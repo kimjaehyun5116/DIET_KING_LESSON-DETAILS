@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>센터 등록하기</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+      }
+
+      .container h2 {
+        margin-top: 0;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background-color: #218838;
+      }
+
+      .btn-secondary {
+        background-color: #007bff;
+      }
+
+      .btn-secondary:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>매장 등록하기</h2>
+      <div class="form-group">
+        <label for="centerName">매장명</label>
+        <input
+          type="text"
+          id="centerName"
+          placeholder="센터 이름을 입력하세요"
+        />
+      </div>
+      <div class="form-group">
+        <label for="centerAddress">주소</label>
+        <input
+          type="text"
+          id="centerAddress"
+          placeholder="센터 주소를 입력하세요"
+        />
+      </div>
+      <div class="form-group">
+        <label for="centerContact">연락처</label>
+        <input
+          type="text"
+          id="centerContact"
+          placeholder="센터 연락처를 입력하세요"
+        />
+      </div>
+      <button class="btn" id="addCenterBtn">등록하기</button>
+      <button class="btn btn-secondary" onclick="goBack()">뒤로가기</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+
+      // 센터 추가 함수
+      function addCenter() {
+        const centerName = document.getElementById("centerName").value;
+        const centerAddress = document.getElementById("centerAddress").value;
+        const centerContact = document.getElementById("centerContact").value;
+
+        if (centerName && centerAddress && centerContact) {
+          const userId = auth.currentUser ? auth.currentUser.uid : null;
+          if (userId) {
+            db.collection("centers")
+              .add({
+                name: centerName,
+                address: centerAddress,
+                contact: centerContact,
+                userId: userId,
+              })
+              .then(() => {
+                alert("센터가 등록되었습니다!");
+                window.location.href = "dashboard.html"; // 등록 후 대시보드 페이지로 이동
+              })
+              .catch((error) => {
+                console.error("Error adding document: ", error);
+              });
+          } else {
+            alert("사용자 정보가 없습니다.");
+          }
+        } else {
+          alert("모든 필드를 입력하세요.");
+        }
+      }
+
+      // 뒤로가기 함수
+      function goBack() {
+        window.history.back();
+      }
+
+      // 이벤트 리스너 추가
+      document
+        .getElementById("addCenterBtn")
+        .addEventListener("click", addCenter);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소셜 로그인</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .login-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: px;
+      }
+      .login-buttons img {
+        width: 200px;
+        height: auto;
+        border-radius: 8px;
+        transition: transform 0.2s;
+        cursor: pointer;
+      }
+      .login-buttons img:hover {
+        transform: scale(1.05);
+      }
+      .message {
+        margin-top: 20px;
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <h1>로그인 페이지</h1>
+      </div>
+      <div class="login-buttons">
+        <a id="kakaoLogin">
+          <img
+            src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png"
+            alt="Kakao Login"
+          />
+        </a>
+        <a id="googleLogin">
+          <img
+            src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
+            alt="Google Login"
+          />
+        </a>
+      </div>
+      <div class="message" id="message"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        OAuthProvider,
+        GoogleAuthProvider,
+        updateProfile,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const auth = getAuth();
+      const db = getFirestore(app);
+
+      // Kakao 로그인 처리
+      const kakaoProvider = new OAuthProvider("oidc.diet-king");
+      document.getElementById("kakaoLogin").addEventListener("click", () => {
+        signInWithPopup(auth, kakaoProvider)
+          .then(async (result) => {
+            const user = result.user;
+            const uid = user.uid;
+
+            // 사용자 프로필을 Firestore에 저장
+            const userDoc = doc(db, "users", uid);
+            await setDoc(userDoc, {
+              displayName: user.displayName,
+              email: user.email,
+            });
+
+            document.getElementById("message").innerText = "로그인 성공!";
+            window.location.href = "dashboard.html"; // 대시보드 페이지로 이동
+          })
+          .catch((error) => {
+            console.error("Error during sign-in:", error);
+            document.getElementById("message").innerText =
+              "로그인 중 오류가 발생했습니다.";
+          });
+      });
+
+      // Google 로그인 처리
+      const googleProvider = new GoogleAuthProvider();
+      document.getElementById("googleLogin").addEventListener("click", () => {
+        signInWithPopup(auth, googleProvider)
+          .then(async (result) => {
+            const user = result.user;
+            const uid = user.uid;
+
+            // 사용자 프로필을 Firestore에 저장
+            const userDoc = doc(db, "users", uid);
+            await setDoc(userDoc, {
+              displayName: user.displayName,
+              email: user.email,
+            });
+
+            document.getElementById("message").innerText = "로그인 성공!";
+            window.location.href = "dashboard.html"; // 대시보드 페이지로 이동
+          })
+          .catch((error) => {
+            console.error("Error during sign-in:", error);
+            document.getElementById("message").innerText =
+              "로그인 중 오류가 발생했습니다.";
+          });
+      });
+    </script>
+  </body>
+</html>

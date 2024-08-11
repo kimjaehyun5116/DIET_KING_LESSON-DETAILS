@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트레이너 추가하기</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        max-width: 100%;
+      }
+
+      h2 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      .back-btn {
+        background-color: #6c757d;
+        margin-top: 10px;
+      }
+
+      .back-btn:hover {
+        background-color: #5a6268;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>트레이너 추가하기</h2>
+      <div class="form-group">
+        <label for="trainerName">이름</label>
+        <input
+          type="text"
+          id="trainerName"
+          placeholder="트레이너 이름을 입력하세요"
+        />
+      </div>
+      <div class="form-group">
+        <label for="trainerPhone">연락처</label>
+        <input
+          type="text"
+          id="trainerPhone"
+          placeholder="트레이너 연락처를 입력하세요"
+        />
+      </div>
+      <button class="btn" id="addTrainerBtn">등록하기</button>
+      <button class="btn back-btn" onclick="goBack()">뒤로가기</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+
+      // 현재 URL에서 센터 ID 추출
+      function getCenterId() {
+        const params = new URLSearchParams(window.location.search);
+        const centerId = params.get("centerId");
+        console.log("URL 파라미터:", window.location.search); // URL 파라미터 확인
+        console.log("Center ID:", centerId); // 디버깅: 센터 ID 확인
+        return centerId;
+      }
+
+      // 트레이너 추가 함수
+      function addTrainer() {
+        const trainerName = document.getElementById("trainerName").value;
+        const trainerPhone = document.getElementById("trainerPhone").value;
+        const centerId = getCenterId();
+
+        if (trainerName && trainerPhone && centerId) {
+          db.collection("trainers")
+            .add({
+              name: trainerName,
+              phone: trainerPhone,
+              centerId: centerId, // 센터 ID 추가
+            })
+            .then(() => {
+              alert("트레이너가 등록되었습니다!");
+              // 트레이너 추가 후 트레이너 목록 페이지로 리다이렉션
+              window.location.href = `trainer_list.html?centerId=${centerId}`;
+            })
+            .catch((error) => {
+              console.error("문서 추가 오류: ", error);
+            });
+        } else {
+          alert("모든 필드를 입력하세요.");
+        }
+      }
+
+      // 이벤트 리스너 추가
+      document
+        .getElementById("addTrainerBtn")
+        .addEventListener("click", addTrainer);
+
+      // 뒤로가기 함수
+      function goBack() {
+        window.history.back(); // 전 페이지로 이동
+      }
+    </script>
+  </body>
+</html>

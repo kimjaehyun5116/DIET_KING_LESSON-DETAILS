@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client List</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        max-width: 100%;
+      }
+
+      h2 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fafafa;
+        border-radius: 5px;
+        margin-bottom: 5px;
+      }
+
+      li:hover {
+        background-color: #e9ecef;
+      }
+
+      .delete-btn,
+      .edit-btn {
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      .delete-btn {
+        background-color: #dc3545;
+      }
+
+      .delete-btn:hover {
+        background-color: #c82333;
+      }
+
+      .edit-btn {
+        background-color: #007bff;
+      }
+
+      .edit-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      /* 팝업 스타일 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        width: 80%;
+        max-width: 500px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-header,
+      .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h3 {
+        margin: 0;
+      }
+
+      .close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .modal-footer .btn {
+        margin-left: 10px;
+        width: auto;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>고객 목록</h2>
+      <ul id="clientList"></ul>
+      <button class="btn" onclick="goToAddClient()">고객 추가</button>
+      <button class="btn" onclick="goBack()">뒤로가기</button>
+    </div>
+
+    <!-- 수정 팝업 -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>고객 수정</h3>
+          <button class="close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="editName">이름</label>
+            <input type="text" id="editName" placeholder="이름" />
+          </div>
+          <div class="form-group">
+            <label for="editPhone">전화번호</label>
+            <input type="text" id="editPhone" placeholder="전화번호" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" onclick="saveClient()">저장</button>
+          <button class="btn" onclick="closeEditModal()">취소</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+      let trainerId; // 트레이너 ID를 저장할 변수
+      let currentClientId = null; // 현재 수정 중인 고객 ID
+
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore(app);
+
+      // 현재 URL에서 트레이너 ID 추출
+      function getTrainerId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("id");
+      }
+
+      // 페이지 로드 시 트레이너 ID 저장 및 고객 목록 가져오기
+      window.onload = function () {
+        trainerId = getTrainerId();
+        if (trainerId) {
+          getClients(); // 고객 목록 가져오기
+        } else {
+          alert("트레이너 ID가 없습니다.");
+        }
+      };
+
+      // 고객 목록 가져오기
+      function getClients() {
+        if (trainerId) {
+          db.collection("clients")
+            .where("trainerId", "==", trainerId) // 트레이너 ID로 필터링
+            .get()
+            .then((querySnapshot) => {
+              const clientList = document.getElementById("clientList");
+              clientList.innerHTML = ""; // 기존 목록 삭제
+
+              querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const li = document.createElement("li");
+                li.innerHTML = `<span>${data.name} - ${data.phone}</span>`; // 고객 이름과 전화번호 표시
+
+                // 고객 상세 페이지로 이동하는 기능
+                li.onclick = function () {
+                  window.location.href = `client_lesson_log.html?clientId=${doc.id}`;
+                };
+
+                const btnContainer = document.createElement("div");
+                btnContainer.style.display = "flex";
+                btnContainer.style.gap = "10px"; // 버튼 간격
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "수정";
+                editBtn.className = "edit-btn";
+                editBtn.onclick = function (e) {
+                  e.stopPropagation(); // li 클릭 이벤트 중단
+                  openEditModal(doc.id); // 수정 팝업 열기
+                };
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "삭제";
+                deleteBtn.className = "delete-btn";
+                deleteBtn.onclick = function (e) {
+                  e.stopPropagation(); // li 클릭 이벤트 중단
+                  deleteClient(doc.id);
+                };
+
+                btnContainer.appendChild(editBtn);
+                btnContainer.appendChild(deleteBtn);
+                li.appendChild(btnContainer);
+                clientList.appendChild(li);
+              });
+            })
+            .catch((error) => {
+              console.error("Error getting documents: ", error);
+            });
+        }
+      }
+
+      // 고객 삭제 함수
+      function deleteClient(clientId) {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+          // 삭제 확인 메시지
+          db.collection("clients")
+            .doc(clientId)
+            .delete()
+            .then(() => {
+              alert("고객이 삭제되었습니다!");
+              getClients(); // 고객 목록 갱신
+            })
+            .catch((error) => {
+              console.error("Error deleting document: ", error);
+            });
+        }
+      }
+
+      // 고객 수정 팝업 열기
+      function openEditModal(clientId) {
+        currentClientId = clientId;
+        db.collection("clients")
+          .doc(clientId)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const data = doc.data();
+              document.getElementById("editName").value = data.name;
+              document.getElementById("editPhone").value = data.phone;
+              document.getElementById("editModal").style.display = "flex";
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting document: ", error);
+          });
+      }
+
+      // 고객 수정 저장
+      function saveClient() {
+        const name = document.getElementById("editName").value;
+        const phone = document.getElementById("editPhone").value;
+
+        if (currentClientId) {
+          db.collection("clients")
+            .doc(currentClientId)
+            .update({ name, phone })
+            .then(() => {
+              alert("고객이 수정되었습니다.");
+              closeEditModal();
+              getClients(); // 목록 새로고침
+            })
+            .catch((error) => {
+              console.error("Error updating document: ", error);
+            });
+        }
+      }
+
+      // 수정 팝업 닫기
+      function closeEditModal() {
+        document.getElementById("editModal").style.display = "none";
+      }
+
+      // 고객 수정 페이지로 이동하는 함수
+      function goToEditClientPage(clientId) {
+        window.location.href = `edit_client.html?id=${clientId}&trainerId=${trainerId}`;
+      }
+
+      // 뒤로가기 함수
+      function goBack() {
+        window.history.back(); // 전 페이지로 이동
+      }
+
+      // 고객 추가 페이지로 이동하는 함수
+      function goToAddClient() {
+        if (trainerId) {
+          window.location.href = `add_client.html?trainerId=${trainerId}`; // 트레이너 ID 전달
+        } else {
+          alert("트레이너 ID가 없습니다.");
+        }
+      }
+    </script>
+  </body>
+</html>
