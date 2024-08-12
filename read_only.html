@@ -59,6 +59,14 @@
       }
 
       .form-group {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        resize: vertical;
+
         margin-bottom: 5px;
       }
 
@@ -194,7 +202,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 13px;
         text-align: center;
         margin-top: 10px;
       }
@@ -246,7 +254,7 @@
       /* 제목 스타일 */
       .header-title h1 {
         margin: 0;
-        font-size: 24px;
+        font-size: 20px;
         color: #333;
         padding: 20px 0;
       }
@@ -279,15 +287,18 @@
 
       /* 모바일 화면에서 테이블 헤더 글자 크기 줄이기 */
       @media (max-width: 600px) {
+        .form-group {
+          font-size: 12px;
+        }
         .exercise-group-table th,
         .exercise-group-table td {
-          font-size: 12px; /* 원하는 글자 크기로 조정 */
+          font-size: 11px; /* 원하는 글자 크기로 조정 */
         }
       }
       .exercise-group-table th,
       .exercise-group-table td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 2px;
         text-align: center;
       }
 
@@ -297,7 +308,7 @@
 
       .exercise-group-table td:nth-child(1),
       .exercise-group-table th:nth-child(1) {
-        width: 20%; /* 세트 열 너비 */
+        width: 10%; /* 세트 열 너비 */
       }
 
       .exercise-group-table td:nth-child(2),
@@ -309,6 +320,29 @@
       .exercise-group-table th:nth-child(3) {
         width: 30%; /* 횟수 열 너비 */
       }
+      .exercise-group-table input[type="number"] {
+        height: 10px; /* 원하는 높이로 조정 */
+        font-size: 11px;
+        text-align: center;
+      }
+      .form-group #exerciseBodyPart1,
+      .form-group #exerciseName1 {
+        height: 10px;
+      }
+      .next_lesson {
+        width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+        margin-top: 20px; /* 위쪽 여백 추가 */
+      }
+
+      .next_lesson textarea {
+        width: 100%; /* 부모 요소에 꽉 차도록 설정 */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 14px;
+        resize: vertical; /* 수직으로만 크기 조절 가능 */
+      }
     </style>
   </head>
   <body>
@@ -317,6 +351,7 @@
         <div class="header-title">
           <h1 id="clientName">레슨 일지</h1>
         </div>
+
         <button class="kakao-share-btn" onclick="shareOnKakao()">
           <img
             src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F%E1%84%8F%E1%85%A1%E1%84%90%E1%85%A9%E1%86%A8%E1%84%85%E1%85%A9%E1%84%80%E1%85%A9.jpeg?alt=media&token=fd001f3f-9d99-4526-968e-1952b1e33119"
@@ -328,6 +363,14 @@
       <div id="message"></div>
       <div id="exerciseGroupsContainer">
         <!-- 운동 그룹들이 동적으로 추가될 위치 -->
+      </div>
+      <div class="next_lesson">
+        <textarea
+          id="exerciseDescription${groupIndex}"
+          rows="4"
+          placeholder="다음 회차 예정 수업을 입력하세요"
+          disabled
+        ></textarea>
       </div>
       <div class="add-group-btn">
         <button class="btn" id="addGroupBtn">종목 추가</button>
@@ -363,26 +406,41 @@
         return urlParams.get("clientId");
       }
 
-      // 레슨 ID 가져오기
       function getLessonId() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("lessonId");
       }
 
       document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get("clientId");
+        if (!clientId) {
+          console.log(
+            "클라이언트 ID가 URL에 없습니다. 클라이언트 ID를 추가합니다."
+          );
+          // 클라이언트 ID를 기본값으로 설정하거나 추가 로직을 작성합니다.
+          const defaultClientId = "defaultClientId"; // 기본 클라이언트 ID
+          const url = new URL(window.location.href);
+          url.searchParams.set("clientId", defaultClientId);
+          window.history.replaceState({}, "", url.toString());
+        } else {
+          console.log("클라이언트 ID:", clientId);
+        }
+
+        updateUrlWithClientId();
         const addGroupBtn = document.getElementById("addGroupBtn");
         const saveLessonBtn = document.getElementById("saveLessonBtn");
         const exerciseGroupsContainer = document.getElementById(
           "exerciseGroupsContainer"
         );
-        const lessonIdInput = document.getElementById("lessonId");
         const viewReadOnlyBtn = document.getElementById("viewReadOnlyBtn");
+        const lessonIdInput = document.getElementById("lessonId");
 
-        const availableIndexes = new Set(); // 사용 가능한 인덱스를 저장할 집합
-
-        // 레슨 데이터 로드
+        // 레슨 데이터 로드 함수
         async function loadLessonData() {
           const lessonId = getLessonId();
+          const clientId = getClientId();
+
           if (lessonId) {
             try {
               const lessonDoc = await db
@@ -393,13 +451,19 @@
                 const lessonData = lessonDoc.data();
                 lessonIdInput.value = lessonId;
 
-                // exerciseGroups가 정의되어 있는지 확인하고, 없다면 빈 배열로 초기화
                 const exerciseGroups = lessonData.exerciseGroups || [];
-
                 exerciseGroups.forEach((group, index) => {
-                  availableIndexes.add(index + 1); // 기존 그룹 인덱스 추가
                   createExerciseGroup(group, index + 1);
                 });
+
+                document.querySelector(".next_lesson textarea").value =
+                  lessonData.nextLesson || "";
+
+                if (clientId) {
+                  await loadClientCycleData(clientId, lessonData.cycle);
+                } else {
+                  console.log("클라이언트 ID가 입력되지 않았습니다.");
+                }
               } else {
                 console.log("레슨 문서를 찾을 수 없습니다.");
               }
@@ -407,9 +471,32 @@
               console.error("레슨 데이터 로드 중 오류 발생:", error);
               alert("레슨 데이터를 로드하는 중 오류가 발생했습니다.");
             }
+          } else {
+            console.log("레슨 ID가 입력되지 않았습니다.");
+          }
+        }
+        function updateUrlWithClientId() {
+          const clientId = getClientId();
+          if (clientId) {
+            const url = new URL(window.location.href);
+            if (!url.searchParams.has("clientId")) {
+              url.searchParams.set("clientId", clientId);
+              window.history.replaceState({}, "", url.toString());
+            }
           }
         }
 
+        // 클라이언트 사이클 데이터 로드 함수
+        async function loadClientCycleData(clientId, cycle) {
+          // cycle 정보를 사용하여 클라이언트 이름 업데이트
+          updateClientName(cycle);
+        }
+
+        // 클라이언트 이름 업데이트 함수
+        function updateClientName(cycle) {
+          const clientNameElement = document.getElementById("clientName");
+          clientNameElement.textContent = `${cycle}회차 레슨 일지`;
+        }
         // 운동 그룹 생성
         function createExerciseGroup(groupData = {}, index) {
           // 사용 가능한 인덱스 중 하나를 가져오거나 새 인덱스를 생성
@@ -422,43 +509,43 @@
           groupDiv.id = `exerciseGroup${groupIndex}`;
 
           groupDiv.innerHTML = `
-    <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
-    <div class="form-group">
-        <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
-        <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" disabled />
-        
-    </div>
-    <div class="form-group">
-        <label for="exerciseBodyPart${groupIndex}">부위</label>
-        <input type="text" id="exerciseBodyPart${groupIndex}" placeholder="운동 부위를 입력하세요" disabled />
-    </div>
-    <div class="form-group">
-        <label for="exerciseTable${groupIndex}"></label>
-        <table id="exerciseTable${groupIndex}" class="exercise-group-table">
-            <thead>
-                <tr>
-                    <th>세트</th>
-                    <th>무게</th>
-                    <th>횟수</th>
-                </tr>
-            </thead>
-            <tbody id="exerciseTableBody${groupIndex}">
-                <!-- 세트 정보가 여기에 추가됨 -->
-            </tbody>
-        </table>
-    </div>
-    <div class="feedback-section">
-        <div class="form-group">
-            <label for="exerciseDescription${groupIndex}">피드백</label>
-            <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요" disabled></textarea>
-        </div>
-        <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">유튜브 검색</button>
-        <div class="add-remove-buttons">
-            <button class="btn add-btn" id="addSetBtn${groupIndex}" disabled>+</button>
-            <button class="btn remove-btn" id="removeSetBtn${groupIndex}" disabled>-</button>
-        </div>
-    </div>
-  `;
+                <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
+                <div class="form-group">
+                    <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
+                    <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" disabled />
+
+                </div>
+                <div class="form-group">
+                    <label for="exerciseBodyPart${groupIndex}">부위</label>
+                    <input type="text" id="exerciseBodyPart${groupIndex}" placeholder="운동 부위를 입력하세요" disabled />
+                </div>
+                <div class="form-group">
+                    <label for="exerciseTable${groupIndex}"></label>
+                    <table id="exerciseTable${groupIndex}" class="exercise-group-table">
+                        <thead>
+                            <tr>
+                                <th>세트</th>
+                                <th>무게</th>
+                                <th>횟수</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exerciseTableBody${groupIndex}">
+                            <!-- 세트 정보가 여기에 추가됨 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="feedback-section">
+                    <div class="form-group">
+                        <label for="exerciseDescription${groupIndex}">피드백</label>
+                        <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요" disabled></textarea>
+                    </div>
+                    <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">유튜브 검색</button>
+                    <div class="add-remove-buttons">
+                        <button class="btn add-btn" id="addSetBtn${groupIndex}" disabled>+</button>
+                        <button class="btn remove-btn" id="removeSetBtn${groupIndex}" disabled>-</button>
+                    </div>
+                </div>
+              `;
 
           exerciseGroupsContainer.appendChild(groupDiv);
 
@@ -575,6 +662,9 @@
           }
 
           const lessonId = lessonIdInput.value;
+          const nextLesson = document.querySelector(
+            ".next_lesson textarea"
+          ).value; // 다음 회차 예정 수업 내용
           const exerciseGroups = Array.from(
             exerciseGroupsContainer.children
           ).map((groupDiv) => {
@@ -603,6 +693,7 @@
               .getElementById("clientName")
               .textContent.replace("회차 레슨 일지", "")
               .trim(),
+            nextLesson: nextLesson, // 추가된 필드
           };
 
           try {
@@ -684,6 +775,8 @@
           ],
         });
       }
+      // 사용 가능한 인덱스를 저장할 집합
+      const availableIndexes = new Set();
     </script>
   </body>
 </html>

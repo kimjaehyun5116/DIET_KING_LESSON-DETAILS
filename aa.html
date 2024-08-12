@@ -9,7 +9,7 @@
       body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
-        margin-top: 0;
+        margin: 0;
         padding: 0;
         display: flex;
         justify-content: center;
@@ -24,7 +24,7 @@
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 90%;
-        max-width: 1000px;
+        max-width: 800px;
         margin-top: 20px;
         display: flex;
         flex-direction: column;
@@ -42,11 +42,9 @@
         font-size: 24px;
         color: #333;
         margin: 0;
-        padding: 20px 0;
+        padding: 0px 0;
       }
-      #viewReadOnlyBtn {
-        margin-bottom: 100px;
-      }
+
       .exercise-group {
         border: 1px solid #ddd;
         border-radius: 5px;
@@ -85,7 +83,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-sizing: border-box;
-        font-size: 14px;
+        font-size: 16px;
       }
 
       .form-group textarea {
@@ -147,7 +145,7 @@
       .exercise-group-table th,
       .exercise-group-table td {
         border: 1px solid #ddd;
-        padding: 2px;
+        padding: 8px;
         text-align: center;
       }
 
@@ -204,7 +202,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 13px;
         text-align: center;
         margin-top: 10px;
       }
@@ -216,33 +214,91 @@
       .header h1 {
         text-align: center;
       }
-      .next_lesson {
-        width: 100%; /* 부모 요소의 너비를 100%로 설정 */
-        margin-top: 20px; /* 위쪽 여백 추가 */
+
+      /* 숨기기 위한 스타일 추가 */
+      #addGroupBtn,
+      .close-btn,
+      .add-remove-buttons,
+      #saveLessonBtn {
+        display: none;
       }
 
-      .next_lesson textarea {
-        width: 100%; /* 부모 요소에 꽉 차도록 설정 */
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 14px;
-        resize: vertical; /* 수직으로만 크기 조절 가능 */
+      /* 텍스트 필드를 비활성화하는 스타일 추가 */
+      .form-group input[disabled],
+      .form-group textarea[disabled] {
+        background-color: #e9ecef;
+        cursor: not-allowed;
       }
+      .header {
+        display: flex;
+        align-items: center; /* 세로 정렬 */
+        justify-content: center;
+        margin-bottom: 0px;
+      }
+
+      /* 헤더 스타일 */
+      .header {
+        display: flex;
+        align-items: center; /* 세로 정렬 */
+        justify-content: center; /* 중앙 정렬 */
+        margin-bottom: 20px; /* 헤더와 본문 사이의 간격 */
+      }
+
+      /* 헤더 제목 스타일 */
+      .header-title {
+        display: flex;
+        align-items: center;
+        margin-right: 10px; /* 카카오톡 버튼과의 간격 */
+      }
+
+      /* 제목 스타일 */
+      .header-title h1 {
+        margin: 0;
+        font-size: 20px;
+        color: #333;
+        padding: 20px 0;
+      }
+
+      /* 카카오톡 공유 버튼 스타일 */
+      .kakao-share-btn {
+        background-color: transparent; /* 배경색 제거 */
+        color: black; /* 텍스트 색상 제거 */
+        border: none;
+        border-radius: 50%;
+        width: 40px; /* 버튼 너비 */
+        height: 40px; /* 버튼 높이 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .kakao-share-btn img {
+        width: 24px; /* 이미지 너비 */
+        height: 24px; /* 이미지 높이 */
+      }
+      .feedback-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 수평 중앙 정렬 */
+        margin-top: 20px; /* 위쪽 여백 */
+      }
+
+      /* 모바일 화면에서 테이블 헤더 글자 크기 줄이기 */
       @media (max-width: 600px) {
+        .form-group {
+          font-size: 12px;
+        }
         .exercise-group-table th,
         .exercise-group-table td {
           font-size: 11px; /* 원하는 글자 크기로 조정 */
-        }
-        .form-group {
-          font-size: 12px;
         }
       }
       .exercise-group-table th,
       .exercise-group-table td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 2px;
         text-align: center;
       }
 
@@ -273,13 +329,36 @@
       .form-group #exerciseName1 {
         height: 10px;
       }
+      .next_lesson {
+        width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+        margin-top: 20px; /* 위쪽 여백 추가 */
+      }
+
+      .next_lesson textarea {
+        width: 100%; /* 부모 요소에 꽉 차도록 설정 */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 14px;
+        resize: vertical; /* 수직으로만 크기 조절 가능 */
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1 id="clientName">레슨 일지</h1>
+        <div class="header-title">
+          <h1 id="clientName">레슨 일지</h1>
+        </div>
+        <button class="kakao-share-btn" onclick="shareOnKakao()">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F%E1%84%8F%E1%85%A1%E1%84%90%E1%85%A9%E1%86%A8%E1%84%85%E1%85%A9%E1%84%80%E1%85%A9.jpeg?alt=media&token=fd001f3f-9d99-4526-968e-1952b1e33119"
+            alt="카카오톡 공유"
+          />
+        </button>
       </div>
+
       <div id="message"></div>
       <div id="exerciseGroupsContainer">
         <!-- 운동 그룹들이 동적으로 추가될 위치 -->
@@ -289,17 +368,16 @@
           id="exerciseDescription${groupIndex}"
           rows="4"
           placeholder="다음 회차 예정 수업을 입력하세요"
+          disabled
         ></textarea>
       </div>
-
       <div class="add-group-btn">
         <button class="btn" id="addGroupBtn">종목 추가</button>
       </div>
-
       <input type="hidden" id="lessonId" />
       <button class="btn" id="saveLessonBtn">저장</button>
-      <button class="btn" onclick="goBack()">뒤로 가기</button>
-      <button class="btn" id="viewReadOnlyBtn">공유하기 페이지로 이동</button>
+      <!-- <button class="btn" onclick="goBack()">뒤로 가기</button> -->
+      <!-- <button class="btn" id="viewReadOnlyBtn">읽기 전용 페이지로 이동</button> -->
     </div>
 
     <!-- Firebase SDK -->
@@ -339,14 +417,14 @@
         const exerciseGroupsContainer = document.getElementById(
           "exerciseGroupsContainer"
         );
-        const viewReadOnlyBtn = document.getElementById("viewReadOnlyBtn");
         const lessonIdInput = document.getElementById("lessonId");
+        const viewReadOnlyBtn = document.getElementById("viewReadOnlyBtn");
 
-        // 레슨 데이터 로드 함수
+        const availableIndexes = new Set(); // 사용 가능한 인덱스를 저장할 집합
+
+        // 레슨 데이터 로드
         async function loadLessonData() {
           const lessonId = getLessonId();
-          const clientId = getClientId();
-
           if (lessonId) {
             try {
               const lessonDoc = await db
@@ -357,19 +435,18 @@
                 const lessonData = lessonDoc.data();
                 lessonIdInput.value = lessonId;
 
+                // exerciseGroups가 정의되어 있는지 확인하고, 없다면 빈 배열로 초기화
                 const exerciseGroups = lessonData.exerciseGroups || [];
+
                 exerciseGroups.forEach((group, index) => {
+                  availableIndexes.add(index + 1); // 기존 그룹 인덱스 추가
                   createExerciseGroup(group, index + 1);
                 });
 
+                // nextLesson 데이터 로드 및 설정
+                const nextLesson = lessonData.nextLesson || "";
                 document.querySelector(".next_lesson textarea").value =
-                  lessonData.nextLesson || "";
-
-                if (clientId) {
-                  await loadClientCycleData(clientId, lessonData.cycle);
-                } else {
-                  console.log("클라이언트 ID가 입력되지 않았습니다.");
-                }
+                  nextLesson;
               } else {
                 console.log("레슨 문서를 찾을 수 없습니다.");
               }
@@ -377,26 +454,13 @@
               console.error("레슨 데이터 로드 중 오류 발생:", error);
               alert("레슨 데이터를 로드하는 중 오류가 발생했습니다.");
             }
-          } else {
-            console.log("레슨 ID가 입력되지 않았습니다.");
           }
-        }
-        // 클라이언트 사이클 데이터 로드 함수
-        async function loadClientCycleData(clientId, cycle) {
-          // cycle 정보를 사용하여 클라이언트 이름 업데이트
-          updateClientName(cycle);
-        }
-
-        // 클라이언트 이름 업데이트 함수
-        function updateClientName(cycle) {
-          const clientNameElement = document.getElementById("clientName");
-          clientNameElement.textContent = `${cycle}회차 레슨 일지`;
         }
 
         // 운동 그룹 생성
         function createExerciseGroup(groupData = {}, index) {
           // 사용 가능한 인덱스 중 하나를 가져오거나 새 인덱스를 생성
-          const groupIndex = index || Math.max(0, ...availableIndexes) + 1;
+          const groupIndex = index || Math.max(...availableIndexes) + 1;
 
           availableIndexes.add(groupIndex); // 인덱스 집합에 추가
 
@@ -405,43 +469,43 @@
           groupDiv.id = `exerciseGroup${groupIndex}`;
 
           groupDiv.innerHTML = `
-          <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
-          <div class="form-group">
-              <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
-              <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" />
-
-          </div>
-          <div class="form-group">
-              <label for="exerciseBodyPart${groupIndex}">부위</label>
-              <input type="text" id="exerciseBodyPart${groupIndex}" placeholder="운동 부위를 입력하세요" />
-          </div>
-          <div class="form-group">
-              <label for="exerciseTable${groupIndex}">세트 정보</label>
-              <table id="exerciseTable${groupIndex}" class="exercise-group-table">
+    <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
+    <div class="form-group">
+        <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
+        <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" disabled />
+        
+    </div>
+    <div class="form-group">
+        <label for="exerciseBodyPart${groupIndex}">부위</label>
+        <input type="text" id="exerciseBodyPart${groupIndex}" placeholder="운동 부위를 입력하세요" disabled />
+    </div>
+    <div class="form-group">
+        <label for="exerciseTable${groupIndex}"></label>
+        <table id="exerciseTable${groupIndex}" class="exercise-group-table">
             <thead>
                 <tr>
-                    <th>세트(set)</th>
-                    <th>무게(kg)</th>
-                    <th>횟수(회)</th>
+                    <th>세트</th>
+                    <th>무게</th>
+                    <th>횟수</th>
                 </tr>
             </thead>
-                  <tbody id="exerciseTableBody${groupIndex}">
-                      <!-- 세트 정보가 여기에 추가됨 -->
-                  </tbody>
-              </table>
-          </div>
-          <div class="feedback-section">
-              <div class="form-group">
-                  <label for="exerciseDescription${groupIndex}">피드백</label>
-                  <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요"></textarea>
-                  <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">유튜브 검색</button>
-              </div>
-              <div class="add-remove-buttons">
-                  <button class="btn add-btn" id="addSetBtn${groupIndex}">+</button>
-                  <button class="btn remove-btn" id="removeSetBtn${groupIndex}">-</button>
-              </div>
-          </div>
-        `;
+            <tbody id="exerciseTableBody${groupIndex}">
+                <!-- 세트 정보가 여기에 추가됨 -->
+            </tbody>
+        </table>
+    </div>
+    <div class="feedback-section">
+        <div class="form-group">
+            <label for="exerciseDescription${groupIndex}">피드백</label>
+            <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요" disabled></textarea>
+        </div>
+        <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">유튜브 검색</button>
+        <div class="add-remove-buttons">
+            <button class="btn add-btn" id="addSetBtn${groupIndex}" disabled>+</button>
+            <button class="btn remove-btn" id="removeSetBtn${groupIndex}" disabled>-</button>
+        </div>
+    </div>
+  `;
 
           exerciseGroupsContainer.appendChild(groupDiv);
 
@@ -464,13 +528,15 @@
             const weightCell = document.createElement("td");
             const weightInput = document.createElement("input");
             weightInput.type = "number";
-            weightInput.placeholder = "무게(kg)";
+            weightInput.placeholder = "무게";
+            weightInput.disabled = true; // 무게 입력 필드 수정 불가
             weightCell.appendChild(weightInput);
             row.appendChild(weightCell);
             const repsCell = document.createElement("td");
             const repsInput = document.createElement("input");
             repsInput.type = "number";
-            repsInput.placeholder = "횟수(회)";
+            repsInput.placeholder = "횟수";
+            repsInput.disabled = true; // 횟수 입력 필드 수정 불가
             repsCell.appendChild(repsInput);
             row.appendChild(repsCell);
             exerciseTableBody.appendChild(row);
@@ -491,7 +557,6 @@
               groupData.bodyPart || "";
 
             const exercises = groupData.exercises || [];
-
             exercises.forEach((exercise, setIndex) => {
               const row = document.createElement("tr");
               const setCell = document.createElement("td");
@@ -502,6 +567,7 @@
               weightInput.type = "number";
               weightInput.value = exercise.weight || "";
               weightInput.placeholder = "무게";
+              weightInput.disabled = true; // 무게 입력 필드 수정 불가
               weightCell.appendChild(weightInput);
               row.appendChild(weightCell);
               const repsCell = document.createElement("td");
@@ -509,6 +575,7 @@
               repsInput.type = "number";
               repsInput.value = exercise.reps || "";
               repsInput.placeholder = "횟수";
+              repsInput.disabled = true; // 횟수 입력 필드 수정 불가
               repsCell.appendChild(repsInput);
               row.appendChild(repsCell);
               exerciseTableBody.appendChild(row);
@@ -516,7 +583,7 @@
 
             // 피드백 로드
             document.getElementById(`exerciseDescription${groupIndex}`).value =
-              groupData.feedback || ""; // 피드백 추가
+              groupData.feedback || "";
           }
         }
 
@@ -555,10 +622,6 @@
           }
 
           const lessonId = lessonIdInput.value;
-          const nextLesson = document.querySelector(
-            ".next_lesson textarea"
-          ).value; // 다음 회차 예정 수업 내용
-
           const exerciseGroups = Array.from(
             exerciseGroupsContainer.children
           ).map((groupDiv) => {
@@ -576,7 +639,7 @@
                 };
               }),
               feedback: document.getElementById(`exerciseDescription${index}`)
-                .value,
+                .value, // 피드백 데이터 추가
             };
           });
 
@@ -587,7 +650,6 @@
               .getElementById("clientName")
               .textContent.replace("회차 레슨 일지", "")
               .trim(),
-            nextLesson: nextLesson, // 추가된 필드
           };
 
           try {
@@ -613,23 +675,62 @@
         // 페이지 로드 시 레슨 데이터 로드
         loadLessonData();
 
-        // 읽기 전용 페이지로 이동 버튼 클릭 이벤트
-        viewReadOnlyBtn.addEventListener("click", function () {
-          const lessonId = lessonIdInput.value;
-          if (lessonId) {
-            window.location.href = `read_only.html?lessonId=${lessonId}`;
-          } else {
-            alert("레슨 ID를 찾을 수 없습니다.");
-          }
-        });
+        // // 읽기 전용 페이지로 이동 버튼 클릭 이벤트
+        // viewReadOnlyBtn.addEventListener("click", function () {
+        //   const lessonId = lessonIdInput.value;
+        //   if (lessonId) {
+        //     window.location.href = `read_only.html?lessonId=${lessonId}`;
+        //   } else {
+        //     alert("레슨 ID를 찾을 수 없습니다.");
+        //   }
+        // });
       });
 
       // 뒤로 가기 버튼 클릭 이벤트
       function goBack() {
         window.history.back();
       }
-      // 사용 가능한 인덱스를 저장할 집합
-      const availableIndexes = new Set();
+
+      // 카카오톡 SDK 초기화
+      Kakao.init("574e770008e383cdbdb1389d4f4074c1"); // 카카오톡 JavaScript SDK 키로 대체
+
+      function shareOnKakao() {
+        const title = document.getElementById("clientName").textContent;
+        const url = window.location.href; // 현재 페이지 URL
+
+        // 현재 날짜를 포맷하기 위한 함수
+        function formatDate(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+
+        const todayDate = formatDate(new Date()); // 현재 날짜 포맷
+
+        Kakao.Link.sendDefault({
+          objectType: "feed",
+          content: {
+            title: `${todayDate} 일지 업로드 완료`,
+            description: `참고하시어 개인 운동에 적용하세요.`, // 날짜와 함께 레슨 일지 제목 설정
+            imageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Feggymlogo.png?alt=media&token=317444a9-00a5-427f-8d89-7ec4bd6842e6", // 썸네일 이미지 URL
+            link: {
+              mobileWebUrl: url,
+              webUrl: url,
+            },
+          },
+          buttons: [
+            {
+              title: "자세히 보기",
+              link: {
+                mobileWebUrl: url,
+                webUrl: url,
+              },
+            },
+          ],
+        });
+      }
     </script>
   </body>
 </html>
