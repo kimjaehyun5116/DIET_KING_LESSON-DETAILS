@@ -23,6 +23,24 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 400px;
         max-width: 100%;
+        position: relative; /* 추가: 로그아웃 버튼 위치 조정을 위해 */
+      }
+
+      .logout-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        text-align: 13px;
+      }
+
+      .logout-btn:hover {
+        background-color: #c82333;
       }
 
       h2 {
@@ -163,6 +181,8 @@
   <body>
     <div class="container">
       <h2>고객 목록</h2>
+      <button class="logout-btn" onclick="logout()">로그아웃</button>
+      <!-- 로그아웃 버튼 추가 -->
       <ul id="clientList"></ul>
       <button class="btn" onclick="goToAddClient()">고객 추가</button>
       <button class="btn" onclick="goBack()">뒤로가기</button>
@@ -195,6 +215,8 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <!-- 추가: Firebase 인증 SDK -->
 
     <script>
       let trainerId; // 트레이너 ID를 저장할 변수
@@ -214,6 +236,20 @@
       // Firebase 초기화
       const app = firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore(app);
+      const auth = firebase.auth(); // 추가: Firebase 인증 객체
+
+      // 로그아웃 함수
+      function logout() {
+        auth
+          .signOut()
+          .then(() => {
+            alert("로그아웃 되었습니다.");
+            window.location.href = "index.html"; // 로그아웃 후 로그인 페이지로 이동
+          })
+          .catch((error) => {
+            console.error("로그아웃 중 오류 발생:", error);
+          });
+      }
 
       // 현재 URL에서 트레이너 ID 추출
       function getTrainerId() {

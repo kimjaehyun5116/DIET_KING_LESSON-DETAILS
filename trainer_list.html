@@ -15,6 +15,35 @@
         align-items: center;
         height: 100vh;
       }
+      .header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .header h2 {
+        margin: 0;
+        text-align: center;
+        flex-grow: 1;
+      }
+
+      .logout-btn {
+        position: absolute;
+        right: 0;
+        padding: 5px 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .logout-btn:hover {
+        background-color: #c82333;
+      }
 
       .container {
         background-color: #fff;
@@ -167,7 +196,10 @@
   </head>
   <body>
     <div class="container">
-      <h2>트레이너 목록</h2>
+      <div class="header">
+        <h2>트레이너 목록</h2>
+        <button class="logout-btn" onclick="logout()">로그아웃</button>
+      </div>
       <ul id="trainerList"></ul>
       <button class="btn" onclick="goToAddTrainer()">트레이너 추가</button>
       <button class="btn" onclick="goBack()">뒤로가기</button>
@@ -217,6 +249,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 
     <script>
       // Firebase 설정
@@ -236,7 +269,7 @@
 
       let currentTrainerId = null; // 현재 수정 중인 트레이너 ID
       let trainerToDelete = null; // 현재 삭제 중인 트레이너 ID
-
+      const auth = firebase.auth();
       // 현재 URL에서 센터 ID 추출
       function getCenterId() {
         const params = new URLSearchParams(window.location.search);
@@ -387,6 +420,45 @@
       function goToAddTrainer() {
         window.location.href = `add_trainer.html?centerId=${getCenterId()}`; // 센터 ID 전달
       }
+
+      // 센터 정보를 가져오는 함수 예시
+      function getCenters() {
+        const centerId = getCenterId(); // URL에서 centerId를 가져오는 함수
+        if (centerId) {
+          db.collection("centers")
+            .doc(centerId)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                const data = doc.data();
+                console.log("센터 정보:", data);
+                // 센터 정보를 UI에 표시하거나 다른 작업을 수행합니다.
+              } else {
+                console.log("센터 정보를 찾을 수 없습니다.");
+              }
+            })
+            .catch((error) => {
+              console.error("센터 정보를 가져오는 중 오류 발생:", error);
+            });
+        } else {
+          alert("센터 ID가 없습니다.");
+        }
+      }
+      function logout() {
+        auth.signOut().then(() => {
+          window.location.href = "index.html";
+        });
+      }
+
+      // 인증 상태 변경 리스너 추가
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          getCenters();
+        } else {
+          alert("로그인 해주세요.");
+          window.location.href = "index.html";
+        }
+      });
     </script>
   </body>
 </html>

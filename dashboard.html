@@ -24,6 +24,32 @@
         width: 90%;
         max-width: 600px;
       }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .header h2 {
+        flex-grow: 1;
+        text-align: center;
+        margin: 0;
+      }
+      .logout-btn {
+        margin-left: -55px;
+        padding: 5px 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .logout-btn:hover {
+        background-color: #c82333;
+      }
 
       .btn {
         display: block;
@@ -188,7 +214,10 @@
   </head>
   <body>
     <div class="container">
-      <h1>대시보드</h1>
+      <div class="header">
+        <h2>대시보드</h2>
+        <button class="logout-btn" onclick="logout()">로그아웃</button>
+      </div>
       <ul id="centerList"></ul>
       <a href="center_registration.html" class="btn">매장 추가하기</a>
     </div>
@@ -381,6 +410,11 @@
       // 삭제 확인 모달 닫기 함수
       function closeConfirmModal() {
         document.getElementById("confirmModal").style.display = "none";
+      }
+      function logout() {
+        auth.signOut().then(() => {
+          window.location.href = "index.html";
+        });
       }
 
       // 인증 상태 변경 리스너 추가

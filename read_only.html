@@ -16,6 +16,7 @@
         align-items: flex-start;
         height: 100vh;
         overflow: hidden;
+        color: #333;
       }
 
       .container {
@@ -29,7 +30,7 @@
         display: flex;
         flex-direction: column;
         height: 90vh;
-        max-height: 800px;
+        max-height: 100%;
         overflow: auto;
       }
 
@@ -84,6 +85,10 @@
         border-radius: 5px;
         box-sizing: border-box;
         font-size: 16px;
+        color: black;
+        font-weight: bold; /* 글자 굵기 조절 */
+        -webkit-font-smoothing: antialiased; /* 폰트 렌더링 개선 - 사파리/크롬 */
+        -moz-osx-font-smoothing: grayscale; /* 폰트 렌더링 개선 - 파이어폭스 */
       }
 
       .form-group textarea {
@@ -226,7 +231,7 @@
       /* 텍스트 필드를 비활성화하는 스타일 추가 */
       .form-group input[disabled],
       .form-group textarea[disabled] {
-        background-color: #e9ecef;
+        background-color: #f4f4f4;
         cursor: not-allowed;
       }
       .header {
@@ -524,9 +529,9 @@
                     <table id="exerciseTable${groupIndex}" class="exercise-group-table">
                         <thead>
                             <tr>
-                                <th>세트</th>
-                                <th>무게</th>
-                                <th>횟수</th>
+                                <th>세트(set)</th>
+                                <th>무게(kg)</th>
+                                <th>횟수(회)</th>
                             </tr>
                         </thead>
                         <tbody id="exerciseTableBody${groupIndex}">
@@ -756,7 +761,7 @@
           objectType: "feed",
           content: {
             title: `${todayDate} 일지 업로드 완료`,
-            description: `참고하시어 개인 운동에 적용하세요.`, // 날짜와 함께 레슨 일지 제목 설정
+            description: `일지의 내용을 참고해서 개인 운동에 적용하세요.`, // 날짜와 함께 레슨 일지 제목 설정
             imageUrl:
               "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Feggymlogo.png?alt=media&token=317444a9-00a5-427f-8d89-7ec4bd6842e6", // 썸네일 이미지 URL
             link: {
