@@ -83,8 +83,8 @@
         box-sizing: border-box;
         font-size: 16px;
         resize: vertical;
-
         margin-bottom: 5px;
+        margin-top: 30px;
       }
 
       .form-group label {
@@ -213,15 +213,15 @@
 
       .youtube-search-btn {
         display: inline-block;
-        padding: 10px 20px;
+        padding: 5px 10px;
         background-color: #ff0000;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 13px;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 0px;
       }
 
       .youtube-search-btn:hover {
@@ -245,14 +245,122 @@
         font-size: 14px;
         resize: vertical; /* 수직으로만 크기 조절 가능 */
       }
+      #exerciseName1 {
+        width: 60%;
+      }
+      #exerciseBodyPart11 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName2 {
+        width: 60%;
+      }
+      #exerciseBodyPart12 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName3 {
+        width: 60%;
+      }
+      #exerciseBodyPart13 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName4 {
+        width: 60%;
+      }
+      #exerciseBodyPart14 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName5 {
+        width: 60%;
+      }
+      #exerciseBodyPart15 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName6 {
+        width: 60%;
+      }
+      #exerciseBodyPart16 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName7 {
+        width: 60%;
+      }
+      #exerciseBodyPart17 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName8 {
+        width: 60%;
+      }
+      #exerciseBodyPart18 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName9 {
+        width: 60%;
+      }
+      #exerciseBodyPart19 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName10 {
+        width: 60%;
+      }
+      #exerciseBodyPart20 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
       @media (max-width: 600px) {
         .exercise-group-table th,
         .exercise-group-table td {
-          font-size: 11px; /* 원하는 글자 크기로 조정 */
+          font-size: 10px; /* 원하는 글자 크기로 조정 */
+        }
+        #clienName {
+          font-size: 20px;
         }
         .form-group {
           font-size: 12px;
+          margin-top: 30px;
         }
+      }
+      #exerciseName1,
+      #exerciseName2,
+      #exerciseName3,
+      #exerciseName4,
+      #exerciseName5,
+      #exerciseName6,
+      #exerciseName7,
+      #exerciseName8,
+      #exerciseName9,
+      #exerciseName10 {
+        width: 50%;
+      }
+      #exerciseBodyPart11,
+      #exerciseBodyPart12,
+      #exerciseBodyPart13,
+      #exerciseBodyPart14,
+      #exerciseBodyPart15,
+      #exerciseBodyPart16,
+      #exerciseBodyPart17,
+      #exerciseBodyPart18,
+      #exerciseBodyPart19,
+      #exerciseBodyPart20 {
+        width: 50%;
       }
       .exercise-group-table th,
       .exercise-group-table td {
@@ -267,7 +375,7 @@
 
       .exercise-group-table td:nth-child(1),
       .exercise-group-table th:nth-child(1) {
-        width: 10%; /* 세트 열 너비 */
+        width: 20%; /* 세트 열 너비 */
       }
 
       .exercise-group-table td:nth-child(2),
@@ -284,9 +392,50 @@
         font-size: 11px;
         text-align: center;
       }
-      .form-group #exerciseBodyPart1,
-      .form-group #exerciseName1 {
-        height: 10px;
+      .logout-btn {
+        width: 10%;
+        font-size: 11px;
+        margin-top: 40px;
+      }
+      .youtube-search-btn {
+        width: 30%;
+        margin-left: 1%;
+        font-size: 11px;
+        padding: 5px 6px;
+      }
+      /* 버튼 스타일 */
+      .exercise-button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+      .exercise-button:hover {
+        background-color: #0056b3;
+      }
+      .exercise-group {
+        margin-top: 20px;
+      }
+      @media (max-width: 480px) {
+        .logout-btn {
+          width: 22%;
+          font-size: 11px;
+          margin-top: 40px;
+        }
+        .youtube-search-btn {
+          width: 35%;
+          margin-left: 10%;
+          font-size: 11px;
+          padding: 5px 6px;
+        }
       }
     </style>
   </head>
@@ -408,12 +557,10 @@
           const clientNameElement = document.getElementById("clientName");
           clientNameElement.textContent = `${cycle}회차 레슨 일지`;
         }
-
         // 운동 그룹 생성
         function createExerciseGroup(groupData = {}, index) {
           // 사용 가능한 인덱스 중 하나를 가져오거나 새 인덱스를 생성
           const groupIndex = index || Math.max(0, ...availableIndexes) + 1;
-
           availableIndexes.add(groupIndex); // 인덱스 집합에 추가
 
           const groupDiv = document.createElement("div");
@@ -421,45 +568,69 @@
           groupDiv.id = `exerciseGroup${groupIndex}`;
 
           groupDiv.innerHTML = `
-          <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
-          <div class="form-group">
-              <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
-              <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" />
-
-          </div>
-          <div class="form-group">
-              <label for="exerciseBodyPart${groupIndex}">부위</label>
-              <input type="text" id="exerciseBodyPart${groupIndex}" placeholder="운동 부위를 입력하세요" />
-          </div>
-          <div class="form-group">
-              <label for="exerciseTable${groupIndex}">세트 정보</label>
-              <table id="exerciseTable${groupIndex}" class="exercise-group-table">
-            <thead>
-                <tr>
-                    <th>세트(set)</th>
-                    <th>무게(kg)</th>
-                    <th>횟수(회)</th>
-                </tr>
-            </thead>
-                  <tbody id="exerciseTableBody${groupIndex}">
-                      <!-- 세트 정보가 여기에 추가됨 -->
-                  </tbody>
-              </table>
-          </div>
-          <div class="feedback-section">
+              <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
               <div class="form-group">
-                  <label for="exerciseDescription${groupIndex}">피드백</label>
-                  <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요"></textarea>
-                  <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">유튜브 검색</button>
+                  <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
+                  <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" />
+                  <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">YouTube 검색</button>
               </div>
-              <div class="add-remove-buttons">
-                  <button class="btn add-btn" id="addSetBtn${groupIndex}">+</button>
-                  <button class="btn remove-btn" id="removeSetBtn${groupIndex}">-</button>
+              <div class="form-group">
+                  <label for="exerciseBodyPart${groupIndex}">부위</label>
+                  <select id="exerciseBodyPart1${groupIndex}" onchange="recommendExercise(this)">
+                      <option value="">선택</option>
+                      <option value="가슴">가슴</option>
+                      <option value="등">등</option>
+                      <option value="하체">하체</option>
+                      <option value="어깨">어깨</option>
+                      <option value="이두">이두</option>
+                      <option value="삼두">삼두</option>
+                      <option value="복근">복근</option>
+                      <option value="유산소">유산소</option>
+                  </select>
+                  <!-- 추천 운동을 표시하는 부분 -->
+                  <div id="recommendation${groupIndex}" class="exercise-recommendation"></div>
               </div>
-          </div>
-        `;
+              <div class="form-group">
+                  <label for="exerciseTable${groupIndex}">세트 정보</label>
+                  <table id="exerciseTable${groupIndex}" class="exercise-group-table">
+                      <thead>
+                          <tr>
+                              <th>세트(set)</th>
+                              <th>무게(kg)</th>
+                              <th>횟수(회)</th>
+                          </tr>
+                      </thead>
+                      <tbody id="exerciseTableBody${groupIndex}">
+                          <!-- 세트 정보가 여기에 추가됨 -->
+                      </tbody>
+                  </table>
+              </div>
+              <div class="feedback-section">
+                  <div class="form-group">
+                      <label for="exerciseDescription${groupIndex}">피드백</label>
+                      <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요"></textarea>
+                  </div>
+                  <div class="add-remove-buttons">
+                      <button class="btn add-btn" id="addSetBtn${groupIndex}">+</button>
+                      <button class="btn remove-btn" id="removeSetBtn${groupIndex}">-</button>
+                  </div>
+              </div>
+          `;
 
           exerciseGroupsContainer.appendChild(groupDiv);
+
+          // 부위가 이미 선택된 경우 추천 운동을 자동으로 업데이트
+          if (groupData.bodyPart) {
+            const selectElement = document.getElementById(
+              `exerciseBodyPart1${groupIndex}`
+            );
+            selectElement.value = groupData.bodyPart;
+            recommendExercise(selectElement);
+          }
+
+          document
+            .getElementById("exerciseGroupsContainer")
+            .appendChild(groupDiv);
 
           const addSetBtn = document.getElementById(`addSetBtn${groupIndex}`);
           const removeSetBtn = document.getElementById(
@@ -501,13 +672,16 @@
 
           // 기존 데이터 로드
           if (groupData) {
+            const exerciseBodyPartSelect = document.getElementById(
+              `exerciseBodyPart1${groupIndex}`
+            );
+            if (exerciseBodyPartSelect) {
+              exerciseBodyPartSelect.value = groupData.bodyPart || "";
+            }
             document.getElementById(`exerciseName${groupIndex}`).value =
               groupData.name || "";
-            document.getElementById(`exerciseBodyPart${groupIndex}`).value =
-              groupData.bodyPart || "";
 
             const exercises = groupData.exercises || [];
-
             exercises.forEach((exercise, setIndex) => {
               const row = document.createElement("tr");
               const setCell = document.createElement("td");
@@ -532,7 +706,7 @@
 
             // 피드백 로드
             document.getElementById(`exerciseDescription${groupIndex}`).value =
-              groupData.feedback || ""; // 피드백 추가
+              groupData.feedback || "";
           }
         }
 
@@ -579,20 +753,37 @@
             exerciseGroupsContainer.children
           ).map((groupDiv) => {
             const index = groupDiv.id.replace("exerciseGroup", "");
+            const exerciseNameElement = document.getElementById(
+              `exerciseName${index}`
+            );
+            const exerciseBodyPartElement = document.getElementById(
+              `exerciseBodyPart1${index}`
+            );
+            const exerciseTableBody = document.getElementById(
+              `exerciseTableBody${index}`
+            );
+            const exerciseDescriptionElement = document.getElementById(
+              `exerciseDescription${index}`
+            );
+
             return {
-              name: document.getElementById(`exerciseName${index}`).value,
-              bodyPart: document.getElementById(`exerciseBodyPart${index}`)
-                .value,
+              name: exerciseNameElement ? exerciseNameElement.value : "",
+              bodyPart: exerciseBodyPartElement
+                ? exerciseBodyPartElement.value
+                : "",
               exercises: Array.from(
-                document.getElementById(`exerciseTableBody${index}`).children
+                exerciseTableBody ? exerciseTableBody.children : []
               ).map((row) => {
+                const weightInput = row.children[1].querySelector("input");
+                const repsInput = row.children[2].querySelector("input");
                 return {
-                  weight: row.children[1].querySelector("input").value,
-                  reps: row.children[2].querySelector("input").value,
+                  weight: weightInput ? weightInput.value : "",
+                  reps: repsInput ? repsInput.value : "",
                 };
               }),
-              feedback: document.getElementById(`exerciseDescription${index}`)
-                .value,
+              feedback: exerciseDescriptionElement
+                ? exerciseDescriptionElement.value
+                : "",
             };
           });
 
@@ -648,6 +839,353 @@
       }
       // 사용 가능한 인덱스를 저장할 집합
       const availableIndexes = new Set();
+    </script>
+    <script>
+      let exerciseGroupCount = 1; // 운동 그룹의 수
+
+      // 각 부위에 해당하는 운동 리스트
+      const exerciseLists = {
+        가슴: [
+          {
+            name: "벤치 프레스",
+            link: "https://www.youtube.com/results?search_query=벤치+프레스",
+          },
+          {
+            name: "푸쉬업",
+            link: "https://www.youtube.com/results?search_query=푸쉬업",
+          },
+          {
+            name: "덤벨 플라이",
+            link: "https://www.youtube.com/results?search_query=덤벨+플라이",
+          },
+          {
+            name: "인클라인 벤치프레스",
+            link: "https://www.youtube.com/results?search_query=인클라인+벤치프레스",
+          },
+          {
+            name: "케이블 크로스오버",
+            link: "https://www.youtube.com/results?search_query=케이블+크로스오버",
+          },
+          {
+            name: "딥스",
+            link: "https://www.youtube.com/results?search_query=딥스",
+          },
+          {
+            name: "덤벨 벤치프레스",
+            link: "https://www.youtube.com/results?search_query=덤벨+벤치프레스",
+          },
+          {
+            name: "케이블 풀오버",
+            link: "https://www.youtube.com/results?search_query=케이블+풀오버",
+          },
+          {
+            name: "체스트 프레스 머신",
+            link: "https://www.youtube.com/results?search_query=체스트+프레스+머신",
+          },
+          {
+            name: "덤벨 풀오버",
+            link: "https://www.youtube.com/results?search_query=덤벨+풀오버",
+          },
+        ],
+        등: [
+          {
+            name: "랫 풀다운",
+            link: "https://www.youtube.com/results?search_query=랫+풀다운",
+          },
+          {
+            name: "바벨 로우",
+            link: "https://www.youtube.com/results?search_query=바벨+로우",
+          },
+          {
+            name: "풀업",
+            link: "https://www.youtube.com/results?search_query=풀업",
+          },
+          {
+            name: "덤벨 로우",
+            link: "https://www.youtube.com/results?search_query=덤벨+로우",
+          },
+          {
+            name: "시티드 로우",
+            link: "https://www.youtube.com/results?search_query=시티드+로우",
+          },
+          {
+            name: "원암 덤벨 로우",
+            link: "https://www.youtube.com/results?search_query=원암+덤벨+로우",
+          },
+          {
+            name: "투암 덤벨 로우",
+            link: "https://www.youtube.com/results?search_query=투암+덤벨+로우",
+          },
+          {
+            name: "롱풀",
+            link: "https://www.youtube.com/results?search_query=롱풀",
+          },
+          {
+            name: "로잉 머신",
+            link: "https://www.youtube.com/results?search_query=로잉+머신",
+          },
+        ],
+        하체: [
+          {
+            name: "스쿼트",
+            link: "https://www.youtube.com/results?search_query=스쿼트",
+          },
+          {
+            name: "파워 레그 프레스",
+            link: "https://www.youtube.com/results?search_query=파워+레그+프레스",
+          },
+          {
+            name: "런지",
+            link: "https://www.youtube.com/results?search_query=런지",
+          },
+          {
+            name: "레그 컬",
+            link: "https://www.youtube.com/results?search_query=레그+컬",
+          },
+          {
+            name: "레그 익스텐션",
+            link: "https://www.youtube.com/results?search_query=레그+익스텐션",
+          },
+          {
+            name: "힙 쓰러스트",
+            link: "https://www.youtube.com/results?search_query=힙+쓰러스트",
+          },
+          {
+            name: "몬스터 글루트 머신",
+            link: "https://www.youtube.com/results?search_query=몬스터+글루트+머신",
+          },
+          {
+            name: "힙 브릿지",
+            link: "https://www.youtube.com/results?search_query=힙+브릿지",
+          },
+          {
+            name: "스모 스쿼트",
+            link: "https://www.youtube.com/results?search_query=스모+스쿼트",
+          },
+          {
+            name: "와이드 스쿼트",
+            link: "https://www.youtube.com/results?search_query=와이드+스쿼트",
+          },
+        ],
+        어깨: [
+          {
+            name: "밀리터리 프레스",
+            link: "https://www.youtube.com/results?search_query=밀리터리+프레스",
+          },
+          {
+            name: "사이드 레터럴 레이즈",
+            link: "https://www.youtube.com/results?search_query=사이드+레터럴+레이즈",
+          },
+          {
+            name: "리어 델트 플라이",
+            link: "https://www.youtube.com/results?search_query=리어+델트+플라이",
+          },
+          {
+            name: "프론트 레이즈",
+            link: "https://www.youtube.com/results?search_query=프론트+레이즈",
+          },
+          {
+            name: "덤벨 숄더 프레스",
+            link: "https://www.youtube.com/results?search_query=덤벨+숄더+프레스",
+          },
+          {
+            name: "업라이트 로우",
+            link: "https://www.youtube.com/results?search_query=업라이트+로우",
+          },
+          {
+            name: "바벨 쉬러그",
+            link: "https://www.youtube.com/results?search_query=바벨+쉬러그",
+          },
+          {
+            name: "덤벨 쉬러그",
+            link: "https://www.youtube.com/results?search_query=덤벨+쉬러그",
+          },
+          {
+            name: "비하인드 넥 프레스",
+            link: "https://www.youtube.com/results?search_query=비하인드+넥+프레스",
+          },
+          {
+            name: "벤트 오버 레터럴 레이즈",
+            link: "https://www.youtube.com/results?search_query=벤트+오버+레터럴+레이즈",
+          },
+        ],
+        복근: [
+          {
+            name: "크런치",
+            link: "https://www.youtube.com/results?search_query=크런치",
+          },
+          {
+            name: "레그 레이즈",
+            link: "https://www.youtube.com/results?search_query=레그+레이즈",
+          },
+          {
+            name: "플랭크",
+            link: "https://www.youtube.com/results?search_query=플랭크",
+          },
+          {
+            name: "바이시클 크런치",
+            link: "https://www.youtube.com/results?search_query=바이시클+크런치",
+          },
+          {
+            name: "행잉 레그 레이즈",
+            link: "https://www.youtube.com/results?search_query=행잉+레그+레이즈",
+          },
+          {
+            name: "케이블 크런치",
+            link: "https://www.youtube.com/results?search_query=케이블+크런치",
+          },
+          {
+            name: "V-싯업",
+            link: "https://www.youtube.com/results?search_query=V-싯업",
+          },
+          {
+            name: "벤치 싯업",
+            link: "https://www.youtube.com/results?search_query=벤치+싯업",
+          },
+        ],
+        이두: [
+          {
+            name: "바벨 컬",
+            link: "https://www.youtube.com/results?search_query=바벨+컬",
+          },
+          {
+            name: "덤벨 컬",
+            link: "https://www.youtube.com/results?search_query=덤벨+컬",
+          },
+          {
+            name: "해머 컬",
+            link: "https://www.youtube.com/results?search_query=해머+컬",
+          },
+          {
+            name: "프리쳐 컬",
+            link: "https://www.youtube.com/results?search_query=프리쳐+컬",
+          },
+          {
+            name: "케이블 컬",
+            link: "https://www.youtube.com/results?search_query=케이블+컬",
+          },
+          {
+            name: "바벨 드래그 컬",
+            link: "https://www.youtube.com/results?search_query=바벨+드래그+컬",
+          },
+          {
+            name: "바벨 리스트 컬",
+            link: "https://www.youtube.com/results?search_query=바벨+리스트+컬",
+          },
+          {
+            name: "콘센트레이션 컬",
+            link: "https://www.youtube.com/results?search_query=콘센트레이션+컬",
+          },
+        ],
+        삼두: [
+          {
+            name: "케이블 로프 푸쉬다운",
+            link: "https://www.youtube.com/results?search_query=케이블+로프+푸쉬다운",
+          },
+          {
+            name: "딥스",
+            link: "https://www.youtube.com/results?search_query=딥스",
+          },
+          {
+            name: "킥백",
+            link: "https://www.youtube.com/results?search_query=킥백",
+          },
+          {
+            name: "오버헤드 트라이셉스 익스텐션",
+            link: "https://www.youtube.com/results?search_query=오버헤드+트라이셉스+익스텐션",
+          },
+          {
+            name: "클로즈 그립 벤치프레스",
+            link: "https://www.youtube.com/results?search_query=클로즈+그립+벤치프레스",
+          },
+          {
+            name: "원암 덤벨 오버헤드 익스텐션",
+            link: "https://www.youtube.com/results?search_query=원암+덤벨+오버헤드+익스텐션",
+          },
+          {
+            name: "라잉 익스텐션",
+            link: "https://www.youtube.com/results?search_query=라잉+익스텐션",
+          },
+        ],
+        유산소: [
+          {
+            name: "트레드밀",
+            link: "https://www.youtube.com/results?search_query=트레드밀",
+          },
+          {
+            name: "천국의 계단",
+            link: "https://www.youtube.com/results?search_query=천국의+계단",
+          },
+          {
+            name: "좌식 사이클",
+            link: "https://www.youtube.com/results?search_query=좌식+사이클",
+          },
+          {
+            name: "입식 사이클",
+            link: "https://www.youtube.com/results?search_query=입식+사이클",
+          },
+          {
+            name: "일랩티컬",
+            link: "https://www.youtube.com/results?search_query=일랩티컬",
+          },
+          {
+            name: "조깅",
+            link: "https://www.youtube.com/results?search_query=조깅",
+          },
+          {
+            name: "수영",
+            link: "https://www.youtube.com/results?search_query=수영",
+          },
+          {
+            name: "마라톤",
+            link: "https://www.youtube.com/results?search_query=마라톤",
+          },
+        ],
+      };
+
+      function showExercises() {
+        const muscle = document.getElementById("muscle-select").value;
+        const container = document.getElementById("exercise-container");
+        container.innerHTML = ""; // 기존 내용 지우기
+
+        if (muscle) {
+          exercises[muscle].forEach((exercise) => {
+            const button = document.createElement("a");
+            button.textContent = exercise;
+            button.className = "exercise-button";
+            button.href = getYouTubeSearchURL(exercise);
+            button.target = "_blank"; // 새 탭에서 열기
+            container.appendChild(button);
+          });
+        }
+      }
+
+      // 운동 부위 선택에 따라 추천 운동을 표시하는 함수
+      function recommendExercise(selectElement) {
+        const selectedBodyPart = selectElement.value;
+        const recommendationDiv = selectElement
+          .closest(".exercise-group")
+          .querySelector(".exercise-recommendation");
+
+        if (selectedBodyPart && exerciseLists[selectedBodyPart]) {
+          const randomExercises = exerciseLists[selectedBodyPart]
+            .sort(() => 0.5 - Math.random()) // 무작위로 섞음
+            .slice(0, 3); // 상위 3개 선택
+
+          // 추천 운동을 HTML 링크로 만들어서 표시
+          recommendationDiv.innerHTML = "<strong>추천 운동:</strong><br>";
+          randomExercises.forEach((exercise) => {
+            const link = document.createElement("a");
+            link.href = exercise.link; // 링크를 올바르게 참조
+            link.textContent = exercise.name;
+            link.target = "_blank"; // 링크를 새 탭에서 열기
+            recommendationDiv.appendChild(link);
+            recommendationDiv.appendChild(document.createElement("br")); // 줄바꿈
+          });
+        } else {
+          recommendationDiv.innerHTML = ""; // 선택 안 했을 때 추천 초기화
+        }
+      }
     </script>
   </body>
 </html>

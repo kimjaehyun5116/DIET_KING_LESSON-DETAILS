@@ -1,370 +1,70 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>레슨 일지 작성</title>
+    <title>Firebase Storage Photo Upload</title>
     <style>
-      /* 기존 스타일은 그대로 유지됩니다 */
       body {
         font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin-top: 0;
-        padding: 0;
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: center;
         height: 100vh;
-        overflow: hidden;
-      }
-      .container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 90%;
-        max-width: 1000px;
-        margin-top: 20px;
-        display: flex;
-        flex-direction: column;
-        height: 90vh;
-        max-height: 100%;
-        overflow: auto;
-        position: relative; /* 추가된 부분 */
-      }
-      .logout-btn {
-        position: absolute;
-        top: 40px;
-        right: 20px;
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        cursor: pointer;
-        font-size: 13px;
-      }
-
-      .logout-btn:hover {
-        background-color: #c82333;
-      }
-      .header {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-
-      #clientName {
-        font-size: 24px;
-        color: #333;
         margin: 0;
-        padding: 20px 0;
+        background-color: #f0f0f0;
       }
-      #viewReadOnlyBtn {
-        margin-bottom: 100px;
-      }
-      .exercise-group {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 15px;
-        margin-bottom: 20px;
-        background-color: #fff;
+      .upload-container {
         position: relative;
-      }
-
-      .exercise-group:last-child {
-        margin-bottom: 0;
-      }
-
-      .form-group {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-        resize: vertical;
-        margin-bottom: 5px;
-        margin-top: 30px;
-      }
-
-      .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        color: #555;
-      }
-
-      .form-group input,
-      .form-group textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 14px;
-      }
-
-      .form-group textarea {
-        resize: vertical;
-      }
-
-      .btn {
-        width: 100%;
-        padding: 12px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-        text-align: center;
-        font-size: 16px;
-      }
-
-      .btn:hover {
-        background-color: #0056b3;
-      }
-
-      .add-remove-buttons {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 10px;
-      }
-
-      .add-remove-buttons button {
-        border: none;
-        background-color: #007bff;
-        color: white;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-        cursor: pointer;
-        margin-left: 5px;
-      }
-
-      .remove-btn {
-        background-color: #dc3545;
-      }
-
-      .remove-btn:hover {
-        background-color: #c82333;
-      }
-
-      .add-btn:hover {
-        background-color: #0056b3;
-      }
-
-      .exercise-group-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      .exercise-group-table th,
-      .exercise-group-table td {
-        border: 1px solid #ddd;
-        padding: 2px;
-        text-align: center;
-      }
-
-      .exercise-group-table th {
-        background-color: #f4f4f4;
-      }
-
-      .add-group-btn {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-
-      .add-group-btn button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-
-      .add-group-btn button:hover {
-        background-color: #0056b3;
-      }
-
-      .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        font-size: 18px;
-        cursor: pointer;
+        width: 300px;
+        height: 300px;
+        border: 2px solid #ddd;
+        background-color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
       }
-
-      .close-btn:hover {
-        background-color: #c82333;
+      .upload-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        display: block;
       }
-
-      .youtube-search-btn {
-        display: inline-block;
-        padding: 5px 10px;
-        background-color: #ff0000;
-        color: white;
-        border: none;
-        border-radius: 5px;
+      .upload-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #fff;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        font-size: 13px;
-        text-align: center;
-        margin-top: 0px;
+        font-size: 24px;
+        color: #333;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
-
-      .youtube-search-btn:hover {
-        background-color: #cc0000;
-      }
-
-      .header h1 {
-        text-align: center;
-      }
-      .next_lesson {
-        width: 100%; /* 부모 요소의 너비를 100%로 설정 */
-        margin-top: 20px; /* 위쪽 여백 추가 */
-      }
-
-      .next_lesson textarea {
-        width: 100%; /* 부모 요소에 꽉 차도록 설정 */
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 14px;
-        resize: vertical; /* 수직으로만 크기 조절 가능 */
-      }
-      #exerciseName1 {
-        width: 60%;
-      }
-      #exerciseBodyPart11 {
-        width: 60%;
-        height: 20px;
-        margin-bottom: 5px;
-      }
-      @media (max-width: 600px) {
-        .exercise-group-table th,
-        .exercise-group-table td {
-          font-size: 10px; /* 원하는 글자 크기로 조정 */
-        }
-        #clienName {
-          font-size: 20px;
-        }
-        .form-group {
-          font-size: 12px;
-          margin-top: 30px;
-        }
-      }
-      #exerciseName1 {
-        width: 50%;
-      }
-      #exerciseBodyPart11 {
-        width: 50%;
-      }
-      .exercise-group-table th,
-      .exercise-group-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-
-      .exercise-group-table th {
-        background-color: #f4f4f4;
-      }
-
-      .exercise-group-table td:nth-child(1),
-      .exercise-group-table th:nth-child(1) {
-        width: 20%; /* 세트 열 너비 */
-      }
-
-      .exercise-group-table td:nth-child(2),
-      .exercise-group-table th:nth-child(2) {
-        width: 30%; /* 무게 열 너비 */
-      }
-
-      .exercise-group-table td:nth-child(3),
-      .exercise-group-table th:nth-child(3) {
-        width: 30%; /* 횟수 열 너비 */
-      }
-      .exercise-group-table input[type="number"] {
-        height: 10px; /* 원하는 높이로 조정 */
-        font-size: 11px;
-        text-align: center;
-      }
-      .form-group #exerciseBodyPart1,
-      .form-group #exerciseName1 {
-        height: 10px;
-      }
-      .logout-btn {
-        width: 10%;
-        font-size: 11px;
-        margin-top: 40px;
-      }
-      .youtube-search-btn {
-        width: 10%;
-        margin-left: 1%;
-        font-size: 11px;
-        padding: 5px 6px;
-      }
-      @media (max-width: 480px) {
-        .logout-btn {
-          width: 22%;
-          font-size: 11px;
-          margin-top: 40px;
-        }
-        .youtube-search-btn {
-          width: 30%;
-          margin-left: 10%;
-          font-size: 11px;
-          padding: 5px 6px;
-        }
+      input[type="file"] {
+        display: none;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1 id="clientName">레슨 일지</h1>
-        <button class="logout-btn" onclick="logout()">로그아웃</button>
-      </div>
-      <div id="message"></div>
-      <div id="exerciseGroupsContainer">
-        <!-- 운동 그룹들이 동적으로 추가될 위치 -->
-      </div>
-      <div class="next_lesson">
-        <textarea
-          id="exerciseDescription${groupIndex}"
-          rows="4"
-          placeholder="다음 회차 예정 수업을 입력하세요"
-        ></textarea>
-      </div>
-
-      <div class="add-group-btn">
-        <button class="btn" id="addGroupBtn">종목 추가</button>
-      </div>
-
-      <input type="hidden" id="lessonId" />
-      <button class="btn" id="saveLessonBtn">저장</button>
-      <button class="btn" onclick="goBack()">뒤로 가기</button>
-      <button class="btn" id="viewReadOnlyBtn">공유하기 페이지로 이동</button>
+    <h1>사진 업로드</h1>
+    <div class="upload-container">
+      <input type="file" id="photoUpload" accept="image/*" />
+      <div class="upload-button">+</div>
+      <img id="photoPreview" src="" alt="사진 미리보기" />
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-
+    <!-- Firebase SDK 추가 -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script>
       // Firebase 설정
       const firebaseConfig = {
@@ -376,470 +76,49 @@
         appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
         measurementId: "G-9NNCPJMT9M",
       };
+
+      // Firebase 초기화
       firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+      const storage = firebase.storage();
 
-      // 클라이언트 ID 가져오기
-      function getClientId() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get("clientId");
-      }
+      const photoUpload = document.getElementById("photoUpload");
+      const uploadButton = document.querySelector(".upload-button");
+      const photoPreview = document.getElementById("photoPreview");
 
-      // 레슨 ID 가져오기
-      function getLessonId() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get("lessonId");
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const addGroupBtn = document.getElementById("addGroupBtn");
-        const saveLessonBtn = document.getElementById("saveLessonBtn");
-        const exerciseGroupsContainer = document.getElementById(
-          "exerciseGroupsContainer"
-        );
-        const viewReadOnlyBtn = document.getElementById("viewReadOnlyBtn");
-        const lessonIdInput = document.getElementById("lessonId");
-
-        // 레슨 데이터 로드 함수
-        async function loadLessonData() {
-          const lessonId = getLessonId();
-          const clientId = getClientId();
-
-          if (lessonId) {
-            try {
-              const lessonDoc = await db
-                .collection("lessons")
-                .doc(lessonId)
-                .get();
-              if (lessonDoc.exists) {
-                const lessonData = lessonDoc.data();
-                lessonIdInput.value = lessonId;
-
-                const exerciseGroups = lessonData.exerciseGroups || [];
-                exerciseGroups.forEach((group, index) => {
-                  createExerciseGroup(group, index + 1);
-                });
-
-                document.querySelector(".next_lesson textarea").value =
-                  lessonData.nextLesson || "";
-
-                if (clientId) {
-                  await loadClientCycleData(clientId, lessonData.cycle);
-                } else {
-                  console.log("클라이언트 ID가 입력되지 않았습니다.");
-                }
-              } else {
-                console.log("레슨 문서를 찾을 수 없습니다.");
-              }
-            } catch (error) {
-              console.error("레슨 데이터 로드 중 오류 발생:", error);
-              alert("레슨 데이터를 로드하는 중 오류가 발생했습니다.");
-            }
-          } else {
-            console.log("레슨 ID가 입력되지 않았습니다.");
-          }
-        }
-        // 클라이언트 사이클 데이터 로드 함수
-        async function loadClientCycleData(clientId, cycle) {
-          // cycle 정보를 사용하여 클라이언트 이름 업데이트
-          updateClientName(cycle);
-        }
-
-        // 클라이언트 이름 업데이트 함수
-        function updateClientName(cycle) {
-          const clientNameElement = document.getElementById("clientName");
-          clientNameElement.textContent = `${cycle}회차 레슨 일지`;
-        }
-
-        // 운동 그룹 생성
-        function createExerciseGroup(groupData = {}, index) {
-          // 사용 가능한 인덱스 중 하나를 가져오거나 새 인덱스를 생성
-          const groupIndex = index || Math.max(0, ...availableIndexes) + 1;
-          availableIndexes.add(groupIndex); // 인덱스 집합에 추가
-
-          const groupDiv = document.createElement("div");
-          groupDiv.classList.add("exercise-group");
-          groupDiv.id = `exerciseGroup${groupIndex}`;
-
-          groupDiv.innerHTML = `
-          <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
-          <div class="form-group">
-              <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
-              <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력하세요" />
-              <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">YouTube 검색</button>
-          </div>
-          <div class="form-group">
-              <label for="exerciseBodyPart${groupIndex}">부위</label>
-              <select id="exerciseBodyPart1${groupIndex}" onchange="recommendExercise(this)">
-                <option value="">선택</option>
-                <option value="가슴">가슴</option>
-                <option value="등">등</option>
-                <option value="하체">하체</option>
-                <option value="어깨">어깨</option>
-                <option value="이두">이두</option>
-                <option value="삼두">삼두</option>
-                <option value="복근">복근</option>
-                <option value="유산소">유산소</option>
-            </select>
-            <!-- 추천 운동을 표시하는 부분 -->
-          <div id="recommendation${groupIndex}" class="exercise-recommendation"></div>
-          </div>
-          <div class="form-group">
-              <label for="exerciseTable${groupIndex}">세트 정보</label>
-              <table id="exerciseTable${groupIndex}" class="exercise-group-table">
-            <thead>
-                <tr>
-                    <th>세트(set)</th>
-                    <th>무게(kg)</th>
-                    <th>횟수(회)</th>
-                </tr>
-            </thead>
-                  <tbody id="exerciseTableBody${groupIndex}">
-                      <!-- 세트 정보가 여기에 추가됨 -->
-                  </tbody>
-              </table>
-          </div>
-          <div class="feedback-section">
-              <div class="form-group">
-                  <label for="exerciseDescription${groupIndex}">피드백</label>
-                  <textarea id="exerciseDescription${groupIndex}" rows="4" placeholder="운동에 대한 피드백을 입력하세요"></textarea>
-              </div>
-              <div class="add-remove-buttons">
-                  <button class="btn add-btn" id="addSetBtn${groupIndex}">+</button>
-                  <button class="btn remove-btn" id="removeSetBtn${groupIndex}">-</button>
-              </div>
-          </div>
-        `;
-          document
-            .getElementById("exerciseGroupsContainer")
-            .appendChild(groupDiv);
-
-          const addSetBtn = document.getElementById(`addSetBtn${groupIndex}`);
-          const removeSetBtn = document.getElementById(
-            `removeSetBtn${groupIndex}`
-          );
-          const exerciseTableBody = document.getElementById(
-            `exerciseTableBody${groupIndex}`
-          );
-
-          let setCount = 0;
-
-          addSetBtn.addEventListener("click", function () {
-            setCount++;
-            const row = document.createElement("tr");
-            const setCell = document.createElement("td");
-            setCell.textContent = setCount;
-            row.appendChild(setCell);
-            const weightCell = document.createElement("td");
-            const weightInput = document.createElement("input");
-            weightInput.type = "number";
-            weightInput.placeholder = "무게(kg)";
-            weightCell.appendChild(weightInput);
-            row.appendChild(weightCell);
-            const repsCell = document.createElement("td");
-            const repsInput = document.createElement("input");
-            repsInput.type = "number";
-            repsInput.placeholder = "횟수(회)";
-            repsCell.appendChild(repsInput);
-            row.appendChild(repsCell);
-            exerciseTableBody.appendChild(row);
-          });
-
-          removeSetBtn.addEventListener("click", function () {
-            if (setCount > 0) {
-              exerciseTableBody.removeChild(exerciseTableBody.lastChild);
-              setCount--;
-            }
-          });
-
-          // 기존 데이터 로드
-          if (groupData) {
-            const exerciseBodyPartSelect = document.getElementById(
-              `exerciseBodyPart${groupIndex}`
-            );
-            if (exerciseBodyPartSelect) {
-              exerciseBodyPartSelect.value = groupData.bodyPart || "";
-            }
-            document.getElementById(`exerciseName${groupIndex}`).value =
-              groupData.name || "";
-
-            const exercises = groupData.exercises || [];
-            exercises.forEach((exercise, setIndex) => {
-              const row = document.createElement("tr");
-              const setCell = document.createElement("td");
-              setCell.textContent = setIndex + 1;
-              row.appendChild(setCell);
-              const weightCell = document.createElement("td");
-              const weightInput = document.createElement("input");
-              weightInput.type = "number";
-              weightInput.value = exercise.weight || "";
-              weightInput.placeholder = "무게";
-              weightCell.appendChild(weightInput);
-              row.appendChild(weightCell);
-              const repsCell = document.createElement("td");
-              const repsInput = document.createElement("input");
-              repsInput.type = "number";
-              repsInput.value = exercise.reps || "";
-              repsInput.placeholder = "횟수";
-              repsCell.appendChild(repsInput);
-              row.appendChild(repsCell);
-              exerciseTableBody.appendChild(row);
-            });
-
-            // 피드백 로드
-            document.getElementById(`exerciseDescription${groupIndex}`).value =
-              groupData.feedback || "";
-          }
-        }
-
-        // 유튜브 검색
-        window.searchYouTube = function (index) {
-          const exerciseName = document.getElementById(
-            `exerciseName${index}`
-          ).value;
-          if (exerciseName) {
-            const searchQuery = encodeURIComponent(exerciseName);
-            const youtubeUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
-            window.open(youtubeUrl, "_blank");
-          } else {
-            alert("운동 이름을 입력해주세요.");
-          }
-        };
-
-        // 운동 그룹 제거
-        window.handleRemoveGroup = function (groupId) {
-          const groupDiv = document.getElementById(groupId);
-          if (groupDiv) {
-            // 인덱스 추출 및 집합에서 제거
-            const index = parseInt(groupId.replace("exerciseGroup", ""), 10);
-            availableIndexes.delete(index);
-
-            exerciseGroupsContainer.removeChild(groupDiv);
-          }
-        };
-
-        // 레슨 데이터 저장
-        saveLessonBtn.addEventListener("click", async function () {
-          const clientId = getClientId();
-          if (!clientId) {
-            alert("클라이언트 ID를 찾을 수 없습니다.");
-            return;
-          }
-
-          const lessonId = lessonIdInput.value;
-          const nextLesson = document.querySelector(
-            ".next_lesson textarea"
-          ).value; // 다음 회차 예정 수업 내용
-
-          const exerciseGroups = Array.from(
-            exerciseGroupsContainer.children
-          ).map((groupDiv) => {
-            const index = groupDiv.id.replace("exerciseGroup", "");
-            const exerciseNameElement = document.getElementById(
-              `exerciseName${index}`
-            );
-            const exerciseBodyPartElement = document.getElementById(
-              `exerciseBodyPart${index}`
-            );
-            const exerciseTableBody = document.getElementById(
-              `exerciseTableBody${index}`
-            );
-            const exerciseDescriptionElement = document.getElementById(
-              `exerciseDescription${index}`
-            );
-
-            return {
-              name: exerciseNameElement ? exerciseNameElement.value : "",
-              bodyPart: exerciseBodyPartElement
-                ? exerciseBodyPartElement.value
-                : "",
-              exercises: Array.from(
-                exerciseTableBody ? exerciseTableBody.children : []
-              ).map((row) => {
-                const weightInput = row.children[1].querySelector("input");
-                const repsInput = row.children[2].querySelector("input");
-                return {
-                  weight: weightInput ? weightInput.value : "",
-                  reps: repsInput ? repsInput.value : "",
-                };
-              }),
-              feedback: exerciseDescriptionElement
-                ? exerciseDescriptionElement.value
-                : "",
-            };
-          });
-
-          const lessonData = {
-            clientId: clientId,
-            exerciseGroups: exerciseGroups,
-            lessonIndex: document
-              .getElementById("clientName")
-              .textContent.replace("회차 레슨 일지", "")
-              .trim(),
-            nextLesson: nextLesson, // 추가된 필드
-          };
-
-          try {
-            if (lessonId) {
-              await db.collection("lessons").doc(lessonId).update(lessonData);
-              alert("레슨이 업데이트되었습니다.");
-            } else {
-              await db.collection("lessons").add(lessonData);
-              alert("새 레슨이 추가되었습니다.");
-            }
-            // window.location.href = "index.html"; // 데이터 저장 후 이동할 페이지
-          } catch (error) {
-            console.error("레슨 저장 중 오류 발생:", error);
-            alert("레슨을 저장하는 중 오류가 발생했습니다.");
-          }
-        });
-
-        // 새로운 운동 그룹 추가 버튼 클릭 이벤트
-        addGroupBtn.addEventListener("click", function () {
-          createExerciseGroup({}, null);
-        });
-
-        // 페이지 로드 시 레슨 데이터 로드
-        loadLessonData();
-
-        // 읽기 전용 페이지로 이동 버튼 클릭 이벤트
-        viewReadOnlyBtn.addEventListener("click", function () {
-          const lessonId = lessonIdInput.value;
-          if (lessonId) {
-            window.location.href = `read_only.html?lessonId=${lessonId}`;
-          } else {
-            alert("레슨 ID를 찾을 수 없습니다.");
-          }
-        });
+      // 업로드 버튼 클릭 시 파일 선택 대화 상자 열기
+      uploadButton.addEventListener("click", function () {
+        photoUpload.click();
       });
-      function logout() {
-        window.location.href = "/index.html"; // 로그아웃 처리 페이지로 리다이렉트
-      }
-      // 뒤로 가기 버튼 클릭 이벤트
-      function goBack() {
-        window.history.back();
-      }
-      // 사용 가능한 인덱스를 저장할 집합
-      const availableIndexes = new Set();
-    </script>
-    <script>
-      let exerciseGroupCount = 1; // 운동 그룹의 수
 
-      // 각 부위에 해당하는 운동 리스트
-      const exerciseLists = {
-        가슴: [
-          "벤치 프레스",
-          "푸쉬업",
-          "덤벨 플라이",
-          "인클라인 벤치프레스",
-          "케이블 크로스오버",
-          "딥스",
-          "덤벨 벤치프레스",
-          "케이블 풀오버",
-          "체스트 프레스 머신",
-          "풀오버",
-        ],
-        등: [
-          "랫 풀다운",
-          "바벨 로우",
-          "데드리프트",
-          "풀업",
-          "T-바 로우",
-          "시티드 로우",
-          "원암 덤벨 로우",
-          "투암 덤벨 로우",
-          "롱풀",
-          "로우 머신",
-        ],
-        하체: [
-          "스쿼트",
-          "레그 프레스",
-          "런지",
-          "레그 컬",
-          "레그 익스텐션",
-          "힙 쓰러스트",
-          "몬스터글루트머신",
-          "힙 브릿지",
-          "스모스쿼트",
-          "와이드스쿼트",
-        ],
-        어깨: [
-          "밀리터리 프레스",
-          "사이드 레터럴 레이즈",
-          "리어 델트 플라이",
-          "프론트 레이즈",
-          "덤벨 숄더 프레스",
-          "업라이트 로우",
-          "바벨쉬러그",
-          "덤벨쉬러그",
-          "비하인드 넥프레스",
-          "벤트 오버 레터럴 레이즈",
-        ],
-        복근: [
-          "크런치",
-          "레그 레이즈",
-          "플랭크",
-          "바이시클 크런치",
-          "행잉 레그레이즈",
-          "플랭크",
-          "케이블 크런치",
-          "V-싯업",
-          "벤치싯업",
-        ],
-        이두: [
-          "바벨 컬",
-          "덤벨 컬",
-          "해머 컬",
-          "프리쳐 컬",
-          "케이블 컬",
-          "바벨 드래그컬",
-          "바벨 리스트컬",
-          "콘센트레이션 컬",
-        ],
-        삼두: [
-          "케이블 로프 푸쉬다운",
-          "딥스",
-          "킥백",
-          "오버헤드 트라이셉스 익스텐션",
-          "클로즈 그립 벤치프레스",
-          "원암 덤벨 오버헤드 익스텐션",
-          "라잉 익스텐션",
-        ],
-        유산소: [
-          "트레드밀",
-          "천국의계단",
-          "좌식사이클",
-          "입식사이클",
-          "일랩티컬",
-          "조깅",
-          "수영",
-          "마라톤",
-        ],
-      };
-      // 추천 운동 클릭 시 유튜브 검색으로 이동
-      function searchYouTube(query) {
-        const searchQuery = encodeURIComponent(query);
-        const youtubeUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
-        window.open(youtubeUrl, "_blank");
-      }
-      // 운동 부위 선택에 따라 추천 운동을 표시하는 함수
-      function recommendExercise(selectElement) {
-        const selectedBodyPart = selectElement.value;
-        const recommendationDiv = selectElement
-          .closest(".exercise-group")
-          .querySelector(".exercise-recommendation");
+      // 파일 선택 후 처리
+      photoUpload.addEventListener("change", function () {
+        const file = photoUpload.files[0];
+        if (file) {
+          const storageRef = storage.ref("images/" + file.name);
+          const uploadTask = storageRef.put(file);
 
-        if (selectedBodyPart && exerciseLists[selectedBodyPart]) {
-          const randomExercises = exerciseLists[selectedBodyPart]
-            .sort(() => 0.5 - Math.random()) // 무작위로 섞음
-            .slice(0, 3); // 상위 3개 선택
-
-          recommendationDiv.innerHTML =
-            "<strong>추천 운동:</strong> " + randomExercises.join(", ");
-        } else {
-          recommendationDiv.innerHTML = ""; // 선택 안 했을 때 추천 초기화
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              // 진행 상황 추적
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+              // 오류 처리
+              console.error("업로드 오류:", error);
+            },
+            () => {
+              // 업로드 완료
+              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                console.log("파일 업로드 완료. 다운로드 URL:", downloadURL);
+                photoPreview.src = downloadURL;
+              });
+            }
+          );
         }
-      }
+      });
     </script>
   </body>
 </html>
