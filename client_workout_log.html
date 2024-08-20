@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>클라이언트 수업 로그</title>
+    <title>클라이언트 운동 일지</title>
     <style>
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -22,12 +22,12 @@
         color: white;
         border: none;
         border-radius: 25px;
-        padding: 5px 10px;
+        padding: 10px 20px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 14px;
         position: absolute;
-        top: 35px;
-        right: 25px;
+        top: 20px;
+        right: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
       }
@@ -333,7 +333,7 @@
         border-radius: 25px;
         cursor: pointer;
         text-align: center;
-        font-size: 12px;
+        font-size: 16px;
         font-weight: 600;
         margin-top: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -374,6 +374,12 @@
           padding: 0; /* 패딩 제거 */
           overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
           white-space: nowrap; /* 줄바꿈 방지 */
+        }
+        .logout-btn {
+          padding: 5px 10px;
+          font-size: 12px;
+          top: 35px;
+          right: 25px;
         }
 
         .navbar-list {
@@ -462,7 +468,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h2 id="pageTitle">수업 목록</h2>
+        <h2 id="pageTitle">운동 일지</h2>
         <button class="logout-btn" onclick="logout()">로그아웃</button>
       </div>
 
@@ -470,7 +476,7 @@
         <input
           type="text"
           id="searchInput"
-          placeholder="회차로 검색..."
+          placeholder="일차로 검색..."
           oninput="searchLessons()"
         />
       </div>
@@ -499,24 +505,28 @@
           <label for="lessonDate"></label>
           <input type="datetime-local" id="lessonDate" />
           <label for="lessonCycle"></label>
-          <input type="text" id="lessonCycle" placeholder="회차를 입력하세요" />
+          <input type="text" id="lessonCycle" placeholder="일차를 입력하세요" />
         </div>
 
-        <button class="btn" id="addLessonBtn">수업 추가</button>
+        <button class="btn" id="addLessonBtn">운동 추가</button>
         <button class="btn" onclick="goBack()">뒤로 가기</button>
       </div>
       <nav class="navbar">
         <ul>
           <li>
-            <button class="btn1" onclick="client_lesson_log()">수업목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="read_client_workout_log()">
-              회원운동일지
+            <button class="btn1" onclick="read_only_client_lesson_log()">
+              수업목록
             </button>
           </li>
           <li>
-            <button class="btn1" onclick="progressrecord()">변화기록</button>
+            <button class="btn1" onclick="client_workout_log()">
+              운동일지
+            </button>
+          </li>
+          <li>
+            <button class="btn1" onclick="read_only_progressrecord()">
+              변화기록
+            </button>
           </li>
         </ul>
       </nav>
@@ -530,21 +540,21 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-              <label for="editLessonDate">수업 날짜</label>
+              <label for="editLessonDate">운동 일자</label>
               <input type="date" id="editLessonDate" />
             </div>
             <div class="form-group">
-              <label for="editLessonCycle">회차</label>
+              <label for="editLessonCycle">일차</label>
               <input
                 type="text"
                 id="editLessonCycle"
-                placeholder="회차를 입력하세요"
+                placeholder="일차를 입력하세요"
               />
             </div>
             <input type="hidden" id="editLessonId" />
           </div>
           <div class="modal-footer">
-            <button class="btn" id="saveEditBtn">수업 저장</button>
+            <button class="btn" id="saveEditBtn">일지 저장</button>
             <button class="btn" onclick="closeEditModal()">취소</button>
           </div>
         </div>
@@ -573,7 +583,7 @@
         auth
           .signOut()
           .then(() => {
-            window.location.href = "index.html"; // 로그아웃 후 이동할 페이지
+            window.location.href = "client_login.html"; // 로그아웃 후 이동할 페이지
           })
           .catch((error) => {
             console.error("로그아웃 오류: ", error);
@@ -584,30 +594,30 @@
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("clientId");
       }
-      // 수정된 progressrecord 함수
-      function progressrecord() {
+      // 수정된 read_only_progressrecord 함수
+      function read_only_progressrecord() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `progress-record.html?clientId=${clientId}`;
+          window.location.href = `read_only_progress-record.html?clientId=${clientId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
-      function client_lesson_log() {
+      function read_only_client_lesson_log() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `client_lesson_log.html?clientId=${clientId}`;
+          window.location.href = `read_only_client_lesson_log.html?clientId=${clientId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
-      function read_client_workout_log() {
+      function client_workout_log() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `read_client_workout_log.html?clientId=${clientId}`;
+          window.location.href = `client_workout_log.html?clientId=${clientId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
@@ -622,7 +632,7 @@
               const clientName = doc.data().name;
               document.getElementById(
                 "pageTitle"
-              ).innerText = `${clientName}의 수업 목록`;
+              ).innerText = `${clientName}의 운동 일지`;
             } else {
               console.error("Client not found.");
             }
@@ -644,7 +654,7 @@
           // 고객 이름 설정
           getClientName(clientId);
 
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .where("clientId", "==", clientId)
             .get()
             .then((querySnapshot) => {
@@ -680,7 +690,7 @@
             const lessonHTML = `
              <div class="lesson-box" onclick="viewLessonDetails('${lesson.id}')">
                <h3>${lesson.date}</h3>
-               <h4>${lesson.cycle}회차</h4>
+               <h4>${lesson.cycle}일차</h4>
                <div class="edit-delete-buttons">
                  <button class="edit-btn" onclick="startEditLesson('${lesson.id}', '${lesson.date}', '${lesson.cycle}'); event.stopPropagation();">수정</button>
                  <button class="delete-btn" onclick="deleteLesson('${lesson.id}'); event.stopPropagation();">삭제</button>
@@ -703,7 +713,7 @@
       // 수업 상세 페이지로 이동
       function viewLessonDetails(lessonId) {
         const clientId = getClientId();
-        window.location.href = `lesson-details.html?clientId=${clientId}&lessonId=${lessonId}`;
+        window.location.href = `client_lesson-details.html?clientId=${clientId}&lessonId=${lessonId}`;
       }
 
       // 페이지 변경
@@ -722,7 +732,7 @@
         const clientId = getClientId();
 
         if (date && cycle && clientId) {
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .add({
               date,
               cycle,
@@ -745,7 +755,7 @@
       // 수업 삭제
       function deleteLesson(lessonId) {
         if (confirm("정말로 이 수업을 삭제하시겠습니까?")) {
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .doc(lessonId)
             .delete()
             .then(() => {
@@ -772,7 +782,7 @@
         const cycle = document.getElementById("editLessonCycle").value;
 
         if (date && cycle) {
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .doc(id)
             .update({
               date,
@@ -800,7 +810,7 @@
         window.history.back();
       }
 
-      // 수업 회차로 검색
+      // 수업 일차로 검색
       function searchLessons() {
         const searchValue = document.getElementById("searchInput").value.trim();
         if (searchValue) {

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원전용 로그인</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .input-field {
+        margin-bottom: 20px;
+      }
+      .input-field input {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .checkbox-field {
+        margin-bottom: 20px;
+      }
+      .checkbox-field input {
+        margin-right: 10px;
+      }
+      .button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+      .message {
+        margin-top: 20px;
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>회원전용 로그인</h1>
+      <div class="input-field">
+        <input type="text" id="name" placeholder="이름을 입력하세요" />
+      </div>
+      <div class="input-field">
+        <input
+          type="text"
+          id="phoneNumber"
+          placeholder="전화번호를 입력하세요"
+        />
+      </div>
+      <div class="checkbox-field">
+        <input type="checkbox" id="rememberMe" />
+        <label for="rememberMe">아이디 저장하기</label>
+      </div>
+      <button class="button" id="loginButton">로그인</button>
+      <div class="message" id="message"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
+        measurementId: "G-9NNCPJMT9M",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Load saved data
+      window.onload = () => {
+        const savedName = localStorage.getItem("savedName") || "";
+        const savedPhoneNumber = localStorage.getItem("savedPhoneNumber") || "";
+        document.getElementById("name").value = savedName;
+        document.getElementById("phoneNumber").value = savedPhoneNumber;
+        document.getElementById("rememberMe").checked =
+          savedName && savedPhoneNumber;
+      };
+
+      document
+        .getElementById("loginButton")
+        .addEventListener("click", async () => {
+          const name = document.getElementById("name").value.trim();
+          const phoneNumber = document
+            .getElementById("phoneNumber")
+            .value.trim();
+          const rememberMe = document.getElementById("rememberMe").checked;
+
+          if (name && phoneNumber) {
+            try {
+              // Create a query against the "clients" collection
+              const q = query(
+                collection(db, "clients"),
+                where("name", "==", name),
+                where("phone", "==", phoneNumber)
+              );
+
+              // Execute the query
+              const querySnapshot = await getDocs(q);
+
+              if (!querySnapshot.empty) {
+                const clientId = querySnapshot.docs[0].id;
+
+                // Save to localStorage if "remember me" is checked
+                if (rememberMe) {
+                  localStorage.setItem("savedName", name);
+                  localStorage.setItem("savedPhoneNumber", phoneNumber);
+                } else {
+                  localStorage.removeItem("savedName");
+                  localStorage.removeItem("savedPhoneNumber");
+                }
+
+                window.location.href = `read_only_client_lesson_log.html?clientId=${clientId}`;
+              } else {
+                document.getElementById("message").innerText =
+                  "이름과 전화번호가 일치하는 클라이언트가 없습니다.";
+              }
+            } catch (error) {
+              console.error("Error fetching client data:", error);
+              document.getElementById("message").innerText =
+                "로그인 중 오류가 발생했습니다.";
+            }
+          } else {
+            document.getElementById("message").innerText =
+              "이름과 전화번호를 입력해주세요.";
+          }
+        });
+    </script>
+  </body>
+</html>

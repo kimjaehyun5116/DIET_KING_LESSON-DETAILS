@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>변화 기록</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin-bottom: 100px;
+      }
+      .container {
+        flex: 1;
+        width: 1200px;
+        margin: auto;
+        padding: 20px;
+      }
+      .form-group {
+        /* margin-bottom: 5px; */
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+      .btn {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+      .chart-container {
+        margin: 20px 0;
+      }
+      .navbar {
+        width: 100%;
+        background-color: #343a40;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        height: 60px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin: 0 20px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar ul li a:hover {
+        background-color: #495057;
+        transform: translateY(-2px);
+      }
+      /* 기록 목록 기본 스타일 */
+      .form-group ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .form-group ul li {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding: 10px;
+        position: relative; /* 버튼의 위치를 기준으로 설정 */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .form-group ul li button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 10px;
+        transition: background-color 0.3s ease;
+        position: absolute; /* 절대 위치로 설정 */
+        right: 0px; /* 오른쪽 끝에서 10px 떨어진 위치 */
+      }
+
+      .form-group ul li button.delete {
+        background-color: #dc3545;
+      }
+
+      .form-group ul li button.delete:hover {
+        background-color: #c82333;
+      }
+
+      .form-group ul li button.edit {
+        background-color: #007bff;
+      }
+
+      .form-group ul li button.edit:hover {
+        background-color: #0056b3;
+      }
+
+      .form-group ul li button:hover {
+        background-color: #0056b3;
+      }
+
+      .form-group ul li button.delete {
+        background-color: #dc3545;
+      }
+
+      .form-group ul li button.delete:hover {
+        background-color: #c82333;
+      }
+
+      /* 데이터 항목의 텍스트 스타일 */
+      .form-group ul li span {
+        font-size: 14px;
+        color: #495057;
+      }
+      .content {
+        display: none;
+        margin-top: 10px;
+      }
+      .list-container {
+        margin-bottom: 20px;
+      }
+      /* form-group1의 flex 스타일 추가 */
+      .form-group1 {
+        display: flex;
+        align-items: center; /* 제목과 버튼을 수직으로 중앙 정렬 */
+        gap: 10px; /* 제목과 버튼 사이에 간격 추가 */
+      }
+
+      .toggle-button {
+        cursor: pointer;
+        background: linear-gradient(
+          135deg,
+          #313131,
+          #868585
+        ); /* 파란색에서 하늘색으로 그라데이션 */
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        padding: 0;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .toggle-button:hover {
+        background: linear-gradient(
+          135deg,
+          #000000,
+          #929292
+        ); /* 마우스를 올렸을 때 그라데이션 변경 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+      }
+      .member-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 10px;
+        transition: background-color 0.3s ease;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+      .member-button:hover {
+        background-color: #0056b3;
+      }
+      .disabled-link {
+        color: gray; /* 비활성화된 링크 색상 */
+        pointer-events: none; /* 클릭 이벤트를 차단 */
+        text-decoration: none; /* 밑줄 제거 */
+      }
+      /* 공통 스타일 */
+      .btn1 {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        background-color: #343a40; /* navbar와 동일한 색상 */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .btn1:hover {
+        background-color: #495057; /* navbar와 동일한 호버 색상 */
+        transform: translateY(-2px);
+      }
+
+      /* 버튼 비활성화 시 스타일 */
+      .btn1:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+
+      /* 추가 버튼 스타일 (삭제 및 수정) */
+      .btn1.delete {
+        background-color: #dc3545;
+      }
+
+      .btn1.delete:hover {
+        background-color: #c82333;
+      }
+
+      .btn1.edit {
+        background-color: #007bff;
+      }
+
+      .btn1.edit:hover {
+        background-color: #0056b3;
+      }
+      .kakao-share-btn {
+        background-color: transparent; /* 배경색 제거 */
+        color: black; /* 텍스트 색상 제거 */
+        border: none;
+        border-radius: 50%;
+        width: 40px; /* 버튼 너비 */
+        height: 40px; /* 버튼 높이 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+      }
+
+      .kakao-share-btn img {
+        width: 24px; /* 이미지 너비 */
+        height: 24px; /* 이미지 높이 */
+      }
+      .navbar {
+        width: 100%;
+        background-color: #343a40;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        height: 60px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin: 0 20px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar ul li a:hover {
+        background-color: #495057;
+        transform: translateY(-2px);
+      }
+      /* 360px 이상의 너비를 가진 화면을 위한 스타일 */
+      @media (min-width: 360px) {
+        .container {
+          width: 80%;
+          max-width: 340px; /* 가로 길이에 맞춘 최대 너비 설정 */
+          padding: 15px;
+        }
+
+        .search-container input {
+          width: 100%;
+          max-width: 340px;
+        }
+
+        .form-group input {
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 340px;
+        }
+
+        .pagination {
+          font-size: 70%;
+        }
+
+        .modal-content {
+          width: 90%;
+          max-width: 340px;
+        }
+        .title {
+          display: flex;
+          gap: 10px;
+        }
+      }
+
+      /* 740px 이상의 너비를 가진 화면을 위한 스타일 */
+      @media (min-width: 740px) {
+        .container {
+          width: 80%;
+          max-width: 720px; /* 가로 길이에 맞춘 최대 너비 설정 */
+        }
+
+        .search-container input {
+          width: 100%;
+          max-width: 720px;
+        }
+
+        .form-group input {
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 720px;
+        }
+
+        .pagination {
+          font-size: 100%;
+        }
+
+        .modal-content {
+          width: 80%;
+          max-width: 720px;
+        }
+      }
+
+      /* 1024px 이상의 너비를 가진 화면을 위한 스타일 */
+      @media (min-width: 1024px) {
+        .container {
+          width: 70%;
+          max-width: 960px; /* 가로 길이에 맞춘 최대 너비 설정 */
+        }
+
+        .search-container input {
+          width: 100%;
+          max-width: 960px;
+        }
+
+        .form-group input {
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 960px;
+        }
+
+        .pagination {
+          font-size: 120%;
+        }
+
+        .modal-content {
+          width: 70%;
+          max-width: 960px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar">
+        <ul>
+          <li>
+            <button class="btn1" onclick="read_only_client_lesson_log()">
+              수업목록
+            </button>
+          </li>
+          <li>
+            <button class="btn1" onclick="client_workout_log()">
+              운동일지
+            </button>
+          </li>
+          <li>
+            <button class="btn1" onclick="read_only_progressrecord()">
+              변화기록
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <div class="title">
+        <h1>변화 기록</h1>
+        <button class="kakao-share-btn" onclick="shareOnKakao()">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F%E1%84%8F%E1%85%A1%E1%84%90%E1%85%A9%E1%86%A8%E1%84%85%E1%85%A9%E1%84%80%E1%85%A9.jpeg?alt=media&token=fd001f3f-9d99-4526-968e-1952b1e33119"
+            alt="카카오톡 공유"
+          />
+        </button>
+      </div>
+      <!-- 인바디 기록 입력 폼 -->
+      <!-- <div class="form-group">
+        <h2>인바디 기록 입력</h2>
+        <label for="inbodyDate">날짜:</label>
+        <input type="date" id="inbodyDate" />
+        <label for="weight">체중 (kg):</label>
+        <input type="number" id="weight" step="0.1" />
+        <label for="muscleMass">근육량 (kg):</label>
+        <input type="number" id="muscleMass" step="0.1" />
+        <label for="fatMass">체지방량 (kg):</label>
+        <input type="number" id="fatMass" step="0.1" />
+        <label for="bodyFatPercentage">체지방률 (%):</label>
+        <input type="number" id="bodyFatPercentage" step="0.1" />
+        <button class="btn" onclick="saveInbodyData()">
+          인바디 데이터 저장
+        </button>
+      </div> -->
+
+      <!-- 삼대운동 측정 기록 입력 폼 -->
+      <!-- <div class="form-group">
+        <h2>삼대운동 측정 기록 입력</h2>
+        <label for="liftDate">날짜:</label>
+        <input type="date" id="liftDate" />
+        <label for="deadlift">데드리프트 (kg):</label>
+        <input type="number" id="deadlift" step="0.1" />
+        <label for="squat">스쿼트 (kg):</label>
+        <input type="number" id="squat" step="0.1" />
+        <label for="benchPress">벤치프레스 (kg):</label>
+        <input type="number" id="benchPress" step="0.1" />
+        <button class="btn" onclick="saveLiftData()">
+          삼대운동 데이터 저장
+        </button>
+      </div> -->
+
+      <!-- 인바디 기록 목록 -->
+      <!-- <div class="form-group">
+        <div class="form-group1">
+          <h2>인바디 기록 목록</h2>
+          <button
+            class="toggle-button"
+            onclick="toggle('inbodyRecordsList', this)"
+          >
+            ▼
+          </button>
+        </div>
+        <ul id="inbodyRecordsList" class="content"></ul>
+      </div> -->
+
+      <!-- 삼대운동 기록 목록 -->
+      <!-- <div class="form-group">
+        <div class="form-group1">
+          <h2>삼대운동 기록 목록</h2>
+          <button
+            class="toggle-button"
+            onclick="toggle('liftRecordsList', this)"
+          >
+            ▼
+          </button>
+        </div>
+        <ul id="liftRecordsList" class="content"></ul>
+      </div> -->
+
+      <!-- 인바디 기록 그래프 -->
+      <div class="chart-container">
+        <h2>인바디 기록 그래프</h2>
+        <canvas id="inbodyChart"></canvas>
+      </div>
+
+      <!-- 삼대운동 측정 기록 그래프 -->
+      <div class="chart-container">
+        <h2>삼대운동 측정 기록 그래프</h2>
+        <canvas id="liftsChart"></canvas>
+      </div>
+      <!-- <button
+        class="btn"
+        onclick="window.location.href='https://test-app-daking.netlify.app/read_only_progress-record.html'"
+      >
+        회원 페이지로 이동
+      </button> -->
+    </div>
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
+        measurementId: "G-9NNCPJMT9M",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth(); // Ensure auth is initialized
+
+      // 클라이언트 ID 가져오기
+      function getClientId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("clientId");
+      }
+
+      // 레슨 ID 가져오기
+      function getLessonId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("lessonId");
+      }
+      // 수정된 read_only_progressrecord 함수
+      function read_only_progressrecord() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `read_only_progress-record.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function read_only_client_lesson_log() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `read_only_client_lesson_log.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function client_workout_log() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `client_workout_log.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      // 로그인 상태 확인
+      // auth.onAuthStateChanged((user) => {
+      //   if (!user) {
+      //     window.location.href = "index.html"; // 로그인 페이지로 리다이렉트
+      //   }
+      // });
+
+      // 인바디 데이터 저장
+      async function saveInbodyData() {
+        const date = document.getElementById("inbodyDate").value;
+        const weight = parseFloat(document.getElementById("weight").value);
+        const muscleMass = parseFloat(
+          document.getElementById("muscleMass").value
+        );
+        const fatMass = parseFloat(document.getElementById("fatMass").value);
+        const bodyFatPercentage = parseFloat(
+          document.getElementById("bodyFatPercentage").value
+        );
+
+        // 클라이언트 ID를 URL에서 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get("clientId");
+
+        if (
+          date &&
+          !isNaN(weight) &&
+          !isNaN(muscleMass) &&
+          !isNaN(fatMass) &&
+          !isNaN(bodyFatPercentage) &&
+          clientId
+        ) {
+          await db.collection("inbodyRecords").add({
+            date: new Date(date),
+            weight,
+            muscleMass,
+            fatMass,
+            bodyFatPercentage,
+            clientId, // 클라이언트 ID를 추가
+          });
+
+          // 폼 초기화
+          document.getElementById("inbodyDate").value = "";
+          document.getElementById("weight").value = "";
+          document.getElementById("muscleMass").value = "";
+          document.getElementById("fatMass").value = "";
+          document.getElementById("bodyFatPercentage").value = "";
+
+          loadInbodyData(); // 데이터 저장 후 그래프 업데이트
+          displayRecords(); // 기록 목록 업데이트
+        } else {
+          alert("모든 필드를 올바르게 입력해 주세요.");
+        }
+      }
+
+      // 삼대운동 데이터 저장
+      async function saveLiftData() {
+        const date = document.getElementById("liftDate").value;
+        const deadlift = parseFloat(document.getElementById("deadlift").value);
+        const squat = parseFloat(document.getElementById("squat").value);
+        const benchPress = parseFloat(
+          document.getElementById("benchPress").value
+        );
+
+        // 클라이언트 ID를 URL에서 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get("clientId");
+
+        if (
+          date &&
+          !isNaN(deadlift) &&
+          !isNaN(squat) &&
+          !isNaN(benchPress) &&
+          clientId
+        ) {
+          await db.collection("liftRecords").add({
+            date: new Date(date),
+            deadlift,
+            squat,
+            benchPress,
+            clientId, // 클라이언트 ID를 추가
+          });
+
+          // 폼 초기화
+          document.getElementById("liftDate").value = "";
+          document.getElementById("deadlift").value = "";
+          document.getElementById("squat").value = "";
+          document.getElementById("benchPress").value = "";
+
+          loadLiftData(); // 데이터 저장 후 그래프 업데이트
+          displayRecords(); // 기록 목록 업데이트
+        } else {
+          alert("모든 필드를 올바르게 입력해 주세요.");
+        }
+      }
+
+      let inbodyChart = null;
+      let liftsChart = null;
+
+      function getClientIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("clientId");
+      }
+
+      // 인바디 데이터 로드 및 그래프 표시
+      async function loadInbodyData() {
+        const clientId = getClientIdFromURL(); // URL에서 클라이언트 ID 추출
+        if (!clientId) {
+          console.error("클라이언트 ID가 URL에 포함되어 있지 않습니다.");
+          return;
+        }
+
+        try {
+          const snapshot = await db
+            .collection("inbodyRecords")
+            .where("clientId", "==", clientId) // 클라이언트 ID로 필터링
+            .orderBy("date")
+            .get();
+
+          const dates = [];
+          const weights = [];
+          const muscleMasses = [];
+          const fatMasses = [];
+          const bodyFatPercentages = [];
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            dates.push(data.date.toDate().toLocaleDateString());
+            weights.push(data.weight);
+            muscleMasses.push(data.muscleMass);
+            fatMasses.push(data.fatMass);
+            bodyFatPercentages.push(data.bodyFatPercentage);
+          });
+
+          const ctx = document.getElementById("inbodyChart")?.getContext("2d");
+          if (ctx) {
+            if (inbodyChart) {
+              inbodyChart.destroy();
+            }
+
+            inbodyChart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: dates,
+                datasets: [
+                  {
+                    label: "체중",
+                    data: weights,
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                  {
+                    label: "근육량",
+                    data: muscleMasses,
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                  {
+                    label: "체지방량",
+                    data: fatMasses,
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                  {
+                    label: "체지방률",
+                    data: bodyFatPercentages,
+                    borderColor: "rgba(255, 159, 64, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        return (
+                          tooltipItem.dataset.label + ": " + tooltipItem.raw
+                        );
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+        } catch (error) {
+          console.error("인바디 데이터 로드 중 오류 발생:", error);
+        }
+      }
+      async function loadLiftData() {
+        const clientId = getClientIdFromURL(); // URL에서 클라이언트 ID 추출
+        if (!clientId) {
+          console.error("클라이언트 ID가 URL에 포함되어 있지 않습니다.");
+          return;
+        }
+
+        try {
+          const snapshot = await db
+            .collection("liftRecords")
+            .where("clientId", "==", clientId) // 클라이언트 ID로 필터링
+            .orderBy("date")
+            .get();
+
+          const dates = [];
+          const deadlifts = [];
+          const squats = [];
+          const benchPresses = [];
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            dates.push(data.date.toDate().toLocaleDateString());
+            deadlifts.push(data.deadlift);
+            squats.push(data.squat);
+            benchPresses.push(data.benchPress);
+          });
+
+          const ctx = document.getElementById("liftsChart")?.getContext("2d");
+          if (ctx) {
+            if (liftsChart) {
+              liftsChart.destroy();
+            }
+
+            liftsChart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: dates,
+                datasets: [
+                  {
+                    label: "데드리프트",
+                    data: deadlifts,
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                  {
+                    label: "스쿼트",
+                    data: squats,
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                  {
+                    label: "벤치프레스",
+                    data: benchPresses,
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    borderWidth: 1,
+                    fill: false,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: function (tooltipItem) {
+                        return (
+                          tooltipItem.dataset.label + ": " + tooltipItem.raw
+                        );
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+        } catch (error) {
+          console.error("삼대운동 데이터 로드 중 오류 발생:", error);
+        }
+      }
+
+      // 페이지 로드 시 데이터 불러오기
+      document.addEventListener("DOMContentLoaded", () => {
+        loadInbodyData();
+        loadLiftData();
+        displayRecords();
+      });
+      // 수정된 progressrecord 함수
+      function progressrecord() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `progress-record.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      // 인바디 기록과 삼대운동 기록을 화면에 표시하는 함수
+      // URL에서 클라이언트 ID를 가져오는 함수
+      function getClientIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("clientId");
+      }
+
+      // 기록을 화면에 표시하는 함수
+      async function displayRecords() {
+        const clientId = getClientIdFromURL(); // URL에서 클라이언트 ID 추출
+        if (!clientId) {
+          console.error("클라이언트 ID가 URL에 포함되어 있지 않습니다.");
+          return;
+        }
+
+        try {
+          // 인바디 기록 필터링
+          const inbodySnapshot = await db
+            .collection("inbodyRecords")
+            .where("clientId", "==", clientId) // 클라이언트 ID로 필터링
+            .orderBy("date")
+            .get();
+
+          // 삼대운동 기록 필터링
+          const liftSnapshot = await db
+            .collection("liftRecords")
+            .where("clientId", "==", clientId) // 클라이언트 ID로 필터링
+            .orderBy("date")
+            .get();
+
+          // const inbodyRecordsList =
+          //   document.getElementById("inbodyRecordsList");
+          // const liftRecordsList = document.getElementById("liftRecordsList");
+
+          // 기존 기록 목록 초기화
+          // inbodyRecordsList.innerHTML = "";
+          // liftRecordsList.innerHTML = "";
+
+          // 인바디 기록 표시
+          inbodySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.textContent = `${data.date
+              .toDate()
+              .toLocaleDateString()} - 체중: ${data.weight}kg, 근육량: ${
+              data.muscleMass
+            }kg, 체지방량: ${data.fatMass}kg, 체지방률: ${
+              data.bodyFatPercentage
+            }%`;
+            const editButton = document.createElement("button");
+            editButton.textContent = "수정";
+            editButton.className = "editButton";
+            editButton.onclick = () => editInbodyRecord(doc.id, data);
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "삭제";
+            deleteButton.className = "deleteButton";
+            deleteButton.onclick = () => deleteInbodyRecord(doc.id);
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            inbodyRecordsList.appendChild(li);
+          });
+
+          // 삼대운동 기록 표시
+          liftSnapshot.forEach((doc) => {
+            const data = doc.data();
+            const li = document.createElement("li");
+            li.textContent = `${data.date
+              .toDate()
+              .toLocaleDateString()} - 데드리프트: ${
+              data.deadlift
+            }kg, 스쿼트: ${data.squat}kg, 벤치프레스: ${data.benchPress}kg`;
+            const editButton = document.createElement("button");
+            editButton.textContent = "수정";
+            editButton.className = "editButton";
+            editButton.onclick = () => editLiftRecord(doc.id, data);
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "삭제";
+            deleteButton.className = "deleteButton";
+            deleteButton.onclick = () => deleteLiftRecord(doc.id);
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            liftRecordsList.appendChild(li);
+          });
+        } catch (error) {
+          console.error("기록 표시 중 오류 발생:", error);
+        }
+      }
+
+      // 인바디 기록 수정
+      function editInbodyRecord(id, data) {
+        document.getElementById("inbodyDate").value = data.date
+          .toDate()
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("weight").value = data.weight;
+        document.getElementById("muscleMass").value = data.muscleMass;
+        document.getElementById("fatMass").value = data.fatMass;
+        document.getElementById("bodyFatPercentage").value =
+          data.bodyFatPercentage;
+
+        // Save button should be updated to handle updates
+        const saveButton = document.getElementById("saveInbodyData");
+        saveButton.onclick = async () => {
+          await updateInbodyRecord(id);
+        };
+      }
+
+      // 삼대운동 기록 수정
+      function editLiftRecord(id, data) {
+        document.getElementById("liftDate").value = data.date
+          .toDate()
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("deadlift").value = data.deadlift;
+        document.getElementById("squat").value = data.squat;
+        document.getElementById("benchPress").value = data.benchPress;
+
+        // Save button should be updated to handle updates
+        const saveButton = document.getElementById("saveLiftData");
+        saveButton.onclick = async () => {
+          await updateLiftRecord(id);
+        };
+      }
+
+      // 인바디 기록 업데이트
+      async function updateInbodyRecord(id) {
+        const date = document.getElementById("inbodyDate").value;
+        const weight = parseFloat(document.getElementById("weight").value);
+        const muscleMass = parseFloat(
+          document.getElementById("muscleMass").value
+        );
+        const fatMass = parseFloat(document.getElementById("fatMass").value);
+        const bodyFatPercentage = parseFloat(
+          document.getElementById("bodyFatPercentage").value
+        );
+
+        if (
+          date &&
+          !isNaN(weight) &&
+          !isNaN(muscleMass) &&
+          !isNaN(fatMass) &&
+          !isNaN(bodyFatPercentage)
+        ) {
+          await db
+            .collection("inbodyRecords")
+            .doc(id)
+            .update({
+              date: new Date(date),
+              weight,
+              muscleMass,
+              fatMass,
+              bodyFatPercentage,
+            });
+          loadInbodyData(); // 데이터 저장 후 그래프 업데이트
+          displayRecords(); // 기록 목록 업데이트
+        } else {
+          alert("모든 필드를 올바르게 입력해 주세요.");
+        }
+      }
+      function getClientIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("clientId");
+      }
+
+      // 버튼 클릭 시 클라이언트 ID를 포함한 URL로 이동하는 함수
+      function redirectToMemberPage() {
+        const clientId = getClientIdFromURL(); // 현재 페이지의 클라이언트 ID 가져오기
+        if (clientId) {
+          // 클라이언트 ID가 존재하는 경우 URL에 추가
+          window.location.href = `https://test-app-daking.netlify.app/read_only_progress-record.html?clientId=${clientId}`;
+        } else {
+          // 클라이언트 ID가 존재하지 않는 경우 기본 URL로 이동
+          window.location.href =
+            "https://test-app-daking.netlify.app/read_only_progress-record.html";
+        }
+      }
+      // 삼대운동 기록 업데이트
+      async function updateLiftRecord(id) {
+        const date = document.getElementById("liftDate").value;
+        const deadlift = parseFloat(document.getElementById("deadlift").value);
+        const squat = parseFloat(document.getElementById("squat").value);
+        const benchPress = parseFloat(
+          document.getElementById("benchPress").value
+        );
+
+        if (date && !isNaN(deadlift) && !isNaN(squat) && !isNaN(benchPress)) {
+          await db
+            .collection("liftRecords")
+            .doc(id)
+            .update({
+              date: new Date(date),
+              deadlift,
+              squat,
+              benchPress,
+            });
+          loadLiftData(); // 데이터 저장 후 그래프 업데이트
+          displayRecords(); // 기록 목록 업데이트
+        } else {
+          alert("모든 필드를 올바르게 입력해 주세요.");
+        }
+      }
+
+      // 인바디 기록 삭제
+      async function deleteInbodyRecord(id) {
+        if (confirm("이 기록을 삭제하시겠습니까?")) {
+          await db.collection("inbodyRecords").doc(id).delete();
+          loadInbodyData(); // 데이터 삭제 후 그래프 업데이트
+          displayRecords(); // 기록 목록 업데이트
+        }
+      }
+
+      // 삼대운동 기록 삭제
+      async function deleteLiftRecord(id) {
+        if (confirm("이 기록을 삭제하시겠습니까?")) {
+          await db.collection("liftRecords").doc(id).delete();
+          loadLiftData(); // 데이터 삭제 후 그래프 업데이트
+          displayRecords(); // 기록 목록 업데이트
+        }
+      }
+      function toggle(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          if (element.style.display === "none") {
+            element.style.display = "block";
+          } else {
+            element.style.display = "none";
+          }
+        }
+      } // 카카오톡 SDK 초기화
+
+      Kakao.init("574e770008e383cdbdb1389d4f4074c1"); // 카카오톡 JavaScript SDK 키로 대체
+
+      function shareOnKakao() {
+        const url = window.location.href; // 현재 페이지 URL
+
+        // 현재 날짜를 포맷하기 위한 함수
+        function formatDate(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+
+        const todayDate = formatDate(new Date()); // 현재 날짜 포맷
+
+        Kakao.Link.sendDefault({
+          objectType: "feed",
+          content: {
+            title: `${todayDate} 변화기록 업로드 완료`, // 제목에서 클라이언트 이름 제거
+            description: `변화기록이 업로드되었습니다. 변화하고 있는 과정을 확인해보세요.`,
+            imageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Feggymlogo.png?alt=media&token=317444a9-00a5-427f-8d89-7ec4bd6842e6", // 썸네일 이미지 URL
+            link: {
+              mobileWebUrl: url,
+              webUrl: url,
+            },
+          },
+          buttons: [
+            {
+              title: "자세히 보기",
+              link: {
+                mobileWebUrl: url,
+                webUrl: url,
+              },
+            },
+          ],
+        });
+      }
+    </script>
+  </body>
+</html>

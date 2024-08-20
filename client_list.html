@@ -52,6 +52,9 @@
       ul {
         list-style-type: none;
         padding: 0;
+        max-height: 400px; /* 최대 높이 설정 (원하는 크기로 조정) */
+        overflow-y: auto; /* 세로 스크롤 추가 */
+        margin: 0; /* margin 제거 */
       }
 
       li {
@@ -176,13 +179,30 @@
         box-sizing: border-box;
         font-size: 16px;
       }
+      p#totalClients {
+        text-align: center;
+        color: #555;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <h2>고객 목록</h2>
+      <p id="totalClients">총 인원 : 0명</p>
       <button class="logout-btn" onclick="logout()">로그아웃</button>
       <!-- 로그아웃 버튼 추가 -->
+      <!-- 검색 폼 추가 -->
+      <div class="search-bar">
+        <input
+          type="text"
+          id="searchQuery"
+          placeholder="이름 또는 전화번호로 검색"
+          oninput="searchClients()"
+        />
+      </div>
+
       <ul id="clientList"></ul>
       <button class="btn" onclick="goToAddClient()">고객 추가</button>
       <button class="btn" onclick="goBack()">뒤로가기</button>
@@ -266,6 +286,170 @@
           alert("트레이너 ID가 없습니다.");
         }
       };
+      let isSearching = false; // 검색 중인지 상태를 저장하는 변수
+      let searchTimeout; // 검색 타임아웃을 저장할 변수
+
+      // 페이지가 로드될 때 실행되는 코드
+      window.onload = function () {
+        // 검색창 초기화
+        document.getElementById("searchQuery").value = "";
+
+        // 트레이너 ID 가져오기
+        trainerId = getTrainerId();
+
+        if (trainerId) {
+          loadClients(); // 전체 목록 로드
+        } else {
+          alert("트레이너 ID가 없습니다.");
+        }
+      };
+
+      // 전체 고객 목록 로드 함수
+      function loadClients() {
+        if (isSearching) return; // 검색 중이면 중복 실행 방지
+
+        const clientList = document.getElementById("clientList");
+        clientList.innerHTML = ""; // 기존 목록 삭제
+
+        db.collection("clients")
+          .where("trainerId", "==", trainerId)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.docs.forEach((doc, index) => {
+              const data = doc.data();
+              const li = document.createElement("li");
+              li.innerHTML = `
+                    <span>${index + 1}. ${data.name} - ${data.phone}</span>
+                    <div class="btn-container">
+                        <button class="edit-btn" onclick="openEditModal('${
+                          doc.id
+                        }', '${data.name}', '${data.phone}')">수정</button>
+                        <button class="delete-btn" onclick="deleteClient('${
+                          doc.id
+                        }')">삭제</button>
+                    </div>
+                `;
+
+              li.addEventListener("click", () => {
+                window.location.href = `client_lesson_log.html?clientId=${doc.id}`;
+              });
+
+              li.querySelectorAll("button").forEach((button) => {
+                button.addEventListener("click", (event) => {
+                  event.stopPropagation(); // 버튼 클릭 시 목록 클릭 이벤트 중단
+                });
+              });
+
+              clientList.appendChild(li);
+            });
+
+            const totalClients = querySnapshot.size; // 총 인원 계산
+            document.getElementById(
+              "totalClients"
+            ).innerText = `총 인원 : ${totalClients}명`;
+          })
+          .catch((error) => {
+            console.error("Error getting documents: ", error);
+          });
+      }
+
+      // 검색 기능 구현
+      function searchClients() {
+        clearTimeout(searchTimeout); // 기존의 타임아웃 제거
+
+        searchTimeout = setTimeout(() => {
+          const searchQuery = document
+            .getElementById("searchQuery")
+            .value.trim()
+            .toLowerCase();
+
+          if (!searchQuery) {
+            loadClients(); // 검색어가 없으면 전체 목록 로드
+            return;
+          }
+
+          if (isSearching) return; // 이미 검색 중이면 중복 실행 방지
+
+          isSearching = true; // 검색 상태 설정
+          const clientList = document.getElementById("clientList");
+          clientList.innerHTML = ""; // 검색을 시작하기 전에 목록 초기화
+
+          db.collection("clients")
+            .where("trainerId", "==", trainerId)
+            .get()
+            .then((snapshot) => {
+              const foundClients = new Set(); // 중복 방지를 위한 Set
+              let totalClients = 0;
+
+              snapshot.docs.forEach((doc, index) => {
+                const client = doc.data();
+                const nameMatch = client.name
+                  .toLowerCase()
+                  .includes(searchQuery);
+                const phoneMatch = client.phone.includes(searchQuery);
+
+                if ((nameMatch || phoneMatch) && !foundClients.has(doc.id)) {
+                  foundClients.add(doc.id); // 해당 클라이언트 ID 저장
+
+                  const listItem = document.createElement("li");
+                  listItem.innerHTML = `
+                            <span>${totalClients + 1}. ${client.name} - ${
+                    client.phone
+                  }</span>
+                            <div class="btn-container">
+                                <button class="edit-btn" onclick="openEditModal('${
+                                  doc.id
+                                }', '${client.name}', '${
+                    client.phone
+                  }')">수정</button>
+                                <button class="delete-btn" onclick="deleteClient('${
+                                  doc.id
+                                }')">삭제</button>
+                            </div>
+                        `;
+
+                  listItem.addEventListener("click", () => {
+                    window.location.href = `client_lesson_log.html?clientId=${doc.id}`;
+                  });
+
+                  listItem.querySelectorAll("button").forEach((button) => {
+                    button.addEventListener("click", (event) => {
+                      event.stopPropagation(); // 버튼 클릭 시 목록 클릭 이벤트 중단
+                    });
+                  });
+
+                  clientList.appendChild(listItem);
+                  totalClients++;
+                }
+              });
+
+              document.getElementById(
+                "totalClients"
+              ).innerText = `총 인원 : ${totalClients}명`;
+            })
+            .catch((error) => {
+              console.error("고객을 검색하는 중 오류 발생:", error);
+            })
+            .finally(() => {
+              isSearching = false; // 검색 상태 해제
+            });
+        }, 300); // 300ms 딜레이 후 검색 실행
+      }
+
+      // 검색창에 입력할 때마다 검색 기능 실행
+      document
+        .getElementById("searchQuery")
+        .addEventListener("input", searchClients);
+
+      // 페이지가 로드되면 전체 고객 목록을 처음 한 번만 로드
+      window.onload = function () {
+        trainerId = getTrainerId();
+        if (trainerId) {
+          loadClients(); // 처음에 한 번만 전체 목록을 로드
+        } else {
+          alert("트레이너 ID가 없습니다.");
+        }
+      };
 
       // 고객 목록 가져오기
       function getClients() {
@@ -276,6 +460,11 @@
             .then((querySnapshot) => {
               const clientList = document.getElementById("clientList");
               clientList.innerHTML = ""; // 기존 목록 삭제
+
+              const totalClients = querySnapshot.size; // 총 인원 계산
+              document.getElementById(
+                "totalClients"
+              ).innerText = `총 인원 : ${totalClients}명`;
 
               querySnapshot.forEach((doc) => {
                 const data = doc.data();

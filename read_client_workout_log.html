@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>클라이언트 수업 로그</title>
+    <title>클라이언트 운동 일지</title>
     <style>
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -22,12 +22,12 @@
         color: white;
         border: none;
         border-radius: 25px;
-        padding: 5px 10px;
+        padding: 10px 20px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 14px;
         position: absolute;
-        top: 35px;
-        right: 25px;
+        top: 20px;
+        right: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
       }
@@ -367,6 +367,12 @@
       .btn1.edit:hover {
         background-color: #0056b3;
       }
+      #addLessonBtn,
+      .form-group,
+      .edit-btn,
+      .delete-btn {
+        display: none;
+      }
       /* 모바일 스타일 */
       @media (max-width: 600px) {
         .navbar {
@@ -375,7 +381,12 @@
           overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
           white-space: nowrap; /* 줄바꿈 방지 */
         }
-
+        .logout-btn {
+          padding: 5px 10px;
+          font-size: 12px;
+          top: 35px;
+          right: 25px;
+        }
         .navbar-list {
           display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
           justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
@@ -462,7 +473,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h2 id="pageTitle">수업 목록</h2>
+        <h2 id="pageTitle">운동 일지</h2>
         <button class="logout-btn" onclick="logout()">로그아웃</button>
       </div>
 
@@ -470,7 +481,7 @@
         <input
           type="text"
           id="searchInput"
-          placeholder="회차로 검색..."
+          placeholder="일차로 검색..."
           oninput="searchLessons()"
         />
       </div>
@@ -499,10 +510,10 @@
           <label for="lessonDate"></label>
           <input type="datetime-local" id="lessonDate" />
           <label for="lessonCycle"></label>
-          <input type="text" id="lessonCycle" placeholder="회차를 입력하세요" />
+          <input type="text" id="lessonCycle" placeholder="일차를 입력하세요" />
         </div>
 
-        <button class="btn" id="addLessonBtn">수업 추가</button>
+        <button class="btn" id="addLessonBtn">운동 추가</button>
         <button class="btn" onclick="goBack()">뒤로 가기</button>
       </div>
       <nav class="navbar">
@@ -520,7 +531,6 @@
           </li>
         </ul>
       </nav>
-
       <!-- 수정 팝업 -->
       <div class="modal" id="editModal">
         <div class="modal-content">
@@ -530,21 +540,21 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-              <label for="editLessonDate">수업 날짜</label>
+              <label for="editLessonDate">운동 일자</label>
               <input type="date" id="editLessonDate" />
             </div>
             <div class="form-group">
-              <label for="editLessonCycle">회차</label>
+              <label for="editLessonCycle">일차</label>
               <input
                 type="text"
                 id="editLessonCycle"
-                placeholder="회차를 입력하세요"
+                placeholder="일차를 입력하세요"
               />
             </div>
             <input type="hidden" id="editLessonId" />
           </div>
           <div class="modal-footer">
-            <button class="btn" id="saveEditBtn">수업 저장</button>
+            <button class="btn" id="saveEditBtn">일지 저장</button>
             <button class="btn" onclick="closeEditModal()">취소</button>
           </div>
         </div>
@@ -622,7 +632,7 @@
               const clientName = doc.data().name;
               document.getElementById(
                 "pageTitle"
-              ).innerText = `${clientName}의 수업 목록`;
+              ).innerText = `${clientName}의 운동 일지`;
             } else {
               console.error("Client not found.");
             }
@@ -644,7 +654,7 @@
           // 고객 이름 설정
           getClientName(clientId);
 
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .where("clientId", "==", clientId)
             .get()
             .then((querySnapshot) => {
@@ -680,7 +690,7 @@
             const lessonHTML = `
              <div class="lesson-box" onclick="viewLessonDetails('${lesson.id}')">
                <h3>${lesson.date}</h3>
-               <h4>${lesson.cycle}회차</h4>
+               <h4>${lesson.cycle}일차</h4>
                <div class="edit-delete-buttons">
                  <button class="edit-btn" onclick="startEditLesson('${lesson.id}', '${lesson.date}', '${lesson.cycle}'); event.stopPropagation();">수정</button>
                  <button class="delete-btn" onclick="deleteLesson('${lesson.id}'); event.stopPropagation();">삭제</button>
@@ -703,7 +713,7 @@
       // 수업 상세 페이지로 이동
       function viewLessonDetails(lessonId) {
         const clientId = getClientId();
-        window.location.href = `lesson-details.html?clientId=${clientId}&lessonId=${lessonId}`;
+        window.location.href = `read_client_lesson-details.html?clientId=${clientId}&lessonId=${lessonId}`;
       }
 
       // 페이지 변경
@@ -722,7 +732,7 @@
         const clientId = getClientId();
 
         if (date && cycle && clientId) {
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .add({
               date,
               cycle,
@@ -745,7 +755,7 @@
       // 수업 삭제
       function deleteLesson(lessonId) {
         if (confirm("정말로 이 수업을 삭제하시겠습니까?")) {
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .doc(lessonId)
             .delete()
             .then(() => {
@@ -772,7 +782,7 @@
         const cycle = document.getElementById("editLessonCycle").value;
 
         if (date && cycle) {
-          db.collection("lessons")
+          db.collection("client_workout_log")
             .doc(id)
             .update({
               date,
@@ -800,7 +810,7 @@
         window.history.back();
       }
 
-      // 수업 회차로 검색
+      // 수업 일차로 검색
       function searchLessons() {
         const searchValue = document.getElementById("searchInput").value.trim();
         if (searchValue) {
