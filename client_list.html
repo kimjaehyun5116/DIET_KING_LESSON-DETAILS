@@ -37,6 +37,7 @@
         padding: 5px 10px;
         cursor: pointer;
         text-align: 13px;
+        font-size: 12px;
       }
 
       .logout-btn:hover {
@@ -108,7 +109,7 @@
         cursor: pointer;
         margin-top: 10px;
         text-align: center;
-        font-size: 16px;
+        font-size: 12px;
       }
 
       .btn:hover {
@@ -331,7 +332,12 @@
                 `;
 
               li.addEventListener("click", () => {
-                window.location.href = `client_lesson_log.html?clientId=${doc.id}`;
+                const trainerId = getTrainerId(); // URL에서 trainerId를 가져옴
+                if (trainerId) {
+                  window.location.href = `client_lesson_log.html?clientId=${doc.id}&id=${trainerId}`;
+                } else {
+                  console.error("trainerId가 정의되지 않았습니다.");
+                }
               });
 
               li.querySelectorAll("button").forEach((button) => {
