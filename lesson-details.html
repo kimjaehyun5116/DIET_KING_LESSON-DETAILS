@@ -27,7 +27,7 @@
         margin-top: 20px;
         display: flex;
         flex-direction: column;
-        height: 90vh;
+        height: 80vh;
         max-height: 100%;
         overflow: auto;
         position: relative; /* 추가된 부분 */
@@ -38,20 +38,24 @@
         color: white;
         border: none;
         border-radius: 25px;
-        padding: 10px 20px;
+        padding: 5px 10px;
         cursor: pointer;
         font-size: 12px;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 35px;
+        right: 25px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
+        margin-top: 40px;
       }
 
       .logout-btn:hover {
-        background-color: #c82333;
+        background-color: #ff3b3f;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
       }
       .header {
+        position: relative;
         text-align: center;
         margin-bottom: 20px;
       }
@@ -452,11 +456,6 @@
         font-size: 12px;
         text-align: center;
       }
-      .logout-btn {
-        width: 10%;
-        font-size: 12px;
-        margin-top: 40px;
-      }
       .youtube-search-btn {
         width: 30%;
         margin-left: 1%;
@@ -484,12 +483,10 @@
       .exercise-group {
         margin-top: 20px;
       }
+      h4 {
+        margin-bottom: -10px;
+      }
       @media (max-width: 480px) {
-        .logout-btn {
-          width: 22%;
-          font-size: 12px;
-          margin-top: 40px;
-        }
         .youtube-search-btn {
           width: 35%;
           margin-left: 10%;
@@ -512,6 +509,7 @@
       <div id="exerciseGroupsContainer">
         <!-- 운동 그룹들이 동적으로 추가될 위치 -->
       </div>
+      <h4>다음 회차 예정 수업</h4>
       <div class="next_lesson">
         <textarea
           id="exerciseDescription${groupIndex}"
@@ -924,11 +922,18 @@
         // 페이지 로드 시 레슨 데이터 로드
         loadLessonData();
 
-        // 읽기 전용 페이지로 이동 버튼 클릭 이벤트
+        // URL에서 clientId를 추출하는 함수
+        function getQueryParam(param) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(param);
+        }
+        // clientId를 URL에서 추출
+        const clientId = getQueryParam("clientId");
+
         viewReadOnlyBtn.addEventListener("click", function () {
           const lessonId = lessonIdInput.value;
           if (lessonId) {
-            window.location.href = `read_only.html?lessonId=${lessonId}`;
+            window.location.href = `read_only.html?clientId=${clientId}&lessonId=${lessonId}`;
           } else {
             alert("레슨 ID를 찾을 수 없습니다.");
           }

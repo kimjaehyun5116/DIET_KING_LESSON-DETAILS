@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>식단 게시판</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #e9ebee;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        padding-top: 50px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+        background: #ffffff;
+        padding: 20px;
+        border: 1px solid #dddfe2;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        font-weight: normal;
+        color: #1c1e21;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      #post-form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      #image-upload {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccd0d5;
+        border-radius: 6px;
+        background-color: #f5f6f7;
+      }
+
+      #post-caption {
+        margin-bottom: 10px;
+        padding: 12px;
+        border: 1px solid #ccd0d5;
+        border-radius: 6px;
+        background-color: #f5f6f7;
+        font-size: 14px;
+      }
+
+      #add-post {
+        padding: 10px;
+        background-color: #1877f2;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      #add-post:hover {
+        background-color: #166fe5;
+      }
+
+      #posts {
+        margin-top: 20px;
+      }
+
+      .post {
+        background: #ffffff;
+        border: 1px solid #dddfe2;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        padding-bottom: 10px;
+        position: relative;
+      }
+
+      .post img {
+        width: 100%;
+        border-bottom: 1px solid #dddfe2;
+        border-radius: 8px 8px 0 0;
+      }
+
+      .post p {
+        margin: 10px;
+        font-size: 14px;
+        color: #1c1e21;
+      }
+
+      .post-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+      }
+
+      .like-button {
+        background-color: transparent;
+        border: none;
+        color: #1877f2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+      }
+
+      .like-button img {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+      }
+
+      .like-button:disabled {
+        color: #8d949e;
+        cursor: default;
+      }
+
+      .comments-section {
+        padding: 0 10px;
+      }
+
+      .comments-section h4 {
+        margin: 10px 0;
+        font-size: 14px;
+        color: #1c1e21;
+      }
+
+      .comment {
+        margin-bottom: 10px;
+        position: relative;
+        padding: 10px;
+        background-color: #f5f6f7;
+        border-radius: 6px;
+      }
+      .comment p {
+        margin: 0;
+        font-size: 14px; /* 댓글의 기본 글꼴 크기 */
+        color: #1c1e21; /* 댓글의 기본 글꼴 색상 */
+      }
+
+      .reply {
+        margin-left: 20px;
+        margin-top: 10px;
+      }
+
+      /* .reply .comment p {
+        margin-bottom: 10px;
+        width: 100%;
+      } */
+      .comment-input {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .comment-input input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ccd0d5;
+        border-radius: 6px;
+        background-color: #f5f6f7;
+        font-size: 14px;
+        margin-right: 10px;
+      }
+
+      .comment-input button {
+        padding: 8px 12px;
+        background-color: #1877f2;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .comment-input button:hover {
+        background-color: #166fe5;
+      }
+
+      .menu-icon {
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .menu-dropdown {
+        display: none;
+        position: static;
+        top: 30px;
+        right: 10px;
+        background-color: white;
+        border: 1px solid #dddfe2;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        width: 100px;
+      }
+      .menu-dropdown button {
+        width: 100%;
+        padding: 5px;
+        border: none;
+        background: none;
+        text-align: left;
+        cursor: pointer;
+        font-size: 14px;
+        border-bottom: 1px solid #dddfe2;
+      }
+
+      .menu-dropdown button:last-child {
+        border-bottom: none;
+      }
+
+      .menu-dropdown button:hover {
+        background-color: #f5f6f7;
+      }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>식단 게시판</h1>
+      <div id="post-form">
+        <!-- 날짜 검색 입력창을 추가합니다. -->
+        <input type="date" id="search-date" placeholder="날짜로 검색" />
+        <button id="search-button">검색</button>
+        <input type="file" id="image-upload" accept="image/*" />
+        <input
+          type="text"
+          id="post-caption"
+          placeholder="내용을 입력해주세요."
+        />
+        <button id="add-post">확인</button>
+      </div>
+
+      <div id="posts"></div>
+    </div>
+
+    <script>
+      // Firebase 초기화
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
+        measurementId: "G-9NNCPJMT9M",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // 게시물을 추가하는 함수
+      function addPost(imageUrl, caption) {
+        const postsContainer = document.getElementById("posts");
+
+        const postDiv = document.createElement("div");
+        postDiv.className = "post";
+
+        if (imageUrl) {
+          const postImage = document.createElement("img");
+          postImage.src = imageUrl;
+          postDiv.appendChild(postImage);
+        }
+
+        const postCaption = document.createElement("p");
+        postCaption.textContent = caption;
+        postDiv.appendChild(postCaption);
+
+        // 날짜 추가
+        const postDate = document.createElement("p");
+        const currentDate = new Date().toLocaleDateString();
+        postDate.textContent = `Posted on: ${currentDate}`;
+        postDate.className = "post-date";
+        postDiv.appendChild(postDate);
+
+        const postActions = document.createElement("div");
+        postActions.className = "post-actions";
+
+        const likeButton = document.createElement("button");
+        likeButton.className = "like-button";
+        let liked = false;
+        likeButton.innerHTML = `♡ Like`;
+
+        likeButton.addEventListener("click", function () {
+          liked = !liked;
+          likeButton.innerHTML = liked ? `♥ Liked` : `♡ Like`;
+        });
+
+        const commentSection = document.createElement("div");
+        commentSection.className = "comments-section";
+
+        const commentTitle = document.createElement("h4");
+        commentTitle.textContent = "댓글";
+
+        const commentList = document.createElement("div");
+
+        const commentInputDiv = document.createElement("div");
+        commentInputDiv.className = "comment-input";
+
+        const commentInput = document.createElement("input");
+        commentInput.type = "text";
+        commentInput.placeholder = "댓글을 작성하세요.";
+
+        const commentButton = document.createElement("button");
+        commentButton.textContent = "작성";
+        commentButton.addEventListener("click", function () {
+          const commentText = commentInput.value;
+          if (commentText.trim() !== "") {
+            addComment(commentList, commentText);
+            commentInput.value = "";
+          }
+        });
+
+        commentInputDiv.appendChild(commentInput);
+        commentInputDiv.appendChild(commentButton);
+
+        commentSection.appendChild(commentTitle);
+        commentSection.appendChild(commentList);
+        commentSection.appendChild(commentInputDiv);
+
+        postActions.appendChild(likeButton);
+        postDiv.appendChild(postActions);
+        postDiv.appendChild(commentSection);
+
+        postsContainer.appendChild(postDiv);
+      }
+
+      function addComment(parentElement, commentText, isReply = false) {
+        const commentDiv = document.createElement("div");
+        commentDiv.className = "comment" + (isReply ? " reply" : "");
+
+        const commentContent = document.createElement("p");
+        commentContent.textContent = commentText;
+
+        const menuIcon = document.createElement("div");
+        menuIcon.className = "menu-icon";
+        menuIcon.innerHTML = "⋮";
+
+        const menuDropdown = document.createElement("div");
+        menuDropdown.className = "menu-dropdown";
+
+        const replyButton = document.createElement("button");
+        replyButton.textContent = "댓글 달기";
+        replyButton.addEventListener("click", function () {
+          toggleReplyInput(commentDiv);
+          closeDropdown(menuDropdown);
+        });
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "수정";
+        editButton.addEventListener("click", function () {
+          editComment(commentDiv, commentContent);
+          closeDropdown(menuDropdown);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "삭제";
+        deleteButton.addEventListener("click", function () {
+          commentDiv.remove();
+          closeDropdown(menuDropdown);
+        });
+
+        menuDropdown.appendChild(replyButton);
+        menuDropdown.appendChild(editButton);
+        menuDropdown.appendChild(deleteButton);
+
+        menuIcon.addEventListener("click", function (event) {
+          event.stopPropagation();
+          toggleDropdown(menuDropdown);
+        });
+
+        const commentWrapper = document.createElement("div");
+        commentWrapper.style.display = "flex";
+        commentWrapper.style.alignItems = "center";
+
+        commentWrapper.appendChild(commentContent);
+        commentWrapper.appendChild(menuIcon);
+        commentDiv.appendChild(commentWrapper);
+        commentDiv.appendChild(menuDropdown);
+
+        parentElement.appendChild(commentDiv);
+      }
+
+      function toggleDropdown(menuDropdown) {
+        if (menuDropdown.style.display === "block") {
+          menuDropdown.style.display = "none";
+        } else {
+          closeAllDropdowns(); // 다른 모든 드롭다운을 닫습니다.
+          menuDropdown.style.display = "block";
+        }
+      }
+
+      function closeDropdown(menuDropdown) {
+        menuDropdown.style.display = "none";
+      }
+
+      function closeAllDropdowns() {
+        const dropdowns = document.querySelectorAll(".menu-dropdown");
+        dropdowns.forEach(function (dropdown) {
+          dropdown.style.display = "none";
+        });
+      }
+
+      function toggleReplyInput(commentDiv) {
+        let replyInputDiv = commentDiv.querySelector(".reply-input");
+        if (!replyInputDiv) {
+          replyInputDiv = document.createElement("div");
+          replyInputDiv.className = "comment-input reply-input";
+
+          const replyInput = document.createElement("input");
+          replyInput.type = "text";
+          replyInput.placeholder = "대댓글을 작성하세요.";
+
+          const replyButton = document.createElement("button");
+          replyButton.textContent = "댓글 작성";
+
+          replyButton.addEventListener("click", function () {
+            const replyText = replyInput.value;
+            if (replyText.trim() !== "") {
+              addComment(commentDiv, replyText, true);
+              replyInputDiv.remove(); // 대댓글 작성 후 입력창을 제거합니다.
+            }
+          });
+
+          replyInputDiv.appendChild(replyInput);
+          replyInputDiv.appendChild(replyButton);
+          commentDiv.appendChild(replyInputDiv);
+        } else {
+          replyInputDiv.remove();
+        }
+      }
+
+      function editComment(commentDiv, commentContent) {
+        const originalText = commentContent.textContent;
+        const editInput = document.createElement("input");
+        editInput.type = "text";
+        editInput.value = originalText;
+        commentContent.replaceWith(editInput);
+
+        editInput.addEventListener("blur", function () {
+          commentContent.textContent = editInput.value;
+          editInput.replaceWith(commentContent);
+        });
+
+        editInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            commentContent.textContent = editInput.value;
+            editInput.replaceWith(commentContent);
+          }
+        });
+
+        editInput.focus();
+      }
+
+      document
+        .getElementById("search-button")
+        .addEventListener("click", function () {
+          const searchDate = document.getElementById("search-date").value;
+          filterPostsByDate(searchDate);
+        });
+
+      function filterPostsByDate(date) {
+        const posts = document.querySelectorAll(".post");
+        posts.forEach((post) => {
+          const postDate = post
+            .querySelector(".post-date")
+            .textContent.split(": ")[1];
+          post.style.display = postDate === date ? "block" : "none";
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("add-post")
+          .addEventListener("click", function () {
+            const fileInput = document.getElementById("image-upload");
+            const caption = document.getElementById("post-caption").value;
+            const file = fileInput.files[0];
+
+            if (file) {
+              const reader = new FileReader();
+              reader.onloadend = function () {
+                const imageUrl = reader.result;
+                addPost(imageUrl, caption);
+              };
+              reader.readAsDataURL(file);
+            } else {
+              addPost("", caption);
+            }
+
+            fileInput.value = "";
+            document.getElementById("post-caption").value = "";
+          });
+
+        // 중복 이벤트 리스너 설정 제거
+      });
+    </script>
+  </body>
+</html>

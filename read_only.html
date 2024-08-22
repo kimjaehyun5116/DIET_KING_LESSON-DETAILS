@@ -432,11 +432,16 @@
         border-radius: 25px;
         cursor: pointer;
         text-align: center;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: 600;
         margin-top: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
+      }
+
+      .btn1:hover {
+        background-color: #495057; /* navbar와 동일한 호버 색상 */
+        transform: translateY(-2px);
       }
 
       /* 모바일 화면에서 테이블 헤더 글자 크기 줄이기 */
@@ -633,22 +638,6 @@
         }
       }
       document.addEventListener("DOMContentLoaded", function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const clientId = urlParams.get("clientId");
-        if (!clientId) {
-          console.log(
-            "클라이언트 ID가 URL에 없습니다. 클라이언트 ID를 추가합니다."
-          );
-          // 클라이언트 ID를 기본값으로 설정하거나 추가 로직을 작성합니다.
-          const defaultClientId = "defaultClientId"; // 기본 클라이언트 ID
-          const url = new URL(window.location.href);
-          url.searchParams.set("clientId", defaultClientId);
-          window.history.replaceState({}, "", url.toString());
-        } else {
-          console.log("클라이언트 ID:", clientId);
-        }
-
-        updateUrlWithClientId();
         const addGroupBtn = document.getElementById("addGroupBtn");
         const saveLessonBtn = document.getElementById("saveLessonBtn");
         const exerciseGroupsContainer = document.getElementById(
