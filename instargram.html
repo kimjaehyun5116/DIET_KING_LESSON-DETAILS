@@ -142,25 +142,15 @@
       .comment {
         margin-bottom: 10px;
         position: relative;
-        padding: 10px;
+        padding: 10px 50px 10px 10px;
         background-color: #f5f6f7;
         border-radius: 6px;
-      }
-      .comment p {
-        margin: 0;
-        font-size: 14px; /* 댓글의 기본 글꼴 크기 */
-        color: #1c1e21; /* 댓글의 기본 글꼴 색상 */
       }
 
       .reply {
         margin-left: 20px;
-        margin-top: 10px;
       }
 
-      /* .reply .comment p {
-        margin-bottom: 10px;
-        width: 100%;
-      } */
       .comment-input {
         display: flex;
         align-items: center;
@@ -193,14 +183,16 @@
       }
 
       .menu-icon {
+        position: absolute;
+        top: 22px;
         cursor: pointer;
-        margin-left: 10px;
+        left: 60px;
       }
 
       .menu-dropdown {
         display: none;
-        position: static;
-        top: 30px;
+        position: absolute;
+        top: 25px;
         right: 10px;
         background-color: white;
         border: 1px solid #dddfe2;
@@ -209,6 +201,7 @@
         z-index: 10;
         width: 100px;
       }
+
       .menu-dropdown button {
         width: 100%;
         padding: 5px;
@@ -228,16 +221,11 @@
         background-color: #f5f6f7;
       }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
   </head>
   <body>
     <div class="container">
       <h1>식단 게시판</h1>
       <div id="post-form">
-        <!-- 날짜 검색 입력창을 추가합니다. -->
-        <input type="date" id="search-date" placeholder="날짜로 검색" />
-        <button id="search-button">검색</button>
         <input type="file" id="image-upload" accept="image/*" />
         <input
           type="text"
@@ -246,12 +234,15 @@
         />
         <button id="add-post">확인</button>
       </div>
-
       <div id="posts"></div>
     </div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
     <script>
-      // Firebase 초기화
+      // Firebase 설정
       const firebaseConfig = {
         apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
         authDomain: "diet-king-b567d.firebaseapp.com",
@@ -264,250 +255,371 @@
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
 
-      // 게시물을 추가하는 함수
-      function addPost(imageUrl, caption) {
-        const postsContainer = document.getElementById("posts");
-
-        const postDiv = document.createElement("div");
-        postDiv.className = "post";
-
-        if (imageUrl) {
-          const postImage = document.createElement("img");
-          postImage.src = imageUrl;
-          postDiv.appendChild(postImage);
-        }
-
-        const postCaption = document.createElement("p");
-        postCaption.textContent = caption;
-        postDiv.appendChild(postCaption);
-
-        // 날짜 추가
-        const postDate = document.createElement("p");
-        const currentDate = new Date().toLocaleDateString();
-        postDate.textContent = `Posted on: ${currentDate}`;
-        postDate.className = "post-date";
-        postDiv.appendChild(postDate);
-
-        const postActions = document.createElement("div");
-        postActions.className = "post-actions";
-
-        const likeButton = document.createElement("button");
-        likeButton.className = "like-button";
-        let liked = false;
-        likeButton.innerHTML = `♡ Like`;
-
-        likeButton.addEventListener("click", function () {
-          liked = !liked;
-          likeButton.innerHTML = liked ? `♥ Liked` : `♡ Like`;
-        });
-
-        const commentSection = document.createElement("div");
-        commentSection.className = "comments-section";
-
-        const commentTitle = document.createElement("h4");
-        commentTitle.textContent = "댓글";
-
-        const commentList = document.createElement("div");
-
-        const commentInputDiv = document.createElement("div");
-        commentInputDiv.className = "comment-input";
-
-        const commentInput = document.createElement("input");
-        commentInput.type = "text";
-        commentInput.placeholder = "댓글을 작성하세요.";
-
-        const commentButton = document.createElement("button");
-        commentButton.textContent = "작성";
-        commentButton.addEventListener("click", function () {
-          const commentText = commentInput.value;
-          if (commentText.trim() !== "") {
-            addComment(commentList, commentText);
-            commentInput.value = "";
-          }
-        });
-
-        commentInputDiv.appendChild(commentInput);
-        commentInputDiv.appendChild(commentButton);
-
-        commentSection.appendChild(commentTitle);
-        commentSection.appendChild(commentList);
-        commentSection.appendChild(commentInputDiv);
-
-        postActions.appendChild(likeButton);
-        postDiv.appendChild(postActions);
-        postDiv.appendChild(commentSection);
-
-        postsContainer.appendChild(postDiv);
-      }
-
-      function addComment(parentElement, commentText, isReply = false) {
-        const commentDiv = document.createElement("div");
-        commentDiv.className = "comment" + (isReply ? " reply" : "");
-
-        const commentContent = document.createElement("p");
-        commentContent.textContent = commentText;
-
-        const menuIcon = document.createElement("div");
-        menuIcon.className = "menu-icon";
-        menuIcon.innerHTML = "⋮";
-
-        const menuDropdown = document.createElement("div");
-        menuDropdown.className = "menu-dropdown";
-
-        const replyButton = document.createElement("button");
-        replyButton.textContent = "댓글 달기";
-        replyButton.addEventListener("click", function () {
-          toggleReplyInput(commentDiv);
-          closeDropdown(menuDropdown);
-        });
-
-        const editButton = document.createElement("button");
-        editButton.textContent = "수정";
-        editButton.addEventListener("click", function () {
-          editComment(commentDiv, commentContent);
-          closeDropdown(menuDropdown);
-        });
-
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "삭제";
-        deleteButton.addEventListener("click", function () {
-          commentDiv.remove();
-          closeDropdown(menuDropdown);
-        });
-
-        menuDropdown.appendChild(replyButton);
-        menuDropdown.appendChild(editButton);
-        menuDropdown.appendChild(deleteButton);
-
-        menuIcon.addEventListener("click", function (event) {
-          event.stopPropagation();
-          toggleDropdown(menuDropdown);
-        });
-
-        const commentWrapper = document.createElement("div");
-        commentWrapper.style.display = "flex";
-        commentWrapper.style.alignItems = "center";
-
-        commentWrapper.appendChild(commentContent);
-        commentWrapper.appendChild(menuIcon);
-        commentDiv.appendChild(commentWrapper);
-        commentDiv.appendChild(menuDropdown);
-
-        parentElement.appendChild(commentDiv);
-      }
-
-      function toggleDropdown(menuDropdown) {
-        if (menuDropdown.style.display === "block") {
-          menuDropdown.style.display = "none";
-        } else {
-          closeAllDropdowns(); // 다른 모든 드롭다운을 닫습니다.
-          menuDropdown.style.display = "block";
-        }
-      }
-
-      function closeDropdown(menuDropdown) {
-        menuDropdown.style.display = "none";
-      }
-
-      function closeAllDropdowns() {
-        const dropdowns = document.querySelectorAll(".menu-dropdown");
-        dropdowns.forEach(function (dropdown) {
-          dropdown.style.display = "none";
-        });
-      }
-
-      function toggleReplyInput(commentDiv) {
-        let replyInputDiv = commentDiv.querySelector(".reply-input");
-        if (!replyInputDiv) {
-          replyInputDiv = document.createElement("div");
-          replyInputDiv.className = "comment-input reply-input";
-
-          const replyInput = document.createElement("input");
-          replyInput.type = "text";
-          replyInput.placeholder = "대댓글을 작성하세요.";
-
-          const replyButton = document.createElement("button");
-          replyButton.textContent = "댓글 작성";
-
-          replyButton.addEventListener("click", function () {
-            const replyText = replyInput.value;
-            if (replyText.trim() !== "") {
-              addComment(commentDiv, replyText, true);
-              replyInputDiv.remove(); // 대댓글 작성 후 입력창을 제거합니다.
-            }
-          });
-
-          replyInputDiv.appendChild(replyInput);
-          replyInputDiv.appendChild(replyButton);
-          commentDiv.appendChild(replyInputDiv);
-        } else {
-          replyInputDiv.remove();
-        }
-      }
-
-      function editComment(commentDiv, commentContent) {
-        const originalText = commentContent.textContent;
-        const editInput = document.createElement("input");
-        editInput.type = "text";
-        editInput.value = originalText;
-        commentContent.replaceWith(editInput);
-
-        editInput.addEventListener("blur", function () {
-          commentContent.textContent = editInput.value;
-          editInput.replaceWith(commentContent);
-        });
-
-        editInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            commentContent.textContent = editInput.value;
-            editInput.replaceWith(commentContent);
-          }
-        });
-
-        editInput.focus();
-      }
-
-      document
-        .getElementById("search-button")
-        .addEventListener("click", function () {
-          const searchDate = document.getElementById("search-date").value;
-          filterPostsByDate(searchDate);
-        });
-
-      function filterPostsByDate(date) {
-        const posts = document.querySelectorAll(".post");
-        posts.forEach((post) => {
-          const postDate = post
-            .querySelector(".post-date")
-            .textContent.split(": ")[1];
-          post.style.display = postDate === date ? "block" : "none";
-        });
+      // URL에서 파라미터 추출 함수
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        const regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        const results = regex.exec(location.search);
+        return results === null
+          ? ""
+          : decodeURIComponent(results[1].replace(/\+/g, " "));
       }
 
       document.addEventListener("DOMContentLoaded", function () {
+        // URL에서 clientId와 trainerId 추출
+        const clientId = getUrlParameter("clientId");
+        const trainerId = getUrlParameter("trainerId");
+
         document
           .getElementById("add-post")
           .addEventListener("click", function () {
-            const fileInput = document.getElementById("image-upload");
-            const caption = document.getElementById("post-caption").value;
-            const file = fileInput.files[0];
+            const imageInput = document.getElementById("image-upload");
+            const captionInput = document.getElementById("post-caption");
 
-            if (file) {
+            if (imageInput.files && imageInput.files[0]) {
               const reader = new FileReader();
-              reader.onloadend = function () {
-                const imageUrl = reader.result;
-                addPost(imageUrl, caption);
+              reader.onload = function (e) {
+                const imageUrl = e.target.result;
+                addPost(imageUrl, captionInput.value);
               };
-              reader.readAsDataURL(file);
-            } else {
-              addPost("", caption);
+              reader.readAsDataURL(imageInput.files[0]);
             }
-
-            fileInput.value = "";
-            document.getElementById("post-caption").value = "";
           });
 
-        // 중복 이벤트 리스너 설정 제거
+        async function addPost(imageUrl, caption) {
+          try {
+            const postsRef = db.collection("posts");
+            const newPostRef = await postsRef.add({
+              imageUrl: imageUrl,
+              caption: caption,
+              timestamp: firebase.firestore.Timestamp.now(),
+            });
+
+            console.log("Post added with ID: ", newPostRef.id);
+            loadPosts(); // 새 게시물 추가 후 게시물 로드
+          } catch (error) {
+            console.error("Error adding post: ", error);
+          }
+        }
+
+        async function loadPosts() {
+          try {
+            const postsContainer = document.getElementById("posts");
+            postsContainer.innerHTML = ""; // 기존 게시물 삭제
+
+            const postsRef = db
+              .collection("posts")
+              .orderBy("timestamp", "desc");
+            const snapshot = await postsRef.get();
+
+            snapshot.forEach((doc) => {
+              const data = doc.data();
+              const postId = doc.id;
+              addPostToDOM(data.imageUrl, data.caption, postId);
+            });
+          } catch (error) {
+            console.error("Error loading posts: ", error);
+          }
+        }
+
+        function addPostToDOM(imageUrl, caption, postId) {
+          const postsContainer = document.getElementById("posts");
+
+          const postDiv = document.createElement("div");
+          postDiv.className = "post";
+
+          const postImage = document.createElement("img");
+          postImage.src = imageUrl;
+
+          const postCaption = document.createElement("p");
+          postCaption.textContent = caption;
+
+          const postActions = document.createElement("div");
+          postActions.className = "post-actions";
+
+          const likeButton = document.createElement("button");
+          likeButton.className = "like-button";
+          let liked = false;
+          likeButton.innerHTML = `♡ Like`;
+
+          likeButton.addEventListener("click", function () {
+            liked = !liked; // liked 상태를 반전시킵니다.
+            if (liked) {
+              likeButton.innerHTML = `♥ Liked`;
+            } else {
+              likeButton.innerHTML = `♡ Like`;
+            }
+          });
+
+          const commentSection = document.createElement("div");
+          commentSection.className = "comments-section";
+
+          const commentTitle = document.createElement("h4");
+          commentTitle.textContent = "댓글";
+
+          const commentList = document.createElement("div");
+
+          const commentInputDiv = document.createElement("div");
+          commentInputDiv.className = "comment-input";
+
+          const commentInput = document.createElement("input");
+          commentInput.type = "text";
+          commentInput.placeholder = "댓글을 작성하세요.";
+
+          const commentButton = document.createElement("button");
+          commentButton.textContent = "작성";
+          commentButton.addEventListener("click", function () {
+            const commentText = commentInput.value;
+            if (commentText.trim() !== "") {
+              addComment(commentList, commentText, false, postId);
+              commentInput.value = "";
+            }
+          });
+
+          commentInputDiv.appendChild(commentInput);
+          commentInputDiv.appendChild(commentButton);
+
+          commentSection.appendChild(commentTitle);
+          commentSection.appendChild(commentList);
+          commentSection.appendChild(commentInputDiv);
+
+          postActions.appendChild(likeButton);
+          postDiv.appendChild(postImage);
+          postDiv.appendChild(postCaption);
+          postDiv.appendChild(postActions);
+          postDiv.appendChild(commentSection);
+
+          postsContainer.appendChild(postDiv);
+
+          // Load comments for this post
+          loadComments(postId, commentList);
+        }
+
+        async function addComment(parentElement, commentText, isReply, postId) {
+          try {
+            const commentsRef = db
+              .collection("posts")
+              .doc(postId)
+              .collection("comments");
+            const docRef = await commentsRef.add({
+              text: commentText,
+              clientId: clientId,
+              timestamp: firebase.firestore.Timestamp.now(),
+              isReply: isReply,
+            });
+
+            console.log("Comment added with ID: ", docRef.id);
+            loadComments(postId, parentElement); // Reload comments after adding a new one
+          } catch (error) {
+            console.error("Error adding comment: ", error);
+          }
+        }
+
+        async function loadComments(postId, commentList) {
+          try {
+            commentList.innerHTML = ""; // Clear existing comments
+
+            const commentsRef = db
+              .collection("posts")
+              .doc(postId)
+              .collection("comments")
+              .orderBy("timestamp");
+            const snapshot = await commentsRef.get();
+
+            snapshot.forEach((doc) => {
+              const data = doc.data();
+              addCommentToDOM(
+                commentList,
+                data.text,
+                data.clientId,
+                data.isReply,
+                doc.id,
+                postId
+              );
+            });
+          } catch (error) {
+            console.error("Error loading comments: ", error);
+          }
+        }
+
+        function addCommentToDOM(
+          parentElement,
+          commentText,
+          clientId,
+          isReply,
+          commentId,
+          postId
+        ) {
+          const commentDiv = document.createElement("div");
+          commentDiv.className = "comment" + (isReply ? " reply" : "");
+
+          const commentContent = document.createElement("p");
+          commentContent.textContent = `${clientId}: ${commentText}`;
+
+          const menuIcon = document.createElement("div");
+          menuIcon.className = "menu-icon";
+          menuIcon.innerHTML = "⋮";
+
+          const menuDropdown = document.createElement("div");
+          menuDropdown.className = "menu-dropdown";
+
+          const replyButton = document.createElement("button");
+          replyButton.textContent = "댓글 달기";
+          replyButton.addEventListener("click", function () {
+            toggleReplyInput(commentDiv, postId);
+            closeDropdown(menuDropdown);
+          });
+
+          const editButton = document.createElement("button");
+          editButton.textContent = "수정";
+          editButton.addEventListener("click", function () {
+            editComment(commentDiv, commentContent, commentId, postId);
+            closeDropdown(menuDropdown);
+          });
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "삭제";
+          deleteButton.addEventListener("click", function () {
+            deleteComment(commentId, postId);
+            commentDiv.remove();
+            closeDropdown(menuDropdown);
+          });
+
+          menuDropdown.appendChild(replyButton);
+          menuDropdown.appendChild(editButton);
+          menuDropdown.appendChild(deleteButton);
+
+          menuIcon.addEventListener("click", function (event) {
+            event.stopPropagation(); // 클릭 이벤트가 부모로 전파되지 않도록 함
+            toggleDropdown(menuDropdown);
+          });
+
+          commentDiv.appendChild(commentContent);
+          commentDiv.appendChild(menuIcon); // 아이콘을 댓글 컨테이너에 추가
+          commentDiv.appendChild(menuDropdown);
+
+          parentElement.appendChild(commentDiv);
+        }
+
+        function toggleDropdown(menuDropdown) {
+          if (menuDropdown.style.display === "block") {
+            menuDropdown.style.display = "none";
+          } else {
+            closeAllDropdowns(); // 다른 모든 드롭다운을 닫습니다.
+            menuDropdown.style.display = "block";
+          }
+        }
+
+        function closeDropdown(menuDropdown) {
+          menuDropdown.style.display = "none";
+        }
+
+        function closeAllDropdowns() {
+          const dropdowns = document.querySelectorAll(".menu-dropdown");
+          dropdowns.forEach(function (dropdown) {
+            dropdown.style.display = "none";
+          });
+        }
+
+        function toggleReplyInput(commentDiv, postId) {
+          let replyInputDiv = commentDiv.querySelector(".reply-input");
+          if (!replyInputDiv) {
+            replyInputDiv = document.createElement("div");
+            replyInputDiv.className = "comment-input reply-input";
+
+            const replyInput = document.createElement("input");
+            replyInput.type = "text";
+            replyInput.placeholder = "대댓글을 작성하세요.";
+
+            const replyButton = document.createElement("button");
+            replyButton.textContent = "댓글 작성";
+
+            replyButton.addEventListener("click", function () {
+              const replyText = replyInput.value;
+              if (replyText.trim() !== "") {
+                addComment(commentDiv, replyText, true, postId);
+                replyInputDiv.remove(); // 대댓글 작성 후 입력창을 제거합니다.
+              }
+            });
+
+            replyInputDiv.appendChild(replyInput);
+            replyInputDiv.appendChild(replyButton);
+            commentDiv.appendChild(replyInputDiv);
+          } else {
+            replyInputDiv.remove();
+          }
+        }
+
+        function editComment(commentDiv, commentContent, commentId, postId) {
+          const originalText = commentContent.textContent.split(": ")[1];
+          const editInput = document.createElement("input");
+          editInput.type = "text";
+          editInput.value = originalText;
+          commentContent.replaceWith(editInput);
+
+          editInput.addEventListener("blur", function () {
+            updateComment(commentId, postId, editInput.value);
+            commentContent.textContent = `${clientId}: ${editInput.value}`;
+            editInput.replaceWith(commentContent);
+          });
+
+          editInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+              updateComment(commentId, postId, editInput.value);
+              commentContent.textContent = `${clientId}: ${editInput.value}`;
+              editInput.replaceWith(commentContent);
+            }
+          });
+
+          editInput.focus();
+        }
+
+        async function updateComment(commentId, postId, newText) {
+          try {
+            const commentRef = db
+              .collection("posts")
+              .doc(postId)
+              .collection("comments")
+              .doc(commentId);
+            await commentRef.update({
+              text: newText,
+            });
+
+            console.log("Comment updated");
+          } catch (error) {
+            console.error("Error updating comment: ", error);
+          }
+        }
+
+        async function deleteComment(commentId, postId) {
+          try {
+            const commentRef = db
+              .collection("posts")
+              .doc(postId)
+              .collection("comments")
+              .doc(commentId);
+            await commentRef.delete();
+
+            console.log("Comment deleted");
+          } catch (error) {
+            console.error("Error deleting comment: ", error);
+          }
+        }
+
+        // 클릭 시 드롭다운이 아닌 곳을 클릭하면 닫히도록
+        document.addEventListener("click", function (event) {
+          const target = event.target;
+          if (
+            !target.classList.contains("menu-icon") &&
+            !target.classList.contains("menu-dropdown") &&
+            !target.closest(".menu-dropdown")
+          ) {
+            closeAllDropdowns();
+          }
+        });
+
+        // 초기 게시물 로드
+        loadPosts();
       });
     </script>
   </body>
