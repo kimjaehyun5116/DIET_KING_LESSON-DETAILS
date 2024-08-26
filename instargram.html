@@ -3,75 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>식단 게시판</title>
+    <title>게시판</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-        background-color: #e9ebee;
+        background-color: #f0f0f0;
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        height: 100vh;
-        margin: 0;
-        padding-top: 50px;
+        padding: 20px;
       }
 
       .container {
         width: 100%;
-        max-width: 500px;
-        background: #ffffff;
+        max-width: 600px;
+        background-color: white;
         padding: 20px;
-        border: 1px solid #dddfe2;
         border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
 
       h1 {
-        text-align: center;
-        font-weight: normal;
-        color: #1c1e21;
-        font-size: 1.5rem;
+        font-size: 24px;
         margin-bottom: 20px;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-align: center;
       }
 
       #post-form {
-        display: flex;
-        flex-direction: column;
         margin-bottom: 20px;
       }
 
-      #image-upload {
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #ccd0d5;
-        border-radius: 6px;
-        background-color: #f5f6f7;
-      }
-
-      #post-caption {
-        margin-bottom: 10px;
-        padding: 12px;
-        border: 1px solid #ccd0d5;
-        border-radius: 6px;
-        background-color: #f5f6f7;
-        font-size: 14px;
-      }
-
-      #add-post {
+      #post-form input[type="text"] {
+        width: 100%;
         padding: 10px;
-        background-color: #1877f2;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+
+      #post-form input[type="file"] {
+        margin-bottom: 10px;
+      }
+
+      #post-form button {
+        padding: 10px 20px;
+        background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 6px;
+        border-radius: 4px;
         cursor: pointer;
-        font-weight: bold;
-        font-size: 14px;
-        text-align: center;
-      }
-
-      #add-post:hover {
-        background-color: #166fe5;
       }
 
       #posts {
@@ -79,167 +59,103 @@
       }
 
       .post {
-        background: #ffffff;
-        border: 1px solid #dddfe2;
+        background-color: #fff;
+        padding: 15px;
         border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        padding-bottom: 10px;
-        position: relative;
       }
 
       .post img {
-        width: 100%;
-        border-bottom: 1px solid #dddfe2;
-        border-radius: 8px 8px 0 0;
+        max-width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
       }
 
       .post p {
-        margin: 10px;
-        font-size: 14px;
-        color: #1c1e21;
-      }
-
-      .post-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10px;
-      }
-
-      .like-button {
-        background-color: transparent;
-        border: none;
-        color: #1877f2;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-      }
-
-      .like-button img {
-        width: 20px;
-        height: 20px;
-        margin-right: 5px;
-      }
-
-      .like-button:disabled {
-        color: #8d949e;
-        cursor: default;
-      }
-
-      .comments-section {
-        padding: 0 10px;
-      }
-
-      .comments-section h4 {
         margin: 10px 0;
-        font-size: 14px;
-        color: #1c1e21;
       }
 
-      .comment {
-        margin-bottom: 10px;
-        position: relative;
-        padding: 10px 50px 10px 10px;
-        background-color: #f5f6f7;
-        border-radius: 6px;
-      }
-
-      .reply {
-        margin-left: 20px;
-      }
-
-      .comment-input {
-        display: flex;
-        align-items: center;
+      .comment-section {
         margin-top: 10px;
       }
 
-      .comment-input input {
-        flex: 1;
+      .comment-section input[type="text"] {
+        width: 80%;
         padding: 8px;
-        border: 1px solid #ccd0d5;
-        border-radius: 6px;
-        background-color: #f5f6f7;
-        font-size: 14px;
-        margin-right: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        margin-right: 5px;
       }
 
-      .comment-input button {
+      .comment-section button {
         padding: 8px 12px;
-        background-color: #1877f2;
+        background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 6px;
+        border-radius: 4px;
         cursor: pointer;
-        font-weight: bold;
-        font-size: 14px;
       }
 
-      .comment-input button:hover {
-        background-color: #166fe5;
+      .comment {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        position: relative;
       }
 
-      .menu-icon {
+      .comment .menu {
         position: absolute;
-        top: 22px;
+        top: 10px;
+        right: 10px;
         cursor: pointer;
-        left: 60px;
       }
 
       .menu-dropdown {
         display: none;
         position: absolute;
-        top: 25px;
+        top: 30px;
         right: 10px;
         background-color: white;
-        border: 1px solid #dddfe2;
-        border-radius: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        z-index: 10;
-        width: 100px;
       }
 
       .menu-dropdown button {
-        width: 100%;
-        padding: 5px;
-        border: none;
+        padding: 5px 10px;
         background: none;
+        border: none;
+        width: 100%;
         text-align: left;
         cursor: pointer;
-        font-size: 14px;
-        border-bottom: 1px solid #dddfe2;
-      }
-
-      .menu-dropdown button:last-child {
-        border-bottom: none;
       }
 
       .menu-dropdown button:hover {
-        background-color: #f5f6f7;
+        background-color: #f0f0f0;
+      }
+
+      .reply {
+        margin-left: 20px;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>식단 게시판</h1>
+      <h1>게시판</h1>
       <div id="post-form">
         <input type="file" id="image-upload" accept="image/*" />
-        <input
-          type="text"
-          id="post-caption"
-          placeholder="내용을 입력해주세요."
-        />
-        <button id="add-post">확인</button>
+        <input type="text" id="post-caption" placeholder="내용을 입력하세요" />
+        <button id="add-post">작성</button>
       </div>
       <div id="posts"></div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
     <script>
       // Firebase 설정
@@ -254,77 +170,69 @@
       };
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
-
-      // URL에서 파라미터 추출 함수
-      function getUrlParameter(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        const regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-        const results = regex.exec(location.search);
-        return results === null
-          ? ""
-          : decodeURIComponent(results[1].replace(/\+/g, " "));
-      }
+      const storage = firebase.storage();
 
       document.addEventListener("DOMContentLoaded", function () {
-        // URL에서 clientId와 trainerId 추출
         const clientId = getUrlParameter("clientId");
         const trainerId = getUrlParameter("trainerId");
 
+        // 게시물 추가
         document
           .getElementById("add-post")
           .addEventListener("click", function () {
             const imageInput = document.getElementById("image-upload");
             const captionInput = document.getElementById("post-caption");
 
-            if (imageInput.files && imageInput.files[0]) {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                const imageUrl = e.target.result;
-                addPost(imageUrl, captionInput.value);
-              };
-              reader.readAsDataURL(imageInput.files[0]);
+            if (
+              imageInput.files.length > 0 &&
+              captionInput.value.trim() !== ""
+            ) {
+              const file = imageInput.files[0];
+              const storageRef = storage.ref().child(`images/${file.name}`);
+              const uploadTask = storageRef.put(file);
+
+              uploadTask.on(
+                "state_changed",
+                null,
+                function (error) {
+                  console.error("이미지 업로드 오류: ", error);
+                },
+                function () {
+                  uploadTask.snapshot.ref
+                    .getDownloadURL()
+                    .then(function (downloadURL) {
+                      addPost(downloadURL, captionInput.value);
+                    });
+                }
+              );
+            } else {
+              alert("이미지와 내용을 모두 입력하세요.");
             }
           });
 
-        async function addPost(imageUrl, caption) {
-          try {
-            const postsRef = db.collection("posts");
-            const newPostRef = await postsRef.add({
-              imageUrl: imageUrl,
-              caption: caption,
-              timestamp: firebase.firestore.Timestamp.now(),
+        function addPost(imageUrl, caption) {
+          const newPost = {
+            imageUrl,
+            caption,
+            clientId,
+            trainerId,
+            createdAt: new Date(),
+          };
+
+          db.collection("posts")
+            .add(newPost)
+            .then((docRef) => {
+              addPostToDOM(imageUrl, caption, docRef.id);
+              document.getElementById("post-caption").value = "";
+              document.getElementById("image-upload").value = "";
+            })
+            .catch((error) => {
+              console.error("게시물 추가 오류: ", error);
             });
-
-            console.log("Post added with ID: ", newPostRef.id);
-            loadPosts(); // 새 게시물 추가 후 게시물 로드
-          } catch (error) {
-            console.error("Error adding post: ", error);
-          }
-        }
-
-        async function loadPosts() {
-          try {
-            const postsContainer = document.getElementById("posts");
-            postsContainer.innerHTML = ""; // 기존 게시물 삭제
-
-            const postsRef = db
-              .collection("posts")
-              .orderBy("timestamp", "desc");
-            const snapshot = await postsRef.get();
-
-            snapshot.forEach((doc) => {
-              const data = doc.data();
-              const postId = doc.id;
-              addPostToDOM(data.imageUrl, data.caption, postId);
-            });
-          } catch (error) {
-            console.error("Error loading posts: ", error);
-          }
         }
 
         function addPostToDOM(imageUrl, caption, postId) {
           const postsContainer = document.getElementById("posts");
-
           const postDiv = document.createElement("div");
           postDiv.className = "post";
 
@@ -334,291 +242,207 @@
           const postCaption = document.createElement("p");
           postCaption.textContent = caption;
 
-          const postActions = document.createElement("div");
-          postActions.className = "post-actions";
-
-          const likeButton = document.createElement("button");
-          likeButton.className = "like-button";
-          let liked = false;
-          likeButton.innerHTML = `♡ Like`;
-
-          likeButton.addEventListener("click", function () {
-            liked = !liked; // liked 상태를 반전시킵니다.
-            if (liked) {
-              likeButton.innerHTML = `♥ Liked`;
-            } else {
-              likeButton.innerHTML = `♡ Like`;
-            }
-          });
-
           const commentSection = document.createElement("div");
-          commentSection.className = "comments-section";
-
-          const commentTitle = document.createElement("h4");
-          commentTitle.textContent = "댓글";
-
-          const commentList = document.createElement("div");
-
-          const commentInputDiv = document.createElement("div");
-          commentInputDiv.className = "comment-input";
+          commentSection.className = "comment-section";
+          commentSection.dataset.postId = postId;
 
           const commentInput = document.createElement("input");
           commentInput.type = "text";
-          commentInput.placeholder = "댓글을 작성하세요.";
+          commentInput.placeholder = "댓글을 작성하세요";
 
           const commentButton = document.createElement("button");
           commentButton.textContent = "작성";
+
           commentButton.addEventListener("click", function () {
             const commentText = commentInput.value;
             if (commentText.trim() !== "") {
-              addComment(commentList, commentText, false, postId);
+              addCommentToDB(postId, commentText);
               commentInput.value = "";
             }
           });
 
-          commentInputDiv.appendChild(commentInput);
-          commentInputDiv.appendChild(commentButton);
+          commentSection.appendChild(commentInput);
+          commentSection.appendChild(commentButton);
 
-          commentSection.appendChild(commentTitle);
-          commentSection.appendChild(commentList);
-          commentSection.appendChild(commentInputDiv);
-
-          postActions.appendChild(likeButton);
           postDiv.appendChild(postImage);
           postDiv.appendChild(postCaption);
-          postDiv.appendChild(postActions);
           postDiv.appendChild(commentSection);
-
           postsContainer.appendChild(postDiv);
 
-          // Load comments for this post
-          loadComments(postId, commentList);
+          loadComments(postId, commentSection);
         }
 
-        async function addComment(parentElement, commentText, isReply, postId) {
-          try {
-            const commentsRef = db
-              .collection("posts")
-              .doc(postId)
-              .collection("comments");
-            const docRef = await commentsRef.add({
-              text: commentText,
-              clientId: clientId,
-              timestamp: firebase.firestore.Timestamp.now(),
-              isReply: isReply,
-            });
+        function addCommentToDB(postId, text, parentId = null) {
+          const newComment = {
+            text,
+            postId,
+            parentId,
+            createdAt: new Date(),
+          };
 
-            console.log("Comment added with ID: ", docRef.id);
-            loadComments(postId, parentElement); // Reload comments after adding a new one
-          } catch (error) {
-            console.error("Error adding comment: ", error);
-          }
-        }
-
-        async function loadComments(postId, commentList) {
-          try {
-            commentList.innerHTML = ""; // Clear existing comments
-
-            const commentsRef = db
-              .collection("posts")
-              .doc(postId)
-              .collection("comments")
-              .orderBy("timestamp");
-            const snapshot = await commentsRef.get();
-
-            snapshot.forEach((doc) => {
-              const data = doc.data();
-              addCommentToDOM(
-                commentList,
-                data.text,
-                data.clientId,
-                data.isReply,
-                doc.id,
-                postId
+          db.collection("comments")
+            .add(newComment)
+            .then(() => {
+              loadComments(
+                postId,
+                document.querySelector(
+                  `.comment-section[data-post-id="${postId}"]`
+                )
               );
+            })
+            .catch((error) => {
+              console.error("댓글 추가 오류: ", error);
             });
-          } catch (error) {
-            console.error("Error loading comments: ", error);
-          }
         }
 
-        function addCommentToDOM(
-          parentElement,
-          commentText,
-          clientId,
+        function loadComments(postId, section) {
+          section
+            .querySelectorAll(".comment")
+            .forEach((comment) => comment.remove());
+
+          db.collection("comments")
+            .where("postId", "==", postId)
+            .orderBy("createdAt", "asc")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const comment = doc.data();
+                const isReply = !!comment.parentId;
+                addComment(
+                  section,
+                  comment.text,
+                  isReply,
+                  doc.id,
+                  comment.parentId
+                );
+              });
+            })
+            .catch((error) => {
+              console.error("댓글 로드 오류: ", error);
+            });
+        }
+
+        function addComment(
+          section,
+          text,
           isReply,
           commentId,
-          postId
+          parentId = null
         ) {
           const commentDiv = document.createElement("div");
-          commentDiv.className = "comment" + (isReply ? " reply" : "");
+          commentDiv.className = "comment";
+          if (isReply) {
+            commentDiv.classList.add("reply");
+          }
+          commentDiv.dataset.commentId = commentId;
 
-          const commentContent = document.createElement("p");
-          commentContent.textContent = `${clientId}: ${commentText}`;
+          const commentText = document.createElement("p");
+          commentText.textContent = text;
 
           const menuIcon = document.createElement("div");
-          menuIcon.className = "menu-icon";
-          menuIcon.innerHTML = "⋮";
+          menuIcon.className = "menu";
+          menuIcon.textContent = "⋮";
 
           const menuDropdown = document.createElement("div");
           menuDropdown.className = "menu-dropdown";
 
-          const replyButton = document.createElement("button");
-          replyButton.textContent = "댓글 달기";
-          replyButton.addEventListener("click", function () {
-            toggleReplyInput(commentDiv, postId);
-            closeDropdown(menuDropdown);
-          });
-
           const editButton = document.createElement("button");
           editButton.textContent = "수정";
           editButton.addEventListener("click", function () {
-            editComment(commentDiv, commentContent, commentId, postId);
-            closeDropdown(menuDropdown);
+            const newText = prompt("댓글 수정", text);
+            if (newText) {
+              updateComment(commentId, newText, section, isReply);
+            }
           });
 
           const deleteButton = document.createElement("button");
           deleteButton.textContent = "삭제";
           deleteButton.addEventListener("click", function () {
-            deleteComment(commentId, postId);
-            commentDiv.remove();
-            closeDropdown(menuDropdown);
+            deleteComment(commentId, section);
           });
 
-          menuDropdown.appendChild(replyButton);
-          menuDropdown.appendChild(editButton);
-          menuDropdown.appendChild(deleteButton);
-
-          menuIcon.addEventListener("click", function (event) {
-            event.stopPropagation(); // 클릭 이벤트가 부모로 전파되지 않도록 함
-            toggleDropdown(menuDropdown);
-          });
-
-          commentDiv.appendChild(commentContent);
-          commentDiv.appendChild(menuIcon); // 아이콘을 댓글 컨테이너에 추가
-          commentDiv.appendChild(menuDropdown);
-
-          parentElement.appendChild(commentDiv);
-        }
-
-        function toggleDropdown(menuDropdown) {
-          if (menuDropdown.style.display === "block") {
-            menuDropdown.style.display = "none";
-          } else {
-            closeAllDropdowns(); // 다른 모든 드롭다운을 닫습니다.
-            menuDropdown.style.display = "block";
-          }
-        }
-
-        function closeDropdown(menuDropdown) {
-          menuDropdown.style.display = "none";
-        }
-
-        function closeAllDropdowns() {
-          const dropdowns = document.querySelectorAll(".menu-dropdown");
-          dropdowns.forEach(function (dropdown) {
-            dropdown.style.display = "none";
-          });
-        }
-
-        function toggleReplyInput(commentDiv, postId) {
-          let replyInputDiv = commentDiv.querySelector(".reply-input");
-          if (!replyInputDiv) {
-            replyInputDiv = document.createElement("div");
-            replyInputDiv.className = "comment-input reply-input";
-
-            const replyInput = document.createElement("input");
-            replyInput.type = "text";
-            replyInput.placeholder = "대댓글을 작성하세요.";
-
-            const replyButton = document.createElement("button");
-            replyButton.textContent = "댓글 작성";
-
-            replyButton.addEventListener("click", function () {
-              const replyText = replyInput.value;
-              if (replyText.trim() !== "") {
-                addComment(commentDiv, replyText, true, postId);
-                replyInputDiv.remove(); // 대댓글 작성 후 입력창을 제거합니다.
-              }
-            });
-
-            replyInputDiv.appendChild(replyInput);
-            replyInputDiv.appendChild(replyButton);
-            commentDiv.appendChild(replyInputDiv);
-          } else {
-            replyInputDiv.remove();
-          }
-        }
-
-        function editComment(commentDiv, commentContent, commentId, postId) {
-          const originalText = commentContent.textContent.split(": ")[1];
-          const editInput = document.createElement("input");
-          editInput.type = "text";
-          editInput.value = originalText;
-          commentContent.replaceWith(editInput);
-
-          editInput.addEventListener("blur", function () {
-            updateComment(commentId, postId, editInput.value);
-            commentContent.textContent = `${clientId}: ${editInput.value}`;
-            editInput.replaceWith(commentContent);
-          });
-
-          editInput.addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-              updateComment(commentId, postId, editInput.value);
-              commentContent.textContent = `${clientId}: ${editInput.value}`;
-              editInput.replaceWith(commentContent);
+          const replyButton = document.createElement("button");
+          replyButton.textContent = "답글";
+          replyButton.addEventListener("click", function () {
+            const replyText = prompt("답글 입력");
+            if (replyText) {
+              addCommentToDB(section.dataset.postId, replyText, commentId);
             }
           });
 
-          editInput.focus();
+          menuDropdown.appendChild(editButton);
+          menuDropdown.appendChild(deleteButton);
+          menuDropdown.appendChild(replyButton);
+
+          menuIcon.appendChild(menuDropdown);
+          menuIcon.addEventListener("click", function () {
+            menuDropdown.style.display =
+              menuDropdown.style.display === "block" ? "none" : "block";
+          });
+
+          commentDiv.appendChild(commentText);
+          commentDiv.appendChild(menuIcon);
+          section.appendChild(commentDiv);
+
+          // 대댓글일 경우, 부모 댓글 바로 아래에 추가
+          if (parentId) {
+            const parentCommentDiv = section.querySelector(
+              `.comment[data-comment-id="${parentId}"]`
+            );
+            parentCommentDiv && parentCommentDiv.appendChild(commentDiv);
+          }
         }
 
-        async function updateComment(commentId, postId, newText) {
-          try {
-            const commentRef = db
-              .collection("posts")
-              .doc(postId)
-              .collection("comments")
-              .doc(commentId);
-            await commentRef.update({
+        function updateComment(commentId, newText, section, isReply) {
+          db.collection("comments")
+            .doc(commentId)
+            .update({
               text: newText,
+            })
+            .then(() => {
+              loadComments(section.dataset.postId, section);
+            })
+            .catch((error) => {
+              console.error("댓글 수정 오류: ", error);
             });
-
-            console.log("Comment updated");
-          } catch (error) {
-            console.error("Error updating comment: ", error);
-          }
         }
 
-        async function deleteComment(commentId, postId) {
-          try {
-            const commentRef = db
-              .collection("posts")
-              .doc(postId)
-              .collection("comments")
-              .doc(commentId);
-            await commentRef.delete();
-
-            console.log("Comment deleted");
-          } catch (error) {
-            console.error("Error deleting comment: ", error);
-          }
+        function deleteComment(commentId, section) {
+          db.collection("comments")
+            .doc(commentId)
+            .delete()
+            .then(() => {
+              loadComments(section.dataset.postId, section);
+            })
+            .catch((error) => {
+              console.error("댓글 삭제 오류: ", error);
+            });
         }
 
-        // 클릭 시 드롭다운이 아닌 곳을 클릭하면 닫히도록
-        document.addEventListener("click", function (event) {
-          const target = event.target;
-          if (
-            !target.classList.contains("menu-icon") &&
-            !target.classList.contains("menu-dropdown") &&
-            !target.closest(".menu-dropdown")
-          ) {
-            closeAllDropdowns();
-          }
-        });
+        function getUrlParameter(name) {
+          name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+          const regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+          const results = regex.exec(location.search);
+          return results === null
+            ? ""
+            : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
 
-        // 초기 게시물 로드
+        function loadPosts() {
+          db.collection("posts")
+            .orderBy("createdAt", "desc")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const post = doc.data();
+                addPostToDOM(post.imageUrl, post.caption, doc.id);
+              });
+            })
+            .catch((error) => {
+              console.error("게시물 로드 오류: ", error);
+            });
+        }
+
         loadPosts();
       });
     </script>

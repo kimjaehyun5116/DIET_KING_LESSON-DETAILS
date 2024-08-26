@@ -1,8 +1,22 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang="ko" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="MacJae" />
+    <meta name="keywords" content="다킹" />
+    <meta name="description" content="다킹" />
+
+    <!-- sns share -->
+    <meta property="og:url" content="https://diet-king-app.netlify.app/" />
+    <meta property="og:title" content="다킹" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/img/main.png" />
+    <meta property="og:description" content="다킹" />
+
+    <!--favicon-->
+    <link rel="shortcut icon" href="/img/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
     <title>Client List</title>
     <style>
       body {
@@ -275,7 +289,7 @@
       // 현재 URL에서 트레이너 ID 추출
       function getTrainerId() {
         const params = new URLSearchParams(window.location.search);
-        return params.get("id");
+        return params.get("trainerId");
       }
 
       // 페이지 로드 시 트레이너 ID 저장 및 고객 목록 가져오기
@@ -334,7 +348,7 @@
               li.addEventListener("click", () => {
                 const trainerId = getTrainerId(); // URL에서 trainerId를 가져옴
                 if (trainerId) {
-                  window.location.href = `client_lesson_log.html?clientId=${doc.id}&id=${trainerId}`;
+                  window.location.href = `client_lesson_log.html?clientId=${doc.id}&trainerId=${trainerId}`;
                 } else {
                   console.error("trainerId가 정의되지 않았습니다.");
                 }
@@ -350,9 +364,8 @@
             });
 
             const totalClients = querySnapshot.size; // 총 인원 계산
-            document.getElementById(
-              "totalClients"
-            ).innerText = `총 인원 : ${totalClients}명`;
+            document.getElementById("totalClients").innerText =
+              `총 인원 : ${totalClients}명`;
           })
           .catch((error) => {
             console.error("Error getting documents: ", error);
@@ -400,14 +413,14 @@
                   const listItem = document.createElement("li");
                   listItem.innerHTML = `
                             <span>${totalClients + 1}. ${client.name} - ${
-                    client.phone
-                  }</span>
+                              client.phone
+                            }</span>
                             <div class="btn-container">
                                 <button class="edit-btn" onclick="openEditModal('${
                                   doc.id
                                 }', '${client.name}', '${
-                    client.phone
-                  }')">수정</button>
+                                  client.phone
+                                }')">수정</button>
                                 <button class="delete-btn" onclick="deleteClient('${
                                   doc.id
                                 }')">삭제</button>
@@ -429,9 +442,8 @@
                 }
               });
 
-              document.getElementById(
-                "totalClients"
-              ).innerText = `총 인원 : ${totalClients}명`;
+              document.getElementById("totalClients").innerText =
+                `총 인원 : ${totalClients}명`;
             })
             .catch((error) => {
               console.error("고객을 검색하는 중 오류 발생:", error);
@@ -468,9 +480,8 @@
               clientList.innerHTML = ""; // 기존 목록 삭제
 
               const totalClients = querySnapshot.size; // 총 인원 계산
-              document.getElementById(
-                "totalClients"
-              ).innerText = `총 인원 : ${totalClients}명`;
+              document.getElementById("totalClients").innerText =
+                `총 인원 : ${totalClients}명`;
 
               querySnapshot.forEach((doc) => {
                 const data = doc.data();

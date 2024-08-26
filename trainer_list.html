@@ -1,8 +1,22 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang="ko" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="MacJae" />
+    <meta name="keywords" content="다킹" />
+    <meta name="description" content="다킹" />
+
+    <!-- sns share -->
+    <meta property="og:url" content="https://diet-king-app.netlify.app/" />
+    <meta property="og:title" content="다킹" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/img/main.png" />
+    <meta property="og:description" content="다킹" />
+
+    <!--favicon-->
+    <link rel="shortcut icon" href="/img/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
     <title>트레이너 목록</title>
     <style>
       body {
@@ -405,7 +419,7 @@
 
       // 고객 리스트 페이지로 이동하는 함수
       function goToTrainerPage(trainerId) {
-        window.location.href = `client_list.html?id=${trainerId}`; // 고객 리스트 페이지로 이동
+        window.location.href = `client_list.html?trainerId=${trainerId}`; // 고객 리스트 페이지로 이동
       }
 
       // 페이지 로드 시 트레이너 목록 가져오기
