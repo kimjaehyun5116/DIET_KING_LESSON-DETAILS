@@ -473,13 +473,16 @@
         .btn {
           width: 100%;
           max-width: none; /* 최대 너비 제한 제거 */
-          font-size: 12px; /* 글자 크기 줄이기 */
+          font-size: 10px; /* 글자 크기 줄이기 */
         }
 
         .container {
           width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
 
           padding: 10px; /* 패딩 줄이기 */
+        }
+        .btn1 {
+          font-size: 10px;
         }
       }
     </style>
@@ -540,11 +543,19 @@
           </li>
           <li>
             <button class="btn1" onclick="read_client_workout_log()">
-              회원운동일지
+              회원일지
             </button>
           </li>
           <li>
             <button class="btn1" onclick="progressrecord()">변화기록</button>
+          </li>
+          <li>
+            <button
+              class="btn1"
+              onclick="Check_attendance_records_only_trainer()"
+            >
+              출석기록
+            </button>
           </li>
         </ul>
       </nav>
@@ -601,7 +612,7 @@
         auth
           .signOut()
           .then(() => {
-            window.location.href = "index.html"; // 로그아웃 후 이동할 페이지
+            window.location.href = "client_login.html"; // 로그아웃 후 이동할 페이지
           })
           .catch((error) => {
             console.error("로그아웃 오류: ", error);
@@ -622,6 +633,16 @@
         if (trainerId) {
           // trainerId를 URL에 포함하여 페이지로 이동
           window.location.href = `client_list.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function Check_attendance_records_only_trainer() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
+        if (trainerId) {
+          // trainerId를 URL에 포함하여 페이지로 이동
+          window.location.href = `Check_attendance_records_only_trainer.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("trainerId가 정의되지 않았습니다.");
         }

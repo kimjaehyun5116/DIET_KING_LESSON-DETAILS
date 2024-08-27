@@ -502,18 +502,99 @@
       h4 {
         margin-bottom: -10px;
       }
-      @media (max-width: 480px) {
-        .youtube-search-btn {
-          width: 35%;
-          margin-left: 10%;
-          font-size: 12px;
-          padding: 5px 6px;
-        }
-        .navbar {
-          margin-top: 1000px;
-        }
+      @media (max-width: 600px) {
         .btn1 {
           padding: 0;
+        }
+        .navbar {
+          background-color: #333; /* 네비게이션 바 배경색 */
+          padding: 0; /* 패딩 제거 */
+          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list {
+          display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
+          justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
+          padding: 0;
+          margin: 0;
+          list-style: none; /* 리스트 스타일 제거 */
+        }
+
+        .navbar-list li {
+          flex: 1; /* 각 항목이 균등하게 공간을 차지 */
+        }
+
+        .navbar-list a {
+          display: block; /* 앵커 태그가 전체 공간을 차지하도록 설정 */
+          padding: 10px 15px; /* 여백 추가 */
+          color: white; /* 텍스트 색상 */
+          text-align: center; /* 텍스트 중앙 정렬 */
+          font-size: 14px; /* 폰트 크기 */
+          text-decoration: none; /* 밑줄 제거 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list a:hover {
+          background-color: #555; /* 마우스 오버 시 배경색 변경 */
+        }
+        .navbar ul li a {
+          font-size: 10px;
+        }
+        .navbar {
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+        }
+
+        .lesson-box {
+          display: flex; /* Flexbox 사용 */
+          flex-direction: row; /* 가로 방향으로 배치 */
+          align-items: center; /* 중앙 정렬 */
+          justify-content: space-between; /* 양 끝에 배치 */
+          padding: 10px; /* 패딩 줄이기 */
+          gap: 10px; /* 글자와 버튼 사이의 간격 */
+        }
+
+        .lesson-box h3,
+        .lesson-box h4 {
+          font-size: 11px; /* 글자 크기 줄이기 */
+          margin: 0; /* 여백 제거 */
+        }
+
+        .edit-delete-buttons {
+          display: flex; /* Flexbox 사용 */
+          flex-direction: row; /* 가로 방향으로 배치 */
+          justify-content: center; /* 중앙 정렬 */
+          margin-top: 5px; /* 간격 줄이기 */
+        }
+
+        .edit-btn,
+        .delete-btn {
+          padding: 5px 10px;
+          font-size: 10px; /* 버튼 글자 크기 줄이기 */
+        }
+
+        .form-group {
+          flex-direction: column; /* 세로로 배치 */
+          gap: 10px; /* 요소들 간의 간격 */
+        }
+
+        .form-group input {
+          width: 100%; /* 입력 필드가 전체 너비를 차지하도록 설정 */
+        }
+
+        .btn {
+          width: 100%;
+          max-width: none; /* 최대 너비 제한 제거 */
+          font-size: 10px; /* 글자 크기 줄이기 */
+        }
+
+        .container {
+          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
+
+          padding: 10px; /* 패딩 줄이기 */
+        }
+        .btn1 {
+          font-size: 10px;
         }
       }
     </style>
@@ -556,11 +637,16 @@
         </li>
         <li>
           <button class="btn1" onclick="read_client_workout_log()">
-            회원운동일지
+            회원일지
           </button>
         </li>
         <li>
           <button class="btn1" onclick="progressrecord()">변화기록</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="Check_attendance_records()">
+            출석 기록
+          </button>
         </li>
       </ul>
     </nav>
@@ -603,6 +689,16 @@
         if (trainerId) {
           // trainerId를 URL에 포함하여 페이지로 이동
           window.location.href = `client_list.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function Check_attendance_records() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
+        if (trainerId) {
+          // trainerId를 URL에 포함하여 페이지로 이동
+          window.location.href = `Check_attendance_records.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("trainerId가 정의되지 않았습니다.");
         }

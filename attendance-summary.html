@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>출석 체크 완료</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 400px;
+        width: 100%;
+      }
+      h1 {
+        color: #333333;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      .message {
+        font-size: 16px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>출석 체크 완료</h1>
+      <p class="message">출석 체크가 성공적으로 완료되었습니다!</p>
+    </div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const savedClientId = localStorage.getItem("clientId");
+
+        if (savedClientId) {
+          const firebaseConfig = {
+            apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+            authDomain: "diet-king-b567d.firebaseapp.com",
+            projectId: "diet-king-b567d",
+            storageBucket: "diet-king-b567d.appspot.com",
+            messagingSenderId: "11155339798",
+            appId: "1:11155339798:web:423854835f18e0b7c21337",
+            measurementId: "G-N9N8T32MVH",
+          };
+
+          // Initialize Firebase
+          const app = initializeApp(firebaseConfig);
+          const db = getFirestore(app);
+
+          try {
+            // 출석 체크를 수행할 문서 참조
+            const docRef = doc(db, "attendance", savedClientId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+              // 출석 체크 페이지로 리다이렉트
+              window.location.href = `https://diet-king-app.netlify.app/attendance_check.html?clientId=${savedClientId}`;
+            } else {
+              // 출석 정보가 없거나 클라이언트 아이디가 유효하지 않은 경우
+              window.location.href = `https://diet-king-app.netlify.app/client_login.html`;
+            }
+          } catch (error) {
+            console.error("출석 기록 확인 중 오류 발생: ", error);
+            window.location.href = `https://diet-king-app.netlify.app/client_login.html`;
+          }
+        } else {
+          // 로컬 스토리지에 클라이언트 아이디가 없는 경우
+          window.location.href = `https://diet-king-app.netlify.app/client_login.html`;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -385,7 +385,7 @@
       .btn1 {
         width: 100%;
         max-width: 500px;
-        padding: 15px;
+        padding: 4px;
         background-color: #343a40; /* navbar와 동일한 색상 */
         color: white;
         border: none;
@@ -565,6 +565,9 @@
             변화기록
           </button>
         </li>
+        <li>
+          <button class="btn1" onclick="attendance_check()">출석체크</button>
+        </li>
       </ul>
     </nav>
     <!-- Firebase SDK -->
@@ -603,6 +606,15 @@
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
           window.location.href = `read_only_progress-record.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function attendance_check() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `attendance_check.html?clientId=${clientId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }

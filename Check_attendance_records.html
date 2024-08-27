@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>출석 기록 확인</title>
+    <style>
+      /* 스타일 정의 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 90%;
+        width: 400px;
+        margin: 20px;
+      }
+
+      h1 {
+        color: #333333;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .attendance-list {
+        text-align: left;
+        font-size: 16px;
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f8f9fa;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .back-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .back-button:hover {
+        background-color: #0056b3;
+      }
+
+      .navbar {
+        width: 100%;
+        background-color: #343a40;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        height: 60px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin: 0 20px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 12px;
+        padding: 10px 20px;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar ul li a:hover {
+        background-color: #495057;
+        transform: translateY(-2px);
+      }
+
+      .btn1 {
+        width: 100%;
+        max-width: 500px;
+        padding: 4px;
+        background-color: #343a40; /* navbar와 동일한 색상 */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      /* 모바일 스타일 */
+      @media (max-width: 600px) {
+        .btn1 {
+          padding: 0;
+        }
+
+        .navbar {
+          background-color: #333; /* 네비게이션 바 배경색 */
+          padding: 0; /* 패딩 제거 */
+          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list {
+          display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
+          justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
+          padding: 0;
+          margin: 0;
+          list-style: none; /* 리스트 스타일 제거 */
+        }
+
+        .navbar-list li {
+          flex: 1; /* 각 항목이 균등하게 공간을 차지 */
+        }
+
+        .navbar-list a {
+          display: block; /* 앵커 태그가 전체 공간을 차지하도록 설정 */
+          padding: 10px 15px; /* 여백 추가 */
+          color: white; /* 텍스트 색상 */
+          text-align: center; /* 텍스트 중앙 정렬 */
+          font-size: 14px; /* 폰트 크기 */
+          text-decoration: none; /* 밑줄 제거 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list a:hover {
+          background-color: #555; /* 마우스 오버 시 배경색 변경 */
+        }
+
+        .navbar ul li a {
+          font-size: 10px;
+        }
+
+        .navbar {
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>출석 기록</h1>
+      <div id="attendance-list" class="attendance-list"></div>
+      <button onclick="goBack()" class="back-button">뒤로가기</button>
+    </div>
+    <nav class="navbar">
+      <ul>
+        <li>
+          <button class="btn1" onclick="read_only_client_lesson_log()">
+            수업목록
+          </button>
+        </li>
+        <li>
+          <button class="btn1" onclick="client_workout_log()">운동일지</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="read_only_progressrecord()">
+            변화기록
+          </button>
+        </li>
+        <li>
+          <button class="btn1" onclick="attendance_check()">출석체크</button>
+        </li>
+      </ul>
+    </nav>
+    <!-- Firebase 스크립트 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+      // URL에서 클라이언트 ID 가져오기
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientId = urlParams.get("clientId");
+
+      if (!clientId) {
+        alert("클라이언트 ID가 누락되었습니다. 올바른 URL로 접근해주세요.");
+        throw new Error("클라이언트 ID 누락");
+      }
+
+      // Firebase 초기화
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // 클라이언트 ID 가져오기
+      function getClientId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("clientId");
+      }
+
+      // 수정된 read_only_progressrecord 함수
+      function read_only_progressrecord() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `read_only_progress-record.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function attendance_check() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `attendance_check.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function read_only_client_lesson_log() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `read_only_client_lesson_log.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function client_workout_log() {
+        const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `client_workout_log.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      // 페이지 이동 함수
+      function navigateTo(page) {
+        const clientId = getClientId();
+        if (clientId) {
+          window.location.href = `${page}?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+
+      // 출석 기록을 불러오는 함수
+      function loadAttendanceRecords() {
+        // 클라이언트 이름을 불러오는 함수
+        function getClientName() {
+          return db
+            .collection("clients")
+            .doc(clientId)
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                return doc.data().name || "알 수 없는 이름"; // 이름이 없으면 "알 수 없는 이름" 반환
+              } else {
+                console.error("클라이언트 문서가 존재하지 않습니다.");
+                return "알 수 없는 이름";
+              }
+            })
+            .catch((error) => {
+              console.error(
+                "클라이언트 이름을 가져오는 중 오류가 발생했습니다: ",
+                error
+              );
+              return "알 수 없는 이름";
+            });
+        }
+
+        // 클라이언트 이름을 먼저 가져온 후, 출석 기록을 불러옴
+        getClientName().then((name) => {
+          const attendanceRef = db.collection("attendance").doc(clientId);
+          const attendanceRecordsRef =
+            attendanceRef.collection("attendanceRecords");
+
+          attendanceRef
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                const data = doc.data();
+                const count = data.count || 0;
+
+                attendanceRecordsRef
+                  .orderBy("checkInTime", "desc")
+                  .get()
+                  .then((querySnapshot) => {
+                    let html = `<h2>${name}님의 출석 기록</h2>
+                      <p><strong>총 출석 횟수:</strong> ${count}</p>`;
+                    if (!querySnapshot.empty) {
+                      querySnapshot.forEach((doc) => {
+                        const record = doc.data();
+                        const checkInTime = record.checkInTime
+                          ? record.checkInTime.toDate().toLocaleString()
+                          : "기록 없음";
+                        html += `<p>출석 시간: ${checkInTime}</p>`;
+                      });
+                    } else {
+                      html += "<p>출석 기록이 없습니다.</p>";
+                    }
+                    document.getElementById("attendance-list").innerHTML = html;
+                  })
+                  .catch((error) => {
+                    console.error(
+                      "출석 기록을 불러오는 중 오류가 발생했습니다: ",
+                      error
+                    );
+                    document.getElementById("attendance-list").innerHTML =
+                      "<p>출석 기록을 불러오는 중 오류가 발생했습니다.</p>";
+                  });
+              } else {
+                document.getElementById("attendance-list").innerHTML =
+                  "<p>출석 기록이 없습니다.</p>";
+              }
+            })
+            .catch((error) => {
+              console.error(
+                "회원 정보를 불러오는 중 오류가 발생했습니다: ",
+                error
+              );
+              document.getElementById("attendance-list").innerHTML =
+                "<p>회원 정보를 불러오는 중 오류가 발생했습니다.</p>";
+            });
+        });
+      }
+
+      // 뒤로가기 함수
+      function goBack() {
+        window.history.back();
+      }
+
+      // 페이지 로드 시 출석 기록을 불러옴
+      window.onload = loadAttendanceRecords;
+    </script>
+  </body>
+</html>

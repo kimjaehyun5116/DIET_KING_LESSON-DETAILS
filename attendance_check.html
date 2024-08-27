@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>출석 체크</title>
+    <style>
+      /* 기본 레이아웃 및 스타일링 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      h1 {
+        color: #333333;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .scan-button,
+      .view-records-button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 15px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 10px;
+      }
+
+      .scan-button:hover,
+      .view-records-button:hover {
+        background-color: #45a049;
+      }
+
+      .qr-reader {
+        margin: 20px 0;
+        border: 2px dashed #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #fafafa;
+      }
+
+      .results {
+        font-size: 16px;
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .navbar {
+        width: 100%;
+        background-color: #343a40;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        height: 60px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin: 0 20px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 12px;
+        padding: 10px 20px;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar ul li a:hover {
+        background-color: #495057;
+        transform: translateY(-2px);
+      }
+      .btn1 {
+        width: 100%;
+        max-width: 500px;
+        padding: 4px;
+        background-color: #343a40; /* navbar와 동일한 색상 */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+      /* 모바일 스타일 */
+      @media (max-width: 600px) {
+        .btn1 {
+          padding: 0;
+        }
+        .navbar {
+          background-color: #333; /* 네비게이션 바 배경색 */
+          padding: 0; /* 패딩 제거 */
+          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list {
+          display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
+          justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
+          padding: 0;
+          margin: 0;
+          list-style: none; /* 리스트 스타일 제거 */
+        }
+
+        .navbar-list li {
+          flex: 1; /* 각 항목이 균등하게 공간을 차지 */
+        }
+
+        .navbar-list a {
+          display: block; /* 앵커 태그가 전체 공간을 차지하도록 설정 */
+          padding: 10px 15px; /* 여백 추가 */
+          color: white; /* 텍스트 색상 */
+          text-align: center; /* 텍스트 중앙 정렬 */
+          font-size: 14px; /* 폰트 크기 */
+          text-decoration: none; /* 밑줄 제거 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list a:hover {
+          background-color: #555; /* 마우스 오버 시 배경색 변경 */
+        }
+        .navbar ul li a {
+          font-size: 10px;
+        }
+        .navbar {
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>출석 체크</h1>
+      <button id="start-scan" class="scan-button">출석 체크</button>
+      <button id="view-records" class="view-records-button">출석 기록</button>
+      <div id="qr-reader" class="qr-reader"></div>
+      <div id="qr-reader-results" class="results"></div>
+    </div>
+    <nav class="navbar">
+      <ul>
+        <li>
+          <button class="btn1" onclick="read_only_client_lesson_log()">
+            수업목록
+          </button>
+        </li>
+        <li>
+          <button class="btn1" onclick="client_workout_log()">운동일지</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="read_only_progressrecord()">
+            변화기록
+          </button>
+        </li>
+        <li>
+          <button class="btn1" onclick="attendance_check()">출석체크</button>
+        </li>
+      </ul>
+    </nav>
+    <!-- HTML5 QR Code 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+
+    <!-- Firebase 스크립트 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get("clientId");
+
+        if (!clientId) {
+          alert("클라이언트 ID가 누락되었습니다. 올바른 URL로 접근해주세요.");
+          throw new Error("클라이언트 ID 누락");
+        }
+
+        const validQrCode =
+          "https://diet-king-app.netlify.app/attendance-summary.html";
+        const qrReaderResults = document.getElementById("qr-reader-results");
+
+        firebase.initializeApp({
+          apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+          authDomain: "diet-king-b567d.firebaseapp.com",
+          projectId: "diet-king-b567d",
+          storageBucket: "diet-king-b567d.appspot.com",
+          messagingSenderId: "11155339798",
+          appId: "1:11155339798:web:423854835f18e0b7c21337",
+          measurementId: "G-N9N8T32MVH",
+        });
+        const db = firebase.firestore();
+
+        // 함수들을 글로벌 스코프로 노출
+        window.getClientId = function () {
+          return urlParams.get("clientId");
+        };
+
+        window.read_only_progressrecord = function () {
+          if (clientId) {
+            window.location.href = `read_only_progress-record.html?clientId=${clientId}`;
+          } else {
+            console.error("clientId가 정의되지 않았습니다.");
+          }
+        };
+
+        window.attendance_check = function () {
+          if (clientId) {
+            window.location.href = `attendance_check.html?clientId=${clientId}`;
+          } else {
+            console.error("clientId가 정의되지 않았습니다.");
+          }
+        };
+
+        window.read_only_client_lesson_log = function () {
+          if (clientId) {
+            window.location.href = `read_only_client_lesson_log.html?clientId=${clientId}`;
+          } else {
+            console.error("clientId가 정의되지 않았습니다.");
+          }
+        };
+
+        window.client_workout_log = function () {
+          if (clientId) {
+            window.location.href = `client_workout_log.html?clientId=${clientId}`;
+          } else {
+            console.error("clientId가 정의되지 않았습니다.");
+          }
+        };
+
+        // 출석 체크 함수
+        function checkIn() {
+          const attendanceRef = db.collection("attendance").doc(clientId);
+          const attendanceRecordsRef =
+            attendanceRef.collection("attendanceRecords");
+
+          attendanceRef
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                const data = doc.data();
+                attendanceRef
+                  .update({
+                    lastCheckIn:
+                      firebase.firestore.FieldValue.serverTimestamp(),
+                    count: data.count + 1,
+                  })
+                  .then(() => {
+                    attendanceRecordsRef
+                      .add({
+                        checkInTime:
+                          firebase.firestore.FieldValue.serverTimestamp(),
+                      })
+                      .then(() => {
+                        qrReaderResults.innerHTML = "출석 체크 완료!";
+                        qrReaderResults.classList.add("success");
+                        window.location.href = `Check_attendance_records.html?clientId=${clientId}`;
+                      })
+                      .catch((error) => {
+                        console.error("출석 기록 추가 중 오류 발생: ", error);
+                        qrReaderResults.innerHTML =
+                          "출석 기록 추가 중 오류가 발생했습니다.";
+                        qrReaderResults.classList.add("error");
+                      });
+                  });
+              } else {
+                attendanceRef
+                  .set({
+                    name: "고객 이름",
+                    lastCheckIn:
+                      firebase.firestore.FieldValue.serverTimestamp(),
+                    count: 1,
+                  })
+                  .then(() => {
+                    attendanceRecordsRef
+                      .add({
+                        checkInTime:
+                          firebase.firestore.FieldValue.serverTimestamp(),
+                      })
+                      .then(() => {
+                        qrReaderResults.innerHTML = "첫 출석 체크 완료!";
+                        qrReaderResults.classList.add("success");
+                        window.location.href = `Check_attendance_records.html?clientId=${clientId}`;
+                      })
+                      .catch((error) => {
+                        console.error("출석 기록 추가 중 오류 발생: ", error);
+                        qrReaderResults.innerHTML =
+                          "출석 기록 추가 중 오류가 발생했습니다.";
+                        qrReaderResults.classList.add("error");
+                      });
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error("출석 체크 중 오류 발생: ", error);
+              qrReaderResults.innerHTML = "출석 체크 중 오류가 발생했습니다.";
+              qrReaderResults.classList.add("error");
+            });
+        }
+
+        document.getElementById("start-scan").addEventListener("click", () => {
+          const html5QrCode = new Html5Qrcode("qr-reader");
+
+          html5QrCode
+            .start(
+              { facingMode: "environment" },
+              { fps: 10, qrbox: { width: 250, height: 250 } },
+              (qrCodeMessage) => {
+                if (qrCodeMessage === validQrCode) {
+                  checkIn();
+                  html5QrCode.stop();
+                } else {
+                  qrReaderResults.innerHTML = "잘못된 QR 코드입니다.";
+                  qrReaderResults.classList.add("error");
+                }
+              }
+            )
+            .catch((err) => {
+              console.error("QR 코드 스캔 오류:", err);
+              qrReaderResults.innerHTML = "QR 코드 스캔 실패: " + err;
+              qrReaderResults.classList.add("error");
+            });
+        });
+
+        document
+          .getElementById("view-records")
+          .addEventListener("click", () => {
+            window.location.href = `Check_attendance_records.html?clientId=${clientId}`;
+          });
+      });
+    </script>
+  </body>
+</html>
