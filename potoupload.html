@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시판</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px; /* 더 넓은 화면에서도 적절한 너비를 설정 */
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      #post-form {
+        margin-bottom: 20px;
+      }
+
+      #post-form input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      #post-form input[type="file"] {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      #post-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #post-form button:hover {
+        background-color: #0056b3;
+      }
+
+      #posts {
+        margin-top: 20px;
+      }
+
+      .post {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .post img,
+      .post video {
+        width: 100%;
+        height: auto;
+        max-width: 100%; /* 최대 너비를 부모 컨테이너에 맞춤 */
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+
+      .post p {
+        margin: 10px 0;
+        font-size: 16px; /* 모바일에서도 읽기 쉬운 폰트 사이즈 */
+      }
+
+      .comment-section {
+        margin-top: 10px;
+      }
+
+      .comment-section input[type="text"] {
+        width: calc(100% - 100px); /* 버튼과 공간을 고려한 너비 조정 */
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        margin-right: 5px;
+      }
+
+      .comment-section button {
+        width: 100px;
+        padding: 8px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .comment-section button:hover {
+        background-color: #0056b3;
+      }
+
+      .comment {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      .comment .menu {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
+
+      .menu-dropdown {
+        display: none;
+        position: absolute;
+        top: 30px;
+        right: 10px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+      }
+
+      .menu-dropdown button {
+        padding: 10px;
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        color: black;
+      }
+
+      .menu-dropdown button:hover {
+        background-color: #f0f0f0;
+      }
+
+      .reply {
+        margin-left: 20px;
+      }
+
+      .post-menu {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        z-index: 1000;
+      }
+
+      button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      /* 반응형 디자인 */
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        #post-form input[type="text"],
+        #post-form input[type="file"],
+        #post-form button {
+          font-size: 14px;
+        }
+
+        .post p {
+          font-size: 14px;
+        }
+
+        .comment-section input[type="text"] {
+          width: calc(100% - 80px); /* 버튼과 공간을 고려한 너비 조정 */
+        }
+
+        .comment-section button {
+          width: 80px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 10px;
+        }
+
+        #post-form input[type="text"],
+        #post-form input[type="file"],
+        #post-form button {
+          font-size: 12px;
+        }
+
+        .post p {
+          font-size: 12px;
+        }
+
+        .comment-section input[type="text"] {
+          width: calc(100% - 60px); /* 버튼과 공간을 고려한 너비 조정 */
+        }
+
+        .comment-section button {
+          width: 60px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>게시판</h1>
+      <div id="post-form">
+        <input type="file" id="media-upload" accept="image/*,video/*" />
+        <input type="text" id="post-caption" placeholder="내용을 입력하세요" />
+        <button id="add-post">작성</button>
+      </div>
+      <div id="posts"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
+        measurementId: "G-9NNCPJMT9M",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const storage = firebase.storage();
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const clientId = getUrlParameter("clientId");
+        const trainerId = getUrlParameter("trainerId");
+
+        document
+          .getElementById("add-post")
+          .addEventListener("click", function () {
+            const mediaInput = document.getElementById("media-upload");
+            const captionInput = document.getElementById("post-caption");
+
+            if (
+              mediaInput.files.length > 0 &&
+              captionInput.value.trim() !== ""
+            ) {
+              const file = mediaInput.files[0];
+              const storageRef = storage.ref(
+                `media/${Date.now()}-${file.name}`
+              );
+              const uploadTask = storageRef.put(file);
+
+              uploadTask.on(
+                "state_changed",
+                null,
+                function (error) {
+                  console.error("미디어 업로드 오류: ", error);
+                },
+                function () {
+                  uploadTask.snapshot.ref
+                    .getDownloadURL()
+                    .then(function (downloadURL) {
+                      addPost(downloadURL, captionInput.value, file.type);
+                    });
+                }
+              );
+            } else {
+              alert("미디어 파일과 내용을 모두 입력하세요.");
+            }
+          });
+
+        function addPost(mediaUrl, caption, mediaType) {
+          const newPost = {
+            mediaUrl,
+            caption,
+            mediaType,
+            clientId,
+            trainerId,
+            createdAt: new Date(),
+          };
+
+          db.collection("posts")
+            .add(newPost)
+            .then((docRef) => {
+              addPostToDOM(mediaUrl, caption, mediaType, docRef.id);
+              document.getElementById("post-caption").value = "";
+              document.getElementById("media-upload").value = "";
+            })
+            .catch((error) => {
+              console.error("게시물 추가 오류: ", error);
+            });
+        }
+
+        function addPostToDOM(mediaUrl, caption, mediaType, postId) {
+          const postsContainer = document.getElementById("posts");
+          const postDiv = document.createElement("div");
+          postDiv.className = "post";
+          postDiv.dataset.postId = postId;
+
+          mediaType = mediaType || "image/jpeg";
+          const isVideo = mediaType.startsWith("video/");
+          const isImage = mediaType.startsWith("image/");
+
+          let mediaElement;
+          if (isVideo) {
+            mediaElement = document.createElement("video");
+            mediaElement.src = mediaUrl;
+            mediaElement.controls = true;
+          } else if (isImage) {
+            mediaElement = document.createElement("img");
+            mediaElement.src = mediaUrl;
+          } else {
+            console.error("Unsupported media type:", mediaType);
+            return;
+          }
+
+          const postCaption = document.createElement("p");
+          postCaption.textContent = caption;
+
+          const postMenuIcon = document.createElement("div");
+          postMenuIcon.className = "post-menu";
+          postMenuIcon.textContent = "⋮";
+
+          const postMenuDropdown = document.createElement("div");
+          postMenuDropdown.className = "menu-dropdown";
+
+          const editPostButton = document.createElement("button");
+          editPostButton.textContent = "수정";
+          editPostButton.addEventListener("click", function () {
+            const newCaption = prompt("게시물 수정", caption);
+            if (newCaption) {
+              updatePost(postId, newCaption, mediaUrl, mediaType);
+            }
+          });
+
+          const deletePostButton = document.createElement("button");
+          deletePostButton.textContent = "삭제";
+          deletePostButton.addEventListener("click", function () {
+            deletePost(postId);
+          });
+
+          postMenuDropdown.appendChild(editPostButton);
+          postMenuDropdown.appendChild(deletePostButton);
+          postMenuIcon.appendChild(postMenuDropdown);
+
+          postMenuIcon.addEventListener("click", function () {
+            postMenuDropdown.style.display =
+              postMenuDropdown.style.display === "block" ? "none" : "block";
+          });
+
+          postDiv.appendChild(postMenuIcon);
+          postDiv.appendChild(mediaElement);
+          postDiv.appendChild(postCaption);
+
+          const commentSection = document.createElement("div");
+          commentSection.className = "comment-section";
+          commentSection.dataset.postId = postId;
+
+          const commentInput = document.createElement("input");
+          commentInput.type = "text";
+          commentInput.placeholder = "댓글을 입력하세요";
+
+          const commentButton = document.createElement("button");
+          commentButton.textContent = "댓글";
+
+          commentButton.addEventListener("click", function () {
+            const commentText = commentInput.value;
+            if (commentText.trim() !== "") {
+              addCommentToDB(postId, commentText);
+              commentInput.value = "";
+            }
+          });
+
+          commentSection.appendChild(commentInput);
+          commentSection.appendChild(commentButton);
+
+          postDiv.appendChild(commentSection);
+
+          postsContainer.insertBefore(postDiv, postsContainer.firstChild);
+
+          loadComments(postId, commentSection);
+        }
+
+        function updatePost(postId, newCaption, mediaUrl, mediaType) {
+          db.collection("posts")
+            .doc(postId)
+            .update({
+              caption: newCaption,
+            })
+            .then(() => {
+              const postDiv = document.querySelector(
+                `.post[data-post-id="${postId}"]`
+              );
+              const mediaElement = postDiv.querySelector("img, video");
+
+              if (mediaElement) {
+                mediaElement.remove();
+              }
+
+              const newMediaElement = mediaType.startsWith("video/")
+                ? document.createElement("video")
+                : document.createElement("img");
+
+              newMediaElement.src = mediaUrl;
+              if (mediaType.startsWith("video/")) {
+                newMediaElement.controls = true;
+              }
+
+              postDiv.insertBefore(newMediaElement, postDiv.querySelector("p"));
+              postDiv.querySelector("p").textContent = newCaption;
+            })
+            .catch((error) => {
+              console.error("게시물 수정 오류: ", error);
+            });
+        }
+
+        function deletePost(postId) {
+          db.collection("posts")
+            .doc(postId)
+            .delete()
+            .then(() => {
+              const postDiv = document.querySelector(
+                `.post[data-post-id="${postId}"]`
+              );
+              postDiv.remove();
+            })
+            .catch((error) => {
+              console.error("게시물 삭제 오류: ", error);
+            });
+        }
+
+        function addCommentToDB(postId, text, parentId = null) {
+          getUserName(trainerId, clientId).then((userName) => {
+            console.log(`User Name Retrieved: ${userName}`);
+
+            const newComment = {
+              text,
+              postId,
+              parentId,
+              createdAt: new Date(),
+              userName, // 가져온 이름을 userName에 할당
+            };
+
+            db.collection("comments")
+              .add(newComment)
+              .then(() => {
+                loadComments(
+                  postId,
+                  document.querySelector(
+                    `.comment-section[data-post-id="${postId}"]`
+                  )
+                );
+              })
+              .catch((error) => {
+                console.error("댓글 추가 오류: ", error);
+              });
+          });
+        }
+
+        function loadComments(postId, section) {
+          section
+            .querySelectorAll(".comment")
+            .forEach((comment) => comment.remove());
+
+          db.collection("comments")
+            .where("postId", "==", postId)
+            .orderBy("createdAt", "asc")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const comment = doc.data();
+                const isReply = !!comment.parentId;
+                addComment(
+                  section,
+                  comment.text,
+                  isReply,
+                  doc.id,
+                  comment.parentId,
+                  comment.userName
+                );
+              });
+            })
+            .catch((error) => {
+              console.error("댓글 로드 오류: ", error);
+            });
+        }
+
+        function addComment(
+          section,
+          text,
+          isReply,
+          commentId,
+          parentId = null,
+          userName
+        ) {
+          const commentDiv = document.createElement("div");
+          commentDiv.className = "comment";
+          if (isReply) {
+            commentDiv.classList.add("reply");
+          }
+          commentDiv.dataset.commentId = commentId;
+
+          const commentText = document.createElement("p");
+          commentText.textContent = `${userName}: ${text}`;
+
+          const menuIcon = document.createElement("div");
+          menuIcon.className = "menu";
+          menuIcon.textContent = "⋮";
+
+          const menuDropdown = document.createElement("div");
+          menuDropdown.className = "menu-dropdown";
+
+          const editButton = document.createElement("button");
+          editButton.textContent = "수정";
+          editButton.addEventListener("click", function () {
+            const newText = prompt("댓글 수정", text);
+            if (newText) {
+              updateComment(commentId, newText, section, isReply);
+            }
+          });
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "삭제";
+          deleteButton.addEventListener("click", function () {
+            deleteComment(commentId, section);
+          });
+
+          const replyButton = document.createElement("button");
+          replyButton.textContent = "답글";
+          replyButton.addEventListener("click", function () {
+            const replyText = prompt("답글 입력");
+            if (replyText) {
+              addCommentToDB(section.dataset.postId, replyText, commentId);
+            }
+          });
+
+          menuDropdown.appendChild(editButton);
+          menuDropdown.appendChild(deleteButton);
+          menuDropdown.appendChild(replyButton);
+
+          menuIcon.appendChild(menuDropdown);
+          menuIcon.addEventListener("click", function () {
+            menuDropdown.style.display =
+              menuDropdown.style.display === "block" ? "none" : "block";
+          });
+
+          commentDiv.appendChild(commentText);
+          commentDiv.appendChild(menuIcon);
+          section.appendChild(commentDiv);
+
+          if (parentId) {
+            const parentCommentDiv = section.querySelector(
+              `.comment[data-comment-id="${parentId}"]`
+            );
+            parentCommentDiv && parentCommentDiv.appendChild(commentDiv);
+          }
+        }
+
+        function updateComment(commentId, newText, section, isReply) {
+          db.collection("comments")
+            .doc(commentId)
+            .update({
+              text: newText,
+            })
+            .then(() => {
+              loadComments(section.dataset.postId, section);
+            })
+            .catch((error) => {
+              console.error("댓글 수정 오류: ", error);
+            });
+        }
+
+        function deleteComment(commentId, section) {
+          db.collection("comments")
+            .doc(commentId)
+            .delete()
+            .then(() => {
+              loadComments(section.dataset.postId, section);
+            })
+            .catch((error) => {
+              console.error("댓글 삭제 오류: ", error);
+            });
+        }
+
+        function getUrlParameter(name) {
+          const params = new URLSearchParams(window.location.search);
+          return params.get(name) || "";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const clientId = getUrlParameter("clientId") || "defaultClientId";
+          const trainerId = getUrlParameter("trainerId") || "defaultTrainerId";
+
+          // 이하 코드
+        });
+
+        function getUserName(trainerId, clientId) {
+          return new Promise((resolve, reject) => {
+            if (trainerId) {
+              console.log(`Fetching trainer name for ID: ${trainerId}`);
+              db.collection("users")
+                .doc(trainerId)
+                .get()
+                .then((doc) => {
+                  if (doc.exists) {
+                    const name = doc.data().name;
+                    console.log(`Trainer name found: ${name}`);
+                    resolve(name);
+                  } else {
+                    console.log("No trainer found, defaulting to '트레이너'");
+                    resolve("트레이너"); // 트레이너가 존재하지 않는 경우 기본값
+                  }
+                })
+                .catch((error) => {
+                  console.error("트레이너 정보 가져오기 오류: ", error);
+                  resolve("트레이너"); // 에러 발생 시 기본값
+                });
+            } else if (clientId) {
+              console.log(`Fetching client name for ID: ${clientId}`);
+              db.collection("users")
+                .doc(clientId)
+                .get()
+                .then((doc) => {
+                  if (doc.exists) {
+                    const name = doc.data().name;
+                    console.log(`Client name found: ${name}`);
+                    resolve(name);
+                  } else {
+                    console.log("No client found, defaulting to '클라이언트'");
+                    resolve("클라이언트"); // 클라이언트가 존재하지 않는 경우 기본값
+                  }
+                })
+                .catch((error) => {
+                  console.error("클라이언트 정보 가져오기 오류: ", error);
+                  resolve("클라이언트"); // 에러 발생 시 기본값
+                });
+            } else {
+              console.log(
+                "No trainerId or clientId provided, defaulting to '사용자'"
+              );
+              resolve("사용자"); // trainerId 또는 clientId가 없을 경우 기본값
+            }
+          });
+        }
+
+        function loadPosts() {
+          const postsContainer = document.getElementById("posts");
+
+          postsContainer.innerHTML = "";
+
+          db.collection("posts")
+            .where("clientId", "==", clientId)
+            .where("trainerId", "==", trainerId)
+            .orderBy("createdAt", "asc")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const post = doc.data();
+                addPostToDOM(
+                  post.mediaUrl,
+                  post.caption,
+                  post.mediaType || "image/jpeg",
+                  doc.id
+                );
+              });
+            })
+            .catch((error) => {
+              console.error("게시물 로드 오류: ", error);
+            });
+        }
+
+        loadPosts();
+      });
+    </script>
+  </body>
+</html>

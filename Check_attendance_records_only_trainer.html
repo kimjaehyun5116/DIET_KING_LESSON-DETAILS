@@ -7,25 +7,15 @@
     <style>
       /* 스타일 정의 */
       body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
         margin: 0;
         padding: 0;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         height: 100vh;
-      }
-
-      .container {
-        text-align: center;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 90%;
-        width: 400px;
-        margin: 20px;
+        overflow-y: scroll;
       }
 
       h1 {
@@ -62,6 +52,13 @@
         background-color: #0056b3;
       }
 
+      .top-navbar {
+        top: 0;
+      }
+
+      .bottom-navbar {
+        bottom: 0;
+      }
       .navbar {
         width: 100%;
         background-color: #343a40;
@@ -92,7 +89,7 @@
       .navbar ul li a {
         color: white;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         transition:
           background-color 0.3s ease,
@@ -104,6 +101,21 @@
       .navbar ul li a:hover {
         background-color: #495057;
         transform: translateY(-2px);
+      }
+
+      .container {
+        margin-top: 5%;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-height: 100%;
+        overflow-y: auto;
       }
 
       .btn1 {
@@ -133,11 +145,19 @@
           font-size: 10px;
         }
 
+        .bottom-navbar {
+          z-index: 10; /* 적절히 z-index를 설정 */
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+
         .navbar {
           background-color: #333; /* 네비게이션 바 배경색 */
           padding: 0; /* 패딩 제거 */
           overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
           white-space: nowrap; /* 줄바꿈 방지 */
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
         }
 
         .navbar-list {
@@ -169,30 +189,33 @@
         .navbar ul li a {
           font-size: 10px;
         }
-
-        .navbar {
-          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
-        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>출석 기록</h1>
-      <div id="attendance-list" class="attendance-list"></div>
-      <button onclick="goBack()" class="back-button">뒤로가기</button>
-    </div>
-    <nav class="navbar">
+    <nav class="navbar top-navbar">
       <ul>
-        <li>
-          <button class="btn1" onclick="client_list()">회원목록</button>
-        </li>
+        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
         <li>
           <button class="btn1" onclick="client_lesson_log()">수업목록</button>
         </li>
         <li>
           <button class="btn1" onclick="read_client_workout_log()">
             회원일지
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <div class="container">
+      <h1>출석 기록</h1>
+      <div id="attendance-list" class="attendance-list"></div>
+      <button onclick="goBack()" class="back-button">뒤로가기</button>
+    </div>
+    <nav class="navbar bottom-navbar">
+      <ul>
+        <li>
+          <button class="btn1" onclick="navigateToFeedback()">
+            피드백게시판
           </button>
         </li>
         <li>

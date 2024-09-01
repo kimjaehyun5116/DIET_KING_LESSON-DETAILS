@@ -1,68 +1,623 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!doctype html>
+<html lang="ko" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>사진 업로드 및 보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="MacJae" />
+    <meta name="keywords" content="다킹" />
+    <meta name="description" content="다킹" />
+
+    <!-- sns share -->
+    <meta property="og:url" content="https://diet-king-app.netlify.app/" />
+    <meta property="og:title" content="다킹" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/img/main.png" />
+    <meta property="og:description" content="다킹" />
+
+    <!--favicon-->
+    <link rel="shortcut icon" href="/img/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
+    <title>클라이언트 수업 로그</title>
     <style>
-      .photo-container {
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
         display: flex;
-        flex-wrap: wrap;
         justify-content: center;
-        margin: 20px;
+        align-items: flex-start;
+        height: 100vh;
+        overflow-y: scroll;
       }
-      .photo-item {
-        margin: 10px;
+
+      .logout-btn {
+        background-color: #ff5a5f;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 12px;
+        position: absolute;
+        top: 35px;
+        right: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
       }
-      .photo-item img {
-        width: 200px; /* 사진 크기를 동일하게 설정 */
-        height: 200px;
-        object-fit: cover; /* 사진을 잘라내서라도 지정된 크기에 맞춤 */
-        border: 1px solid #ddd;
-        border-radius: 8px;
+
+      .logout-btn:hover {
+        background-color: #ff3b3f;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
       }
-      .form-container {
-        margin: 20px;
+      .top-navbar {
+        top: 0;
+      }
+
+      .bottom-navbar {
+        bottom: 0;
+      }
+      .navbar {
+        width: 100%;
+        background-color: #343a40;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        height: 60px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin: 0 20px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar ul li a:hover {
+        background-color: #495057;
+        transform: translateY(-2px);
+      }
+
+      .container {
+        margin-top: 5%;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-height: 100%;
+        overflow-y: auto;
+      }
+      .lesson-list {
+        height: 40%;
+        overflow-y: scroll;
+        padding: 5px;
+        margin-bottom: 10px; /* 하단 여백 추가 */
+      }
+
+      .header {
+        position: relative;
         text-align: center;
+        margin-bottom: 20px;
       }
-      .form-container input[type="file"] {
-        margin: 10px 0;
+
+      h2 {
+        margin-top: 0;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 500px;
+        gap: 10px;
+      }
+
+      .form-group input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+
+      .lesson-box {
+        margin-top: 10px;
+        cursor: pointer;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition:
+          box-shadow 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .lesson-box:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .lesson-box h3,
+      .lesson-box h4 {
+        margin: 0;
+        color: #343a40;
+      }
+
+      .edit-delete-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .edit-btn,
+      .delete-btn {
+        padding: 8px 15px;
+        border-radius: 25px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .edit-btn {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .edit-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+      }
+
+      .delete-btn {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .delete-btn:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      .pagination button {
+        border: 1px solid #ddd;
+        background-color: #ffffff;
+        padding: 8px;
+        margin: 0 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 14px;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .pagination button:hover {
+        background-color: #007bff;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .pagination-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        font-size: 14px;
+      }
+
+      .pagination-info span {
+        margin: 0 10px;
+      }
+
+      .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      .search-container input {
+        width: 100%;
+        max-width: 600px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      /* 팝업 스타일 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        width: 80%;
+        max-width: 500px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .modal-header,
+      .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .modal-footer .btn {
+        width: auto;
+        margin-left: 10px;
+      }
+      /* 공통 스타일 */
+      .btn1 {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        background-color: #343a40; /* navbar와 동일한 색상 */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .btn1:hover {
+        background-color: #495057; /* navbar와 동일한 호버 색상 */
+        transform: translateY(-2px);
+      }
+
+      /* 버튼 비활성화 시 스타일 */
+      .btn1:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+
+      /* 추가 버튼 스타일 (삭제 및 수정) */
+      .btn1.delete {
+        background-color: #dc3545;
+      }
+
+      .btn1.delete:hover {
+        background-color: #c82333;
+      }
+
+      .btn1.edit {
+        background-color: #007bff;
+      }
+
+      .btn1.edit:hover {
+        background-color: #0056b3;
+      }
+      /* 모바일 스타일 */
+      @media (max-width: 600px) {
+        .container {
+          margin-top: 15%;
+          height: auto; /* height를 auto로 설정하여 컨텐츠에 따라 유동적으로 조정 */
+          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
+          padding: 10px;
+          padding-bottom: 60px; /* 바텀 네비게이션 바의 높이만큼 패딩 추가 */
+        }
+
+        .btn1 {
+          padding: 0;
+          font-size: 10px;
+        }
+
+        .bottom-navbar {
+          z-index: 10; /* 적절히 z-index를 설정 */
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+
+        .navbar {
+          background-color: #333; /* 네비게이션 바 배경색 */
+          padding: 0; /* 패딩 제거 */
+          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+        }
+
+        .navbar-list {
+          display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
+          justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
+          padding: 0;
+          margin: 0;
+          list-style: none; /* 리스트 스타일 제거 */
+        }
+
+        .navbar-list li {
+          flex: 1; /* 각 항목이 균등하게 공간을 차지 */
+        }
+
+        .navbar-list a {
+          display: block; /* 앵커 태그가 전체 공간을 차지하도록 설정 */
+          padding: 10px 15px; /* 여백 추가 */
+          color: white; /* 텍스트 색상 */
+          text-align: center; /* 텍스트 중앙 정렬 */
+          font-size: 14px; /* 폰트 크기 */
+          text-decoration: none; /* 밑줄 제거 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list a:hover {
+          background-color: #555; /* 마우스 오버 시 배경색 변경 */
+        }
+
+        .navbar ul li a {
+          font-size: 10px;
+        }
+
+        .lesson-box {
+          display: flex; /* Flexbox 사용 */
+          flex-direction: row; /* 가로 방향으로 배치 */
+          align-items: center; /* 중앙 정렬 */
+          justify-content: space-between; /* 양 끝에 배치 */
+          padding: 10px; /* 패딩 줄이기 */
+          gap: 10px; /* 글자와 버튼 사이의 간격 */
+        }
+
+        .lesson-box h3,
+        .lesson-box h4 {
+          font-size: 11px; /* 글자 크기 줄이기 */
+          margin: 0; /* 여백 제거 */
+        }
+
+        .edit-delete-buttons {
+          display: flex; /* Flexbox 사용 */
+          flex-direction: row; /* 가로 방향으로 배치 */
+          justify-content: center; /* 중앙 정렬 */
+          margin-top: 5px; /* 간격 줄이기 */
+        }
+
+        .edit-btn,
+        .delete-btn {
+          padding: 5px 10px;
+          font-size: 10px; /* 버튼 글자 크기 줄이기 */
+        }
+
+        .form-group {
+          flex-direction: column; /* 세로로 배치 */
+          gap: 10px; /* 요소들 간의 간격 */
+        }
+
+        .form-group input {
+          width: 100%; /* 입력 필드가 전체 너비를 차지하도록 설정 */
+        }
+
+        .btn {
+          width: 100%;
+          max-width: none; /* 최대 너비 제한 제거 */
+          font-size: 10px; /* 글자 크기 줄이기 */
+        }
       }
     </style>
   </head>
   <body>
-    <h1>사진 업로드 및 보기</h1>
+    <nav class="navbar top-navbar">
+      <ul>
+        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
+        <li>
+          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="read_client_workout_log()">
+            회원일지
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <div class="container">
+      <div class="header">
+        <h2 id="pageTitle">수업 목록</h2>
+        <button class="logout-btn" onclick="logout()">로그아웃</button>
+      </div>
 
-    <div class="form-container">
-      <input type="date" id="photoDate" placeholder="날짜" />
-      <input type="file" id="photoInput" accept="image/*" placeholder="사진" />
-      <button onclick="uploadPhoto()">사진 업로드</button>
-    </div>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="회차로 검색..."
+          oninput="searchLessons()"
+        />
+      </div>
 
-    <div id="photoList" class="photo-container">
-      <!-- 사진 항목이 여기에 동적으로 추가됩니다 -->
+      <div class="lesson-list" id="lessonContainer"></div>
+      <div class="pagination">
+        <button
+          class="pagination"
+          id="prevPage"
+          onclick="changePage(currentPage - 1)"
+        >
+          ◀ 이전
+        </button>
+        <span id="pageInfo">페이지 정보 로딩 중...</span>
+        <button
+          class="pagination"
+          id="nextPage"
+          onclick="changePage(currentPage + 1)"
+        >
+          다음 ▶
+        </button>
+      </div>
+
+      <div class="form-container">
+        <div class="form-group">
+          <label for="lessonDate"></label>
+          <input type="datetime-local" id="lessonDate" />
+          <label for="lessonCycle"></label>
+          <input type="text" id="lessonCycle" placeholder="회차를 입력하세요" />
+        </div>
+
+        <button class="btn" id="addLessonBtn">수업 추가</button>
+        <button class="btn" onclick="goBack()">뒤로 가기</button>
+      </div>
+
+      <nav class="navbar bottom-navbar">
+        <ul>
+          <li>
+            <button class="btn1" onclick="navigateToFeedback()">
+              피드백게시판
+            </button>
+          </li>
+          <li>
+            <button class="btn1" onclick="progressrecord()">변화기록</button>
+          </li>
+          <li>
+            <button
+              class="btn1"
+              onclick="Check_attendance_records_only_trainer()"
+            >
+              출석기록
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- 수정 팝업 -->
+      <div class="modal" id="editModal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>수업 수정</h2>
+            <button class="close" onclick="closeEditModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="editLessonDate">수업 날짜</label>
+              <input type="date" id="editLessonDate" />
+            </div>
+            <div class="form-group">
+              <label for="editLessonCycle">회차</label>
+              <input
+                type="text"
+                id="editLessonCycle"
+                placeholder="회차를 입력하세요"
+              />
+            </div>
+            <input type="hidden" id="editLessonId" />
+          </div>
+          <div class="modal-footer">
+            <button class="btn" id="saveEditBtn">수업 저장</button>
+            <button class="btn" onclick="closeEditModal()">취소</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
-      // Firebase SDK 모듈 가져오기
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-      import {
-        getStorage,
-        ref,
-        uploadBytes,
-        getDownloadURL,
-      } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
-      import {
-        getFirestore,
-        collection,
-        doc,
-        addDoc,
-        getDocs,
-        query,
-      } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
-      // Firebase 프로젝트 구성
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script>
+      // Firebase 설정
       const firebaseConfig = {
         apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
         authDomain: "diet-king-b567d.firebaseapp.com",
@@ -72,103 +627,295 @@
         appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
         measurementId: "G-9NNCPJMT9M",
       };
-
-      // Firebase 초기화
-      const app = initializeApp(firebaseConfig);
-      const storage = getStorage(app);
-      const firestore = getFirestore(app);
-
-      // URL에서 클라이언트 ID 추출
-      function getClientIdFromURL() {
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+      function logout() {
+        auth
+          .signOut()
+          .then(() => {
+            window.location.href = "client_login.html"; // 로그아웃 후 이동할 페이지
+          })
+          .catch((error) => {
+            console.error("로그아웃 오류: ", error);
+          });
+      }
+      function getTrainerId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("trainerId");
+      }
+      // 클라이언트 ID 가져오기
+      function getClientId() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("clientId");
       }
-
-      // 사진 업로드
-      async function uploadPhoto() {
-        const clientId = getClientIdFromURL();
-        if (!clientId)
-          return alert("클라이언트 ID가 URL에 포함되어 있지 않습니다.");
-
-        const photoDate = document.getElementById("photoDate").value;
-        const photoFile = document.getElementById("photoInput").files[0];
-        if (!photoDate || !photoFile) return alert("날짜와 사진을 입력하세요.");
-
-        try {
-          const photoUrl = await uploadSinglePhoto(
-            clientId,
-            photoFile,
-            photoDate
-          );
-
-          // Firestore에 사진 URL을 추가로 저장
-          await addDoc(
-            collection(firestore, "photoRecords", clientId, "photos"),
-            {
-              date: photoDate,
-              photoUrl: photoUrl,
+      function client_list() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
+        if (trainerId) {
+          // trainerId를 URL에 포함하여 페이지로 이동
+          window.location.href = `client_list.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function Check_attendance_records_only_trainer() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
+        if (trainerId) {
+          // trainerId를 URL에 포함하여 페이지로 이동
+          window.location.href = `Check_attendance_records_only_trainer.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function navigateToFeedback() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `potoupload.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      // 수정된 progressrecord 함수
+      function progressrecord() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `progress-record.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function client_lesson_log() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `client_lesson_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function read_client_workout_log() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `read_client_workout_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      // 클라이언트 이름 설정
+      function getClientName(clientId) {
+        db.collection("clients")
+          .doc(clientId)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const clientName = doc.data().name;
+              document.getElementById("pageTitle").innerText =
+                `${clientName}의 수업 목록`;
+            } else {
+              console.error("Client not found.");
             }
-          );
-          alert("사진 업로드 완료!");
-
-          // 파일 선택 초기화
-          document.getElementById("photoInput").value = "";
-
-          // 사진 리스트 업데이트
-          displayPhotos();
-        } catch (error) {
-          console.error("사진 업로드 중 오류 발생:", error);
-        }
-      }
-
-      // 사진 업로드 함수 (타임스탬프를 사용해 파일명 고유화)
-      async function uploadSinglePhoto(clientId, file, date) {
-        const timestamp = new Date().getTime();
-        const storageRef = ref(
-          storage,
-          `photos/${clientId}/${date}_${timestamp}.jpg`
-        );
-        await uploadBytes(storageRef, file);
-        return getDownloadURL(storageRef);
-      }
-
-      // 모든 사진 표시
-      async function displayPhotos() {
-        const clientId = getClientIdFromURL();
-        if (!clientId)
-          return console.error("클라이언트 ID가 URL에 포함되어 있지 않습니다.");
-
-        const photoList = document.getElementById("photoList");
-        photoList.innerHTML = ""; // 기존 항목 초기화
-
-        try {
-          const q = query(
-            collection(firestore, "photoRecords", clientId, "photos")
-          );
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => {
-            const photoData = doc.data();
-            const container = document.createElement("div");
-            container.className = "photo-item";
-            container.innerHTML = `
-                        <div>
-                            <h3>${photoData.date} 사진</h3>
-                            <img src="${photoData.photoUrl}" alt="사진">
-                        </div>
-                    `;
-            photoList.appendChild(container);
+          })
+          .catch((error) => {
+            console.error("Error getting client name: ", error);
           });
-        } catch (error) {
-          console.error("사진 로드 중 오류 발생:", error);
+      }
+
+      let lessons = [];
+      let filteredLessons = [];
+      let currentPage = 1;
+      const itemsPerPage = 10;
+
+      // 수업 목록 가져오기
+      function getLessons() {
+        const clientId = getClientId();
+        if (clientId) {
+          // 고객 이름 설정
+          getClientName(clientId);
+
+          db.collection("lessons")
+            .where("clientId", "==", clientId)
+            .get()
+            .then((querySnapshot) => {
+              lessons = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }));
+              filteredLessons = lessons; // 초기 필터링
+              updateLessonList();
+            });
         }
       }
 
-      // 함수들을 전역 스코프에 할당
-      window.uploadPhoto = uploadPhoto;
-      window.displayPhotos = displayPhotos;
+      // 수업 목록 업데이트
+      function updateLessonList() {
+        const lessonContainer = document.getElementById("lessonContainer");
+        const pageInfo = document.getElementById("pageInfo");
 
-      // 페이지 로드 시 사진 표시
-      window.onload = displayPhotos;
+        if (filteredLessons.length > 0) {
+          // 날짜 오름차순 정렬
+          filteredLessons.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+          const totalPages = Math.ceil(filteredLessons.length / itemsPerPage);
+          const startIndex = (currentPage - 1) * itemsPerPage;
+          const endIndex = Math.min(
+            startIndex + itemsPerPage,
+            filteredLessons.length
+          );
+          const paginatedLessons = filteredLessons.slice(startIndex, endIndex);
+
+          lessonContainer.innerHTML = "";
+          paginatedLessons.forEach((lesson) => {
+            const lessonHTML = `
+             <div class="lesson-box" onclick="viewLessonDetails('${lesson.id}')">
+               <h3>${lesson.date}</h3>
+               <h4>${lesson.cycle}회차</h4>
+               <div class="edit-delete-buttons">
+                 <button class="edit-btn" onclick="startEditLesson('${lesson.id}', '${lesson.date}', '${lesson.cycle}'); event.stopPropagation();">수정</button>
+                 <button class="delete-btn" onclick="deleteLesson('${lesson.id}'); event.stopPropagation();">삭제</button>
+               </div>
+             </div>
+           `;
+            lessonContainer.innerHTML += lessonHTML;
+          });
+
+          // 페이지 정보 업데이트
+          pageInfo.innerText = `Page ${currentPage} of ${totalPages}`;
+
+          // 이전 및 다음 버튼 활성화
+          document.getElementById("prevPage").disabled = currentPage === 1;
+          document.getElementById("nextPage").disabled =
+            currentPage === totalPages;
+        }
+      }
+
+      // 수업 상세 페이지로 이동
+      function viewLessonDetails(lessonId) {
+        const clientId = getClientId();
+        const trainerId = getTrainerId();
+        window.location.href = `lesson-details.html?clientId=${clientId}&lessonId=${lessonId}&trainerId=${trainerId}`;
+      }
+
+      // 페이지 변경
+      function changePage(page) {
+        currentPage = Math.max(
+          1,
+          Math.min(page, Math.ceil(filteredLessons.length / itemsPerPage))
+        );
+        updateLessonList();
+      }
+
+      // 수업 추가 버튼 클릭 시 호출
+      document.getElementById("addLessonBtn").addEventListener("click", () => {
+        const date = document.getElementById("lessonDate").value;
+        const cycle = document.getElementById("lessonCycle").value;
+        const clientId = getClientId();
+
+        if (date && cycle && clientId) {
+          db.collection("lessons")
+            .add({
+              date,
+              cycle,
+              clientId,
+            })
+            .then(() => {
+              getLessons(); // 추가 후 목록 갱신
+              // 입력 필드 초기화
+              document.getElementById("lessonDate").value = "";
+              document.getElementById("lessonCycle").value = "";
+            })
+            .catch((error) => {
+              console.error("Error adding lesson: ", error);
+            });
+        } else {
+          alert("모든 필드를 입력해주세요.");
+        }
+      });
+
+      // 수업 삭제
+      function deleteLesson(lessonId) {
+        if (confirm("정말로 이 수업을 삭제하시겠습니까?")) {
+          db.collection("lessons")
+            .doc(lessonId)
+            .delete()
+            .then(() => {
+              getLessons(); // 삭제 후 목록 갱신
+            })
+            .catch((error) => {
+              console.error("Error deleting lesson: ", error);
+            });
+        }
+      }
+
+      // 수업 수정 시작
+      function startEditLesson(id, date, cycle) {
+        document.getElementById("editLessonDate").value = date;
+        document.getElementById("editLessonCycle").value = cycle;
+        document.getElementById("editLessonId").value = id;
+        document.getElementById("editModal").style.display = "flex";
+      }
+
+      // 수업 수정 저장
+      document.getElementById("saveEditBtn").addEventListener("click", () => {
+        const id = document.getElementById("editLessonId").value;
+        const date = document.getElementById("editLessonDate").value;
+        const cycle = document.getElementById("editLessonCycle").value;
+
+        if (date && cycle) {
+          db.collection("lessons")
+            .doc(id)
+            .update({
+              date,
+              cycle,
+            })
+            .then(() => {
+              closeEditModal();
+              getLessons(); // 수정 후 목록 갱신
+            })
+            .catch((error) => {
+              console.error("Error updating lesson: ", error);
+            });
+        } else {
+          alert("모든 필드를 입력해주세요.");
+        }
+      });
+
+      // 수정 팝업 닫기
+      function closeEditModal() {
+        document.getElementById("editModal").style.display = "none";
+      }
+
+      // 뒤로 가기 버튼 클릭 시 호출
+      function goBack() {
+        window.history.back();
+      }
+
+      // 수업 회차로 검색
+      function searchLessons() {
+        const searchValue = document.getElementById("searchInput").value.trim();
+        if (searchValue) {
+          filteredLessons = lessons.filter((lesson) =>
+            lesson.cycle.includes(searchValue)
+          );
+        } else {
+          filteredLessons = lessons;
+        }
+        currentPage = 1; // 검색 후 첫 페이지로 리셋
+        updateLessonList();
+      }
+
+      // 페이지 로드 시 수업 목록 가져오기
+      window.onload = () => {
+        getLessons();
+      };
     </script>
   </body>
 </html>

@@ -51,7 +51,13 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         transform: translateY(-2px);
       }
+      .top-navbar {
+        top: 0;
+      }
 
+      .bottom-navbar {
+        bottom: 0;
+      }
       .navbar {
         width: 100%;
         background-color: #343a40;
@@ -97,6 +103,7 @@
       }
 
       .container {
+        margin-top: 5%;
         background-color: #ffffff;
         padding: 30px;
         border-radius: 10px;
@@ -105,7 +112,7 @@
         max-width: 800px;
         display: flex;
         flex-direction: column;
-        height: 90vh;
+        height: 100vh;
         max-height: 100%;
         overflow-y: auto;
       }
@@ -391,14 +398,32 @@
       }
       /* 모바일 스타일 */
       @media (max-width: 600px) {
+        .container {
+          margin-top: 15%;
+          height: auto; /* height를 auto로 설정하여 컨텐츠에 따라 유동적으로 조정 */
+          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
+          padding: 10px;
+          padding-bottom: 60px; /* 바텀 네비게이션 바의 높이만큼 패딩 추가 */
+        }
+
         .btn1 {
           padding: 0;
+          font-size: 10px;
         }
+
+        .bottom-navbar {
+          z-index: 10; /* 적절히 z-index를 설정 */
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+
         .navbar {
           background-color: #333; /* 네비게이션 바 배경색 */
           padding: 0; /* 패딩 제거 */
           overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
           white-space: nowrap; /* 줄바꿈 방지 */
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
         }
 
         .navbar-list {
@@ -426,11 +451,9 @@
         .navbar-list a:hover {
           background-color: #555; /* 마우스 오버 시 배경색 변경 */
         }
+
         .navbar ul li a {
           font-size: 10px;
-        }
-        .navbar {
-          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
         }
 
         .lesson-box {
@@ -475,19 +498,23 @@
           max-width: none; /* 최대 너비 제한 제거 */
           font-size: 10px; /* 글자 크기 줄이기 */
         }
-
-        .container {
-          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
-
-          padding: 10px; /* 패딩 줄이기 */
-        }
-        .btn1 {
-          font-size: 10px;
-        }
       }
     </style>
   </head>
   <body>
+    <nav class="navbar top-navbar">
+      <ul>
+        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
+        <li>
+          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="read_client_workout_log()">
+            회원일지
+          </button>
+        </li>
+      </ul>
+    </nav>
     <div class="container">
       <div class="header">
         <h2 id="pageTitle">수업 목록</h2>
@@ -533,17 +560,12 @@
         <button class="btn" id="addLessonBtn">수업 추가</button>
         <button class="btn" onclick="goBack()">뒤로 가기</button>
       </div>
-      <nav class="navbar">
+
+      <nav class="navbar bottom-navbar">
         <ul>
           <li>
-            <button class="btn1" onclick="client_list()">회원목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="client_lesson_log()">수업목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="read_client_workout_log()">
-              회원일지
+            <button class="btn1" onclick="navigateToFeedback()">
+              피드백게시판
             </button>
           </li>
           <li>
@@ -645,6 +667,16 @@
           window.location.href = `Check_attendance_records_only_trainer.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function navigateToFeedback() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `potoupload.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
         }
       }
       // 수정된 progressrecord 함수

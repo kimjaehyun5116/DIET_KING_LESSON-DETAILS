@@ -52,6 +52,13 @@
         transform: translateY(-2px);
       }
 
+      .top-navbar {
+        top: 0;
+      }
+
+      .bottom-navbar {
+        bottom: 0;
+      }
       .navbar {
         width: 100%;
         background-color: #343a40;
@@ -82,7 +89,7 @@
       .navbar ul li a {
         color: white;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         transition:
           background-color 0.3s ease,
@@ -97,6 +104,7 @@
       }
 
       .container {
+        margin-top: 5%;
         background-color: #ffffff;
         padding: 30px;
         border-radius: 10px;
@@ -105,7 +113,7 @@
         max-width: 800px;
         display: flex;
         flex-direction: column;
-        height: 90vh;
+        height: 100vh;
         max-height: 100%;
         overflow-y: auto;
       }
@@ -397,21 +405,34 @@
       }
       /* 모바일 스타일 */
       @media (max-width: 600px) {
+        .container {
+          margin-top: 15%;
+          height: auto; /* height를 auto로 설정하여 컨텐츠에 따라 유동적으로 조정 */
+          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
+          padding: 10px;
+          padding-bottom: 60px; /* 바텀 네비게이션 바의 높이만큼 패딩 추가 */
+        }
+
         .btn1 {
           padding: 0;
+          font-size: 10px;
         }
+
+        .bottom-navbar {
+          z-index: 10; /* 적절히 z-index를 설정 */
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+
         .navbar {
           background-color: #333; /* 네비게이션 바 배경색 */
           padding: 0; /* 패딩 제거 */
           overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
           white-space: nowrap; /* 줄바꿈 방지 */
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
         }
-        .logout-btn {
-          padding: 5px 10px;
-          font-size: 12px;
-          top: 35px;
-          right: 25px;
-        }
+
         .navbar-list {
           display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
           justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
@@ -429,7 +450,7 @@
           padding: 10px 15px; /* 여백 추가 */
           color: white; /* 텍스트 색상 */
           text-align: center; /* 텍스트 중앙 정렬 */
-          font-size: 12px; /* 폰트 크기 */
+          font-size: 14px; /* 폰트 크기 */
           text-decoration: none; /* 밑줄 제거 */
           white-space: nowrap; /* 줄바꿈 방지 */
         }
@@ -437,11 +458,9 @@
         .navbar-list a:hover {
           background-color: #555; /* 마우스 오버 시 배경색 변경 */
         }
+
         .navbar ul li a {
-          font-size: 12px;
-        }
-        .navbar {
-          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+          font-size: 10px;
         }
 
         .lesson-box {
@@ -449,13 +468,13 @@
           flex-direction: row; /* 가로 방향으로 배치 */
           align-items: center; /* 중앙 정렬 */
           justify-content: space-between; /* 양 끝에 배치 */
-          padding: 12px; /* 패딩 줄이기 */
+          padding: 10px; /* 패딩 줄이기 */
           gap: 10px; /* 글자와 버튼 사이의 간격 */
         }
 
         .lesson-box h3,
         .lesson-box h4 {
-          font-size: 12px; /* 글자 크기 줄이기 */
+          font-size: 11px; /* 글자 크기 줄이기 */
           margin: 0; /* 여백 제거 */
         }
 
@@ -469,7 +488,7 @@
         .edit-btn,
         .delete-btn {
           padding: 5px 10px;
-          font-size: 12px; /* 버튼 글자 크기 줄이기 */
+          font-size: 10px; /* 버튼 글자 크기 줄이기 */
         }
 
         .form-group {
@@ -486,19 +505,23 @@
           max-width: none; /* 최대 너비 제한 제거 */
           font-size: 10px; /* 글자 크기 줄이기 */
         }
-
-        .container {
-          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
-
-          padding: 10px; /* 패딩 줄이기 */
-        }
-        .btn1 {
-          font-size: 10px;
-        }
       }
     </style>
   </head>
   <body>
+    <nav class="navbar top-navbar">
+      <ul>
+        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
+        <li>
+          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="read_client_workout_log()">
+            회원일지
+          </button>
+        </li>
+      </ul>
+    </nav>
     <div class="container">
       <div class="header">
         <h2 id="pageTitle">운동 일지</h2>
@@ -544,17 +567,11 @@
         <button class="btn" id="addLessonBtn">운동 추가</button>
         <button class="btn" onclick="goBack()">뒤로 가기</button>
       </div>
-      <nav class="navbar">
+      <nav class="navbar bottom-navbar">
         <ul>
           <li>
-            <button class="btn1" onclick="client_list()">회원목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="client_lesson_log()">수업목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="read_client_workout_log()">
-              회원일지
+            <button class="btn1" onclick="navigateToFeedback()">
+              피드백게시판
             </button>
           </li>
           <li>

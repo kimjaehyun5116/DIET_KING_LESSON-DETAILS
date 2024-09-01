@@ -75,6 +75,13 @@
       .chart-container {
         margin: 20px 0;
       }
+      .top-navbar {
+        top: 0;
+      }
+
+      .bottom-navbar {
+        bottom: 0;
+      }
       .navbar {
         width: 100%;
         background-color: #343a40;
@@ -105,7 +112,7 @@
       .navbar ul li a {
         color: white;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         transition:
           background-color 0.3s ease,
@@ -117,6 +124,21 @@
       .navbar ul li a:hover {
         background-color: #495057;
         transform: translateY(-2px);
+      }
+
+      .container {
+        margin-top: 5%;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-height: 100%;
+        overflow-y: auto;
       }
       /* 기록 목록 기본 스타일 */
       .form-group ul {
@@ -378,18 +400,28 @@
         .btn1 {
           padding: 0;
         }
-        .navbar {
-          background-color: #333; /* 네비게이션 바 배경색 */
-          padding: 0; /* 패딩 제거 */
-          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
-          white-space: nowrap; /* 줄바꿈 방지 */
-        }
+
         .logout-btn {
           padding: 5px 10px;
           font-size: 12px;
           top: 35px;
           right: 25px;
         }
+        .bottom-navbar {
+          z-index: 10; /* 적절히 z-index를 설정 */
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+        }
+
+        .navbar {
+          background-color: #333; /* 네비게이션 바 배경색 */
+          padding: 0; /* 패딩 제거 */
+          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+        }
+
         .navbar-list {
           display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
           justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
@@ -407,7 +439,7 @@
           padding: 10px 15px; /* 여백 추가 */
           color: white; /* 텍스트 색상 */
           text-align: center; /* 텍스트 중앙 정렬 */
-          font-size: 12px; /* 폰트 크기 */
+          font-size: 14px; /* 폰트 크기 */
           text-decoration: none; /* 밑줄 제거 */
           white-space: nowrap; /* 줄바꿈 방지 */
         }
@@ -415,11 +447,9 @@
         .navbar-list a:hover {
           background-color: #555; /* 마우스 오버 시 배경색 변경 */
         }
+
         .navbar ul li a {
-          font-size: 12px;
-        }
-        .navbar {
-          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+          font-size: 10px;
         }
 
         .lesson-box {
@@ -477,18 +507,25 @@
     </style>
   </head>
   <body>
+    <nav class="navbar top-navbar">
+      <ul>
+        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
+        <li>
+          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="read_client_workout_log()">
+            회원일지
+          </button>
+        </li>
+      </ul>
+    </nav>
     <div class="container">
-      <nav class="navbar">
+      <nav class="navbar bottom-navbar">
         <ul>
           <li>
-            <button class="btn1" onclick="client_list()">회원목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="client_lesson_log()">수업목록</button>
-          </li>
-          <li>
-            <button class="btn1" onclick="read_client_workout_log()">
-              회원일지
+            <button class="btn1" onclick="navigateToFeedback()">
+              피드백게시판
             </button>
           </li>
           <li>
@@ -499,7 +536,7 @@
               class="btn1"
               onclick="Check_attendance_records_only_trainer()"
             >
-              출석 기록
+              출석기록
             </button>
           </li>
         </ul>
