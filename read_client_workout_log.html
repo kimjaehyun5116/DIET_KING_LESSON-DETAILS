@@ -36,12 +36,12 @@
         color: white;
         border: none;
         border-radius: 25px;
-        padding: 10px 20px;
+        padding: 5px 10px;
         cursor: pointer;
         font-size: 12px;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 35px;
+        right: 25px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
       }
@@ -672,6 +672,16 @@
           window.location.href = `Check_attendance_records_only_trainer.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function navigateToFeedback() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `potoupload.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
         }
       }
       // 수정된 progressrecord 함수

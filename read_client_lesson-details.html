@@ -29,22 +29,28 @@
         justify-content: center;
         align-items: flex-start;
         height: 100vh;
-        overflow: hidden;
+        overflow: scroll;
+      }
+      .top-navbar {
+        top: 0;
+      }
+
+      .bottom-navbar {
+        bottom: 0;
       }
       .container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 100px;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         width: 90%;
-        max-width: 1000px;
-        margin-top: 20px;
+        max-width: 800px;
         display: flex;
         flex-direction: column;
         height: 90vh;
         max-height: 100%;
-        overflow: auto;
-        position: relative; /* 추가된 부분 */
+        overflow-y: auto;
       }
 
       .logout-btn {
@@ -52,19 +58,24 @@
         color: white;
         border: none;
         border-radius: 25px;
-        padding: 10px 20px;
+        padding: 5px 10px;
         cursor: pointer;
         font-size: 12px;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 35px;
+        right: 25px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
+        margin-top: 40px;
       }
+
       .logout-btn:hover {
-        background-color: #c82333;
+        background-color: #ff3b3f;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
       }
       .header {
+        position: relative;
         text-align: center;
         margin-bottom: 20px;
       }
@@ -235,7 +246,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 11px;
         text-align: center;
         margin-top: 0px;
       }
@@ -566,6 +577,18 @@
     </style>
   </head>
   <body>
+    <nav class="navbar top-navbar">
+      <ul>
+        <li>
+          <button class="btn1" onclick="read_only_client_lesson_log()">
+            수업목록
+          </button>
+        </li>
+        <li>
+          <button class="btn1" onclick="client_workout_log()">운동일지</button>
+        </li>
+      </ul>
+    </nav>
     <div class="container">
       <div class="header">
         <h1 id="clientName">운동 일지</h1>
@@ -592,18 +615,17 @@
       <button class="btn" onclick="goBack()">뒤로 가기</button>
       <button class="btn" id="viewReadOnlyBtn">공유하기 페이지로 이동</button>
     </div>
-    <nav class="navbar">
+    <nav class="navbar bottom-navbar">
       <ul>
         <li>
-          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
-        </li>
-        <li>
-          <button class="btn1" onclick="read_client_workout_log()">
-            회원운동일지
+          <button class="btn1" onclick="navigateToFeedback()">
+            피드백게시판
           </button>
         </li>
         <li>
-          <button class="btn1" onclick="progressrecord()">변화기록</button>
+          <button class="btn1" onclick="read_only_progressrecord()">
+            변화기록
+          </button>
         </li>
         <li>
           <button class="btn1" onclick="attendance_check()">출석체크</button>
@@ -634,6 +656,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("clientId");
       }
+      function getTrainerId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("trainerId");
+      }
 
       // 운동 ID 가져오기
       function getLessonId() {
@@ -643,36 +669,50 @@
       // 수정된 progressrecord 함수
       function progressrecord() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        const trainerId = getTrainerId();
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `progress-record.html?clientId=${clientId}`;
+          window.location.href = `progress-record.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
       function client_lesson_log() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        const trainerId = getTrainerId();
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `client_lesson_log.html?clientId=${clientId}`;
+          window.location.href = `client_lesson_log.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
       function attendance_check() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        const trainerId = getTrainerId();
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `attendance_check.html?clientId=${clientId}`;
+          window.location.href = `attendance_check.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
       function read_client_workout_log() {
         const clientId = getClientId(); // 현재 URL에서 clientId를 가져옴
+        const trainerId = getTrainerId();
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
-          window.location.href = `read_client_workout_log.html?clientId=${clientId}`;
+          window.location.href = `read_client_workout_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function navigateToFeedback() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `potoupload.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }

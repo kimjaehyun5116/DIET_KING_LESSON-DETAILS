@@ -1006,6 +1006,16 @@
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
+      function navigateToFeedback() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `potoupload.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
       // 인바디 기록과 삼대운동 기록을 화면에 표시하는 함수
       // URL에서 클라이언트 ID를 가져오는 함수
       function getClientIdFromURL() {
