@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+
+      // Storage 참조 생성
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child("img/159.gif");
+
+      // 이미지 다운로드 URL 가져오기
+      imageRef
+        .getDownloadURL()
+        .then((url) => {
+          // 이미지 src 속성 설정
+          document.getElementById("firebase-image").src = url;
+        })
+        .catch((error) => {
+          console.error("Error getting download URL:", error);
+        });
+    </script>
+    <title>다킹</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: black;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        table-layout: fixed; /* 테이블의 칸 크기를 고정 */
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        width: 33.33%; /* 각 칸의 너비를 균등하게 설정 */
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      h1 {
+        text-align: center;
+      }
+      .resize-img {
+        border-radius: 50px;
+        width: 30%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fex2.png?alt=media&token=e41b0af0-1875-48e8-8585-41477a1cf531"
+              alt="등 이미지"
+              class="resize-img"
+            />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a
+              href="/training/cable straight arm pulldown.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F181.gif?alt=media&token=b4ec7891-92bc-4628-a12b-2911a6669e12"
+                alt="암 풀 다운"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />암 풀 다운<br />
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/cable seated row neutral grip.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F182.gif?alt=media&token=0f8d0a23-ffaf-4647-ae53-c504727e277b"
+                alt="시티드 로우 뉴트럴 그립"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 로우 뉴트럴 그립
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/cable seated wide grip row.html.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F184.gif?alt=media&token=3e95535b-a44e-4af5-ad6c-a3da77ca3ad8"
+                alt="시티드 와이드그립 로우"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 와이드그립 로우
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/cable seated underhand row.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F185.gif?alt=media&token=cd1c13f5-2ff6-4414-a70a-ecdc2d60d59f"
+                alt="시티드 언더그립 로우"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 언더그립 로우
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/cable seated row neutral grip.html.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F186.gif?alt=media&token=6b3413db-cf5b-4433-8f84-d6da01911a83"
+                alt="시티드 뉴트럴그립 로우"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 뉴트럴그립 로우
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/cable straight arm pulldown.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F190.gif?alt=media&token=2b8ef7c4-095d-4e0f-92a1-8053e4993534"
+                alt="케이블 스트레이트 암풀다운"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />스트레이트 암풀다운
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

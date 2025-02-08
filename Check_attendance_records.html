@@ -1,8 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="MacJae" />
+    <meta name="keywords" content="다킹" />
+    <meta name="description" content="다킹" />
+
+    <!-- sns share -->
+    <meta property="og:url" content="https://diet-king-app.netlify.app/" />
+    <meta property="og:title" content="다킹" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/img/main.png" />
+    <meta property="og:description" content="다킹" />
+
+    <!--favicon-->
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
     <title>출석 기록 확인</title>
     <style>
       /* 스타일 정의 */
@@ -69,6 +94,7 @@
       }
 
       .container {
+        margin-top: 10%;
         margin-top: 100px;
         background-color: #ffffff;
         padding: 30px;
@@ -238,6 +264,9 @@
         <li>
           <button class="btn1" onclick="client_workout_log()">운동일지</button>
         </li>
+        <!-- <li>
+          <button class="btn1" onclick="calendar()">캘린더</button>
+        </li> -->
       </ul>
     </nav>
     <div class="container">
@@ -248,18 +277,13 @@
     <nav class="navbar bottom-navbar">
       <ul>
         <li>
-          <button class="btn1" onclick="navigateToFeedback()">
-            피드백게시판
-          </button>
-        </li>
-        <li>
           <button class="btn1" onclick="read_only_progressrecord()">
             변화기록
           </button>
         </li>
-        <li>
+        <!-- <li>
           <button class="btn1" onclick="attendance_check()">출석체크</button>
-        </li>
+        </li> -->
       </ul>
     </nav>
     <!-- Firebase 스크립트 -->
@@ -354,6 +378,16 @@
         const trainerId = getTrainerId();
         if (clientId) {
           window.location.href = `${page}?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function calendar() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `calendar.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }

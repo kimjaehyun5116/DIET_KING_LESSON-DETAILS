@@ -15,8 +15,23 @@
     <meta property="og:description" content="다킹" />
 
     <!--favicon-->
-    <link rel="shortcut icon" href="/img/favicon.ico" />
-    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
     <title>변화 기록</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
@@ -25,7 +40,7 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
+        background-color: #121212; /* 전체 배경 어두운 테마 */
         margin: 0;
         padding: 0;
         display: flex;
@@ -33,7 +48,7 @@
         align-items: flex-start;
         height: 100vh;
         overflow: hidden;
-        color: #333;
+        color: #ffffff;
         overflow-y: scroll;
       }
       .top-navbar {
@@ -44,10 +59,14 @@
         bottom: 0;
       }
       .container {
+        margin-top: 10%;
         flex: 1;
         width: 1200px;
         margin: auto;
         padding: 20px;
+        border-radius: 15px;
+        background-color: #444242; /* 컨테이너 카드 스타일 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 부드러운 그림자 */
       }
       .form-group {
         /* margin-bottom: 5px; */
@@ -71,8 +90,8 @@
         border-radius: 25px;
         cursor: pointer;
         text-align: center;
-        font-size: 12px;
-        font-weight: 600;
+        font-size: 16px;
+        font-weight: bold;
         margin-top: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
@@ -92,30 +111,30 @@
         bottom: 0;
         left: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
         z-index: 1000;
         height: 60px;
       }
-
       .navbar ul {
         list-style: none;
         margin: 0;
         padding: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
       }
 
       .navbar ul li {
+        text-align: center;
         margin: 0 20px;
       }
 
       .navbar ul li a {
         color: white;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         transition:
           background-color 0.3s ease,
@@ -128,6 +147,7 @@
         background-color: #495057;
         transform: translateY(-2px);
       }
+
       /* 기록 목록 기본 스타일 */
       .form-group ul {
         list-style: none;
@@ -154,7 +174,7 @@
         border-radius: 5px;
         padding: 5px 10px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
         margin-left: 10px;
         transition: background-color 0.3s ease;
         position: absolute; /* 절대 위치로 설정 */
@@ -191,7 +211,7 @@
 
       /* 데이터 항목의 텍스트 스타일 */
       .form-group ul li span {
-        font-size: 12px;
+        font-size: 16px;
         color: #495057;
       }
       .content {
@@ -221,7 +241,7 @@
         height: 30px;
         border-radius: 50%;
         padding: 0;
-        font-size: 12px;
+        font-size: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -245,7 +265,7 @@
         border-radius: 5px;
         padding: 5px 10px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
         margin-left: 10px;
         transition: background-color 0.3s ease;
         justify-content: center;
@@ -262,25 +282,35 @@
       }
       /* 공통 스타일 */
       .btn1 {
-        width: 100%;
-        max-width: 500px;
-        padding: 15px;
-        background-color: #343a40; /* navbar와 동일한 색상 */
-        color: white;
+        background: none;
         border: none;
-        border-radius: 25px;
+        color: #e0e0e0; /* 버튼 텍스트 색 */
+        font-size: 10px; /* 텍스트 크기 */
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+        align-items: center;
         cursor: pointer;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
-        margin-top: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
+        transition: color 0.3s ease;
+      }
+
+      .btn1 i {
+        font-size: 30px; /* 아이콘 크기 */
+        margin-bottom: 3px; /* 아이콘과 텍스트 사이 여백 */
       }
 
       .btn1:hover {
-        background-color: #495057; /* navbar와 동일한 호버 색상 */
-        transform: translateY(-2px);
+        color: #007bff; /* 버튼 호버 시 색상 */
+      }
+
+      .btn1 span {
+        font-size: 10px; /* 텍스트 크기 */
+      }
+
+      #clientName {
+        font-size: 24px;
+        color: #ffffff;
+        margin: 0;
+        padding: 0px 0;
       }
 
       /* 버튼 비활성화 시 스타일 */
@@ -354,7 +384,7 @@
       .navbar ul li a {
         color: white;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         transition:
           background-color 0.3s ease,
@@ -493,7 +523,7 @@
           padding: 10px 15px; /* 여백 추가 */
           color: white; /* 텍스트 색상 */
           text-align: center; /* 텍스트 중앙 정렬 */
-          font-size: 14px; /* 폰트 크기 */
+          font-size: 16px; /* 폰트 크기 */
           text-decoration: none; /* 밑줄 제거 */
           white-space: nowrap; /* 줄바꿈 방지 */
         }
@@ -502,7 +532,7 @@
           background-color: #555; /* 마우스 오버 시 배경색 변경 */
         }
         .navbar ul li a {
-          font-size: 10px;
+          font-size: 16px;
         }
         .navbar {
           width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
@@ -511,52 +541,58 @@
     </style>
   </head>
   <body>
-    <nav class="navbar top-navbar">
-      <ul>
-        <li>
-          <button class="btn1" onclick="read_only_client_lesson_log()">
-            수업목록
-          </button>
-        </li>
-        <li>
-          <button class="btn1" onclick="client_workout_log()">운동일지</button>
-        </li>
-        <li>
-          <button
-            class="btn1"
-            onclick="window.location.href='https://diet-king.netlify.app/schedule%20kimjaehyun/kimjaehyun%20output.html';"
-          >
-            스케쥴표
-          </button>
-        </li>
-      </ul>
-    </nav>
     <div class="container">
       <nav class="navbar bottom-navbar">
         <ul>
           <li>
-            <button class="btn1" onclick="navigateToFeedback()">
-              피드백게시판
+            <button class="btn1" onclick="read_only_client_lesson_log()">
+              <i class="fa fa-book"></i>
+              <span>수업목록</span>
             </button>
           </li>
+          <!-- <li>
+            <button class="btn1" onclick="client_workout_log()">
+              <i class="fa fa-dumbbell"></i>
+              <span>운동일지</span>
+            </button>
+          </li> -->
+          <!-- <li>
+            <button class="btn1" onclick="calendar()">
+              <i class="fa fa-calendar-alt"></i>
+              <span>캘린더</span>
+            </button>
+          </li> -->
           <li>
             <button class="btn1" onclick="read_only_progressrecord()">
-              변화기록
+              <i class="fa fa-chart-line"></i>
+              <span>변화기록</span>
             </button>
           </li>
           <li>
-            <button class="btn1" onclick="attendance_check()">출석체크</button>
+            <button class="btn1" onclick="exercise_information()">
+              <i class="fa fa-info-circle"></i>
+              <span>운동정보</span>
+            </button>
           </li>
+          <li>
+            <button class="btn1" onclick="review()">
+              <i class="fa fa-star"></i>
+              <span>상품리뷰</span>
+            </button>
+          </li>
+          <!-- <li>
+            <button class="btn1" onclick="attendance_check()">출석체크</button>
+          </li> -->
         </ul>
       </nav>
       <div class="title">
         <h1>변화 기록</h1>
-        <button class="kakao-share-btn" onclick="shareOnKakao()">
+        <!-- <button class="kakao-share-btn" onclick="shareOnKakao()">
           <img
             src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F%E1%84%8F%E1%85%A1%E1%84%90%E1%85%A9%E1%86%A8%E1%84%85%E1%85%A9%E1%84%80%E1%85%A9.jpeg?alt=media&token=fd001f3f-9d99-4526-968e-1952b1e33119"
             alt="카카오톡 공유"
           />
-        </button>
+        </button> -->
       </div>
       <!-- 인바디 기록 입력 폼 -->
       <!-- <div class="form-group">
@@ -690,6 +726,16 @@
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
+      function calendar() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `calendar.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
       function navigateToFeedback() {
         const clientId = getClientId();
         const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
@@ -726,6 +772,26 @@
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
           window.location.href = `client_workout_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function exercise_information() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `/weppage/exercise information.html?clientId=${clientId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function review() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `/weppage/reviewpage.html?clientId=${clientId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }
@@ -1279,7 +1345,7 @@
             title: `${todayDate} 변화기록 업로드 완료`, // 제목에서 클라이언트 이름 제거
             description: `변화기록이 업로드되었습니다. 변화하고 있는 과정을 확인해보세요.`,
             imageUrl:
-              "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Feggymlogo.png?alt=media&token=317444a9-00a5-427f-8d89-7ec4bd6842e6", // 썸네일 이미지 URL
+              "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fwlbfitness.png?alt=media&token=c1140dd2-0f2e-45da-bec2-1e71eb87bb26", // 썸네일 이미지 URL
             link: {
               mobileWebUrl: url,
               webUrl: url,

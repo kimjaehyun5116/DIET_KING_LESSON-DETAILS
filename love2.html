@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa6.jpeg?alt=media&token=b2c61f5f-4811-40d0-ba17-f4fd4c3d917a"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa6.jpeg?alt=media&token=b2c61f5f-4811-40d0-ba17-f4fd4c3d917a"
+    />
+    <title>진영아, 생일축하해❤️</title>
+    <!-- Google Fonts -->
+    <meta property="og:title" content="진영아, 생일축하해❤️" />
+    <meta
+      property="og:description"
+      content="너와 내가 만난 첫번째 생일을 너무 축하해 진영아❤️"
+    />
+    <meta
+      property="og:image"
+      content="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa6.jpeg?alt=media&token=b2c61f5f-4811-40d0-ba17-f4fd4c3d917a"
+    />
+    <meta property="og:url" content="YOUR_URL_HERE" />
+    <meta property="og:type" content="website" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Jua&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Jua", sans-serif;
+        background-image: url("https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa6.jpeg?alt=media&token=b2c61f5f-4811-40d0-ba17-f4fd4c3d917a"); /* 배경 이미지 설정 */
+        background-repeat: repeat; /* 이미지 반복으로 바둑판 모양 */
+        background-size: 500px 500px; /* 이미지 타일 크기 조정 */
+        text-align: center;
+        padding: 20px;
+        margin: 0;
+        overflow: auto;
+      }
+      #container {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+      }
+      h1 {
+        color: #ff69b4;
+        font-size: 3rem;
+        font-family: "Cute Font", cursive;
+        margin-bottom: 20px;
+      }
+      #photo-gallery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        max-width: 100%;
+        height: 300px;
+        overflow: hidden;
+        margin: 20px auto;
+      }
+      .photo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Scale the image to fit the container */
+        opacity: 0;
+        transform: translateX(100%);
+        transition:
+          opacity 1s ease,
+          transform 1s ease;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .photo.active {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .photo.exit-left {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      #confession {
+        background-color: #ffebf0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+      .nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 105, 180, 0.8);
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+      .nav-button:hover {
+        background-color: #ff1493;
+      }
+      #prevButton {
+        left: 10px;
+      }
+      #nextButton {
+        right: 10px;
+      }
+      /* Heart styles */
+      .heart {
+        position: fixed;
+        font-size: 24px;
+        animation: fly 4s forwards; /* Adjusted to make hearts fly for longer */
+      }
+      @keyframes fly {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1>생일 축하해, 사랑하는 여보💖</h1>
+      <iframe
+        width="300"
+        height="150"
+        src="https://www.youtube.com/embed/YRcYiIBuWMQ?autoplay=1&loop=1&loop=1&playlist=YRcYiIBuWMQ"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      >
+      </iframe>
+
+      <div id="message">
+        <p>
+          우리가 함께한 소중한 순간들을 돌아보며, 너와 함께라 더 특별한 시간들.
+        </p>
+      </div>
+
+      <!-- Slideshow container with navigation buttons -->
+      <div id="photo-gallery">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa10.jpeg?alt=media&token=a19c9c18-3078-4e51-a460-d11336e1a4af"
+          alt="우리의 첫 데이트"
+          class="photo active"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa1.jpeg?alt=media&token=d1cd4031-2701-40ed-a6f3-63298a500267"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa11.jpeg?alt=media&token=f809d721-c327-4093-905d-03dd68538e79"
+          alt="멋진 풍경"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa12.jpeg?alt=media&token=7c45759d-73a7-42a4-ad8d-b183595361f5"
+          alt="웃고 있는 너"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa13.jpeg?alt=media&token=edd871b4-81cc-427f-b605-d95c2f6e5a90"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa14.jpeg?alt=media&token=d21a82df-ba4f-45d3-b3b1-e2700c71945a"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa15.jpeg?alt=media&token=b2793cd5-d0d8-4c94-913b-1d94bb15f1e9"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa16.jpeg?alt=media&token=97ec0186-ed2d-4102-9c8e-2070994869f8"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa17.jpeg?alt=media&token=5c28af6f-e4b6-49ad-ac10-e6e351e2c4ea"
+          alt="닭도리탕"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa18.jpeg?alt=media&token=79f9669c-ec1d-4f2a-a4e6-98da83bf5aa8"
+          alt="야채조공"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa19.jpeg?alt=media&token=5ad147e3-2ba3-405c-9e9f-6a96ca73c0d7"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa2.jpeg?alt=media&token=48951d54-b5e0-41ca-9a82-b8a0b908f4cc"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa20.jpeg?alt=media&token=5fb50a04-9a4f-4ca6-8f8a-9f5d94b8edac"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa21.jpeg?alt=media&token=bb592b47-3293-40f9-8171-cbdf9d80fd26"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa22.jpeg?alt=media&token=df6ee685-9563-48fb-a463-7679524ccafd"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa23.jpeg?alt=media&token=f587f89c-6cd7-4ae9-a407-5ad75eef589e"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa24.jpeg?alt=media&token=0848f070-d17d-4fbf-9832-18e9a9c8a8af"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa25.jpeg?alt=media&token=1fdb62c4-7106-47f8-bff2-fff81caab10e"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa26.jpeg?alt=media&token=cf7ad643-1ffd-44a4-b002-0197cc010333"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa27.jpeg?alt=media&token=48aad63f-6fa8-4452-accd-750fe6f06179"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa28.jpeg?alt=media&token=f5d04c3c-7645-4d73-8518-7e4eb4f0d027"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa29.jpeg?alt=media&token=e5150647-b4ed-45fc-aa3c-69a2f4acfb07"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa3.jpeg?alt=media&token=d14ca123-e9bb-4f61-958e-3068c6ad8393"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa30.jpeg?alt=media&token=b6dcb8bd-316c-4c0f-a81e-260a31e30f43"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa31.jpeg?alt=media&token=afc6ce4e-418c-46a9-82c8-31e3fc889721"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa32.jpeg?alt=media&token=ed48e212-4dc7-432e-be93-bff5e76cb837"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa33.jpeg?alt=media&token=dcfaaa12-b54e-4158-94ea-a820e36fc337"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa34.jpeg?alt=media&token=353b4ac4-35d1-4667-b68c-6df8fa889e9c"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa35.jpeg?alt=media&token=82ef3877-3b05-4bcd-b418-0964f3b1c97e"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa36.jpeg?alt=media&token=5257fc81-a36f-4826-b90f-40efc5a0e484"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa37.jpeg?alt=media&token=1c022d82-fe5b-4dae-9d23-00221bdc9803"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa38.jpeg?alt=media&token=0d616d3e-1680-4860-a3b8-b41264ec7628"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa39.jpeg?alt=media&token=e0fdad59-4423-4097-9990-88bc5b91d3fc"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa4.jpeg?alt=media&token=82611397-969b-4cc7-a049-4e2329022d56"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa40.jpeg?alt=media&token=babc3cea-c9fd-46e3-af44-937f8ea49741"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa41.jpeg?alt=media&token=da4f5a91-4ed1-4cc3-a01b-8663757f3d03"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa42.jpeg?alt=media&token=5d6e8067-0dd6-449e-ba9b-6b314cf9922c"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa43.jpeg?alt=media&token=66abb1b5-c4f7-4cc1-84d9-b46e774fee62"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa44.jpeg?alt=media&token=46dc643a-c60e-46b2-ba04-05574cb68f06"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa5.jpeg?alt=media&token=2ceb5208-0dd3-4de2-9622-b618890d5f45"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa7.jpeg?alt=media&token=145efd54-5959-4ba7-9b0c-8145b533a69b"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa8.jpeg?alt=media&token=a3aacc8b-3700-467a-af0a-36faf141da3a"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa9.jpeg?alt=media&token=b733f077-296a-4812-a83b-8f39c495d4a9"
+          alt="함께한 여행"
+          class="photo"
+        />
+        <img src="loveimg/a43.jpeg" alt="함께한 여행" class="photo" />
+
+        <!-- Additional images here -->
+        <button id="prevButton" class="nav-button">❮</button>
+        <button id="nextButton" class="nav-button">❯</button>
+      </div>
+      <div id="confession">
+        <h2>내 사랑,</h2>
+        <p>
+          사랑하는 진영이에게, ❤️<br /><br />
+          오늘은 우리가 함께하는 첫 생일이야.<br />
+          이렇게 소중한 날을 맞이하면서, 너와 함께한 모든 순간이 얼마나 값진지
+          새삼 깨닫게 돼. 너와 나의 인연이 시작된 이후로, 너의 따뜻한 마음과
+          밝은 미소가 내 삶을 더 환하게 만들어 주었어. 진심으로 고맙고,
+          무엇보다도 너무 사랑해. 우리가 함께하는 날들 속에서 서로 맞지 않는
+          부분들이 있을 수도 있고, 가끔 서운한 일도 생길 거야. 하지만 그럴
+          때마다 서로의 마음을 이해하려 노력하고, 무엇보다 소중한 우리의 사랑을
+          지키기 위해 노력하자. 사랑이란, 서로를 맞추어가며 더 나은 사람이
+          되어가는 과정이라고 생각해. 그래서 앞으로도 너와 함께 더 아름답고
+          행복한 날들을 만들어 가고 싶어. 진영아, 너와 함께라면 무엇이든 가능할
+          것 같아. 서로에게 힘이 되어주며, 매일 조금씩 더 사랑하고, 더
+          아껴주면서 예쁜 추억들로 우리 이야기를 채워가자. 너와 함께하는 모든
+          날이 축복이고 기쁨이야. 생일 정말 축하해, 그리고 내 곁에 있어줘서
+          고마워. 앞으로도 잘 부탁해,
+        </p>
+        <p>사랑해! ❤️</p>
+      </div>
+    </div>
+
+    <script>
+      const photos = document.querySelectorAll(".photo");
+      const prevButton = document.getElementById("prevButton");
+      const nextButton = document.getElementById("nextButton");
+      let currentIndex = 0;
+
+      function showPhoto(index) {
+        photos.forEach((photo, i) => {
+          photo.classList.remove("active", "exit-left");
+          if (i === index) {
+            photo.classList.add("active");
+          }
+        });
+      }
+
+      // Create heart effect
+      function createHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw"; // Random horizontal position
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s"; // Random duration between 3s and 5s
+        document.body.appendChild(heart);
+
+        // Remove heart after animation completes
+        heart.addEventListener("animationend", () => {
+          heart.remove();
+        });
+      }
+
+      // Generate hearts every 300ms
+      setInterval(createHeart, 300);
+
+      // Slideshow interval
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % photos.length;
+        showPhoto(currentIndex);
+      }, 2000); // Change photo every 4 seconds
+
+      // Add click event for previous button
+      prevButton.addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+        showPhoto(currentIndex);
+      });
+
+      // Add click event for next button
+      nextButton.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % photos.length;
+        showPhoto(currentIndex);
+      });
+    </script>
+  </body>
+</html>

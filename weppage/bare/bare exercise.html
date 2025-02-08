@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+
+      // Storage 참조 생성
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child("img/159.gif");
+
+      // 이미지 다운로드 URL 가져오기
+      imageRef
+        .getDownloadURL()
+        .then((url) => {
+          // 이미지 src 속성 설정
+          document.getElementById("firebase-image").src = url;
+        })
+        .catch((error) => {
+          console.error("Error getting download URL:", error);
+        });
+    </script>
+    <title>다킹</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: black;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        table-layout: fixed; /* 테이블의 칸 크기를 고정 */
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        width: 33.33%; /* 각 칸의 너비를 균등하게 설정 */
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      h1 {
+        text-align: center;
+      }
+      .resize-img {
+        border-radius: 50px;
+        width: 30%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fbare1.png?alt=media&token=9128d6ff-bc06-4cca-9cba-a5e1a9f7549e"
+              alt="맨몸 이미지"
+              class="resize-img"
+            />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="/training/chin up.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(9).gif?alt=media&token=35efb72b-158a-403c-a5bf-17e7df9861aa"
+                alt="친 업"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />친 업<br /><br />
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/narrow tricep press up.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(13).gif?alt=media&token=db3cc6e4-4c3c-41dd-845a-74410b7fba25"
+                alt="트라이셉스 프레스업"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />트라이셉스 프레스업
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/wide grip rear pull up.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(17).gif?alt=media&token=b01ceec7-8e68-4931-81e7-ef7ca6937920"
+                alt="와이드그립 리어 풀업"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />와이드그립 리어 풀업
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/hip extension stretch .html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(46).gif?alt=media&token=13d78547-a3dc-4bde-b539-d8070e52caa8"
+                alt="힙 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />힙 익스텐션<br /><br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/glute kickbacks.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(45).gif?alt=media&token=8b6c167d-4d5c-459f-80ba-1c4dbeb20553"
+                alt="글루트 킥백"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />글루트 킥백<br /><br />
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/lying alternate hip extension.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(50).gif?alt=media&token=c02cd684-c947-457b-adda-f4afa67975e9"
+                alt="라잉 얼터네이트 힙 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />얼터네이트 힙 익스텐션
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/lying hip lift.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(51).gif?alt=media&token=b3ed09a0-4a2b-4906-a549-99834b6ea6a7"
+                alt="리버스 하이퍼 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />리버스 하이퍼 익스텐션
+            </a>
+          </td>
+          <td>
+            <a href="/training/hip bridge.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(53).gif?alt=media&token=6619aaf7-cded-46dd-b0b4-bf3496b94b21"
+                alt="힙 브릿지"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />힙 브릿지<br /><br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/jumping lunge.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(54).gif?alt=media&token=a510eaba-012a-4a8a-b1d3-77eef304960a"
+                alt="점핑 런지"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />점핑 런지<br /><br />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/reverse hyper on flat bench.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(55).gif?alt=media&token=aa9ca51e-89a8-4073-a816-77469c7f9b2e"
+                alt="리버스 하이퍼 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />리버스 하이퍼 익스텐션
+            </a>
+          </td>
+          <td>
+            <a href="/training/plyometric push ups.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(118).gif?alt=media&token=054beef7-8686-40b6-a295-6d53d900f0b4"
+                alt="플라이오메트릭 푸쉬업"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />플라이오메트릭 푸쉬업
+            </a>
+          </td>
+          <td>
+            <a href="/training/push up.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(119).gif?alt=media&token=11500d38-48ee-4be9-8ed8-3a3fb7530eab"
+                alt="푸쉬 업"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />푸쉬 업<br /><br />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/squat jump.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(121).gif?alt=media&token=3d91ef47-ace2-4c25-8386-f56bf64692d9"
+                alt="리버스 하이퍼 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />점핑스쿼트
+            </a>
+          </td>
+          <td>
+            <a href="/training/tricep dips on bench.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(132).gif?alt=media&token=9437a0c0-2eed-4998-bc25-00fbbdb553f3"
+                alt="벤치 딥스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />벤치 딥스<br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/sumo squat.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(135).gif?alt=media&token=72ad7058-8c1c-4c13-a65a-ad56d2d37a15"
+                alt="맨몸 스쿼트"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />맨몸 스쿼트<br />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/back extension.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F166.gif?alt=media&token=7c2375a0-b5be-43b8-a23c-b0f87ceed9db"
+                alt="백 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />백 익스텐션<br /><br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/inverted body row.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F168.gif?alt=media&token=3aab133e-3f8e-4935-b68a-5f6b3bda7e9f"
+                alt="인버티드 바디로우"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />인버티드 바디로우<br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/chin up neutral grip.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F178.gif?alt=media&token=3a9349d8-1614-484f-9f93-999ef7bf0554"
+                alt="친업 뉴트럴그립"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />친업 뉴트럴그립<br />
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+
+      // Storage 참조 생성
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child("img/159.gif");
+
+      // 이미지 다운로드 URL 가져오기
+      imageRef
+        .getDownloadURL()
+        .then((url) => {
+          // 이미지 src 속성 설정
+          document.getElementById("firebase-image").src = url;
+        })
+        .catch((error) => {
+          console.error("Error getting download URL:", error);
+        });
+    </script>
+    <title>다킹</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: black;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        table-layout: fixed; /* 테이블의 칸 크기를 고정 */
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        width: 33.33%; /* 각 칸의 너비를 균등하게 설정 */
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      h1 {
+        text-align: center;
+      }
+      .resize-img {
+        border-radius: 50px;
+        width: 30%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fex4.png?alt=media&token=230de819-c469-4e84-8611-6ed17913a85a"
+              alt="하체 이미지"
+              class="resize-img"
+            />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="/training/fixed deadlift.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(39).gif?alt=media&token=0462634a-31ff-4ad8-8fb7-af4d56ee8e76"
+                alt="플렉시드 데드리프트"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />플렉시드 데드리프트
+            </a>
+          </td>
+          <td>
+            <a href="/training/sled hack squat.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(131).gif?alt=media&token=2b596c41-bffb-43e4-adee-a7cf21b104c5"
+                alt="슬래드 핵 스쿼트"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />슬래드 핵 스쿼트
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/fixed kneeling leg curl.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(41).gif?alt=media&token=f5881466-f3ee-46f1-93ea-8cfe1276106c"
+                alt="플렉시드 니링 레그 컬"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />플렉시드 니링 레그 컬
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/horizontal leg press.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(47).gif?alt=media&token=224945ed-f65b-4ff7-9338-6fc0e31bec78"
+                alt="머신 레그프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />머신 레그프레스
+            </a>
+          </td>
+          <td>
+            <a href="/training/sled lying squat.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(130).gif?alt=media&token=dd660759-d088-43ab-9373-2f2057d46285"
+                alt="슬레드 라잉 스쿼트"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />슬레드 라잉 스쿼트
+            </a>
+          </td>
+          <td>
+            <a href="/training/leg extension.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(49).gif?alt=media&token=81cf6fa9-5ba2-4557-8a56-190615194614"
+                alt="레그 익스텐션"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />레그 익스텐션
+            </a>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <a href="/training/lying leg curl.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(52).gif?alt=media&token=1ac6cfbd-5676-4e35-9b98-04d3332fcbe1"
+                alt="머신 레그 컬"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />머신 레그 컬<br /><br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/seated calf raise.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(107).gif?alt=media&token=9a7fab22-1c92-4422-b93d-0fa4d92525ea"
+                alt="시티드 카프레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 카프레이즈
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/sled reverse hack squat.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(128).gif?alt=media&token=33457159-f709-4d8d-9e52-4e858bedb7ff"
+                alt="리버스 핵 스쿼트"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />리버스 핵 스쿼트
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/fixed hip thrust.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(40).gif?alt=media&token=d8dedda1-ba4b-475a-bd85-61b6bff57bb5"
+                alt="플렉시드 힙 트러스트"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />플렉시드 힙 트러스트
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/fixed standing rear kick.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(44).gif?alt=media&token=7c35f5ab-8552-4ebd-b74e-7c5b0fe0dedf"
+                alt="스탠딩 리어킥"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />스탠딩 리어킥
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/reverse glute ham raise.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-video-to-gif-converter%20(5).gif?alt=media&token=8881af11-46f1-47aa-9746-ef5d9f2df68e"
+                alt="리버스 글루트 햄 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />리버스 글루트 햄 레이즈
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/monster gluter.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fmostergluter-ezgif.com-optimize.gif?alt=media&token=b8de6faa-9d2a-4c44-9e64-2f42762f1039"
+                alt="몬스터글루터"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />몬스터글루터
+            </a>
+          </td>
+          <td>
+            <a href="/training/Out Thigh.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(106).gif?alt=media&token=20caa83f-93c4-4141-82c3-331d3a9f31e2"
+                alt="아웃타이"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />아웃타이<br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/seated leg cur.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(106).gif?alt=media&token=20caa83f-93c4-4141-82c3-331d3a9f31e2"
+                alt="시티드레그컬"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드레그컬<br />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/powerlegpress.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2FPower_Leg_Press-ezgif.com-optimize.gif?alt=media&token=99c7fcc5-f9f6-4094-bc44-fe979f0f8b65"
+                alt="파워레그프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />파워레그프레스<br />
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -15,14 +15,26 @@
     <meta property="og:description" content="다킹" />
 
     <!--favicon-->
-    <link rel="shortcut icon" href="/img/favicon.ico" />
-    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
     <title>운동 일지 작성</title>
     <style>
       /* 기존 스타일은 그대로 유지됩니다 */
       body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
+        color: #ffffff;
         margin-top: 0;
         padding: 0;
         display: flex;
@@ -39,11 +51,11 @@
         bottom: 0;
       }
       .container {
-        margin-top: 100px;
-        background-color: #ffffff;
+        margin-top: 10%;
         padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        background-color: #444242; /* 컨테이너 카드 스타일 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 부드러운 그림자 */
         width: 90%;
         max-width: 800px;
         display: flex;
@@ -60,7 +72,7 @@
         border-radius: 25px;
         padding: 5px 10px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
         position: absolute;
         top: 35px;
         right: 25px;
@@ -80,12 +92,6 @@
         margin-bottom: 20px;
       }
 
-      #clientName {
-        font-size: 24px;
-        color: #333;
-        margin: 0;
-        padding: 20px 0;
-      }
       #viewReadOnlyBtn {
         margin-bottom: 100px;
       }
@@ -108,7 +114,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-sizing: border-box;
-        font-size: 12px;
+        font-size: 16px;
         resize: vertical;
         margin-bottom: 5px;
         margin-top: 30px;
@@ -127,7 +133,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-sizing: border-box;
-        font-size: 12px;
+        font-size: 16px;
       }
 
       .form-group textarea {
@@ -144,7 +150,8 @@
         cursor: pointer;
         margin-top: 10px;
         text-align: center;
-        font-size: 12px;
+        font-size: 16px;
+        font-weight: bold;
       }
 
       .btn:hover {
@@ -164,7 +171,7 @@
         border-radius: 50%;
         width: 40px;
         height: 40px;
-        font-size: 20px;
+        font-size: 16px;
         cursor: pointer;
         margin-left: 5px;
       }
@@ -210,7 +217,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
       }
 
       .add-group-btn button:hover {
@@ -227,7 +234,7 @@
         border-radius: 50%;
         width: 20px;
         height: 20px;
-        font-size: 18px;
+        font-size: 16px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -246,7 +253,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 11px;
+        font-size: 16px;
         text-align: center;
         margin-top: 0px;
       }
@@ -269,7 +276,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-sizing: border-box;
-        font-size: 12px;
+        font-size: 16px;
         resize: vertical; /* 수직으로만 크기 조절 가능 */
       }
       #exerciseName1 {
@@ -359,30 +366,30 @@
         bottom: 0;
         left: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
         z-index: 1000;
         height: 60px;
       }
-
       .navbar ul {
         list-style: none;
         margin: 0;
         padding: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
       }
 
       .navbar ul li {
+        text-align: center;
         margin: 0 20px;
       }
 
       .navbar ul li a {
         color: white;
         text-decoration: none;
-        font-size: 12px;
+        font-size: 16px;
         padding: 10px 20px;
         transition:
           background-color 0.3s ease,
@@ -395,21 +402,37 @@
         background-color: #495057;
         transform: translateY(-2px);
       }
+      /* 공통 스타일 */
       .btn1 {
-        width: 100%;
-        max-width: 500px;
-        padding: 15px;
-        background-color: #343a40; /* navbar와 동일한 색상 */
-        color: white;
+        background: none;
         border: none;
-        border-radius: 25px;
+        color: #e0e0e0; /* 버튼 텍스트 색 */
+        font-size: 10px; /* 텍스트 크기 */
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+        align-items: center;
         cursor: pointer;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
-        margin-top: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
+        transition: color 0.3s ease;
+      }
+
+      .btn1 i {
+        font-size: 30px; /* 아이콘 크기 */
+        margin-bottom: 3px; /* 아이콘과 텍스트 사이 여백 */
+      }
+
+      .btn1:hover {
+        color: #007bff; /* 버튼 호버 시 색상 */
+      }
+
+      .btn1 span {
+        font-size: 10px; /* 텍스트 크기 */
+      }
+
+      #clientName {
+        font-size: 24px;
+        color: #ffffff;
+        margin: 0;
+        padding: 0px 0;
       }
       #viewReadOnlyBtn,
       .form-group1,
@@ -421,13 +444,13 @@
       @media (max-width: 600px) {
         .exercise-group-table th,
         .exercise-group-table td {
-          font-size: 10px; /* 원하는 글자 크기로 조정 */
+          font-size: 16px; /* 원하는 글자 크기로 조정 */
         }
         #clienName {
           font-size: 20px;
         }
         .form-group {
-          font-size: 12px;
+          font-size: 16px;
           margin-top: 30px;
         }
       }
@@ -482,18 +505,18 @@
       }
       .exercise-group-table input[type="number"] {
         height: 10px; /* 원하는 높이로 조정 */
-        font-size: 12px;
+        font-size: 16px;
         text-align: center;
       }
       .logout-btn {
         width: 10%;
-        font-size: 12px;
+        font-size: 16px;
         margin-top: 40px;
       }
       .youtube-search-btn {
         width: 30%;
         margin-left: 1%;
-        font-size: 12px;
+        font-size: 16px;
         padding: 5px 6px;
       }
       /* 버튼 스타일 */
@@ -506,7 +529,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
         text-align: center;
         text-decoration: none;
         transition: background-color 0.3s ease;
@@ -520,13 +543,13 @@
       @media (max-width: 480px) {
         .logout-btn {
           width: 22%;
-          font-size: 12px;
+          font-size: 16px;
           margin-top: 40px;
         }
         .youtube-search-btn {
           width: 35%;
           margin-left: 10%;
-          font-size: 12px;
+          font-size: 16px;
           padding: 5px 6px;
         }
       }
@@ -559,7 +582,7 @@
           padding: 10px 15px; /* 여백 추가 */
           color: white; /* 텍스트 색상 */
           text-align: center; /* 텍스트 중앙 정렬 */
-          font-size: 14px; /* 폰트 크기 */
+          font-size: 16px; /* 폰트 크기 */
           text-decoration: none; /* 밑줄 제거 */
           white-space: nowrap; /* 줄바꿈 방지 */
         }
@@ -568,7 +591,7 @@
           background-color: #555; /* 마우스 오버 시 배경색 변경 */
         }
         .navbar ul li a {
-          font-size: 10px;
+          font-size: 16px;
         }
         .navbar {
           width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
@@ -577,18 +600,6 @@
     </style>
   </head>
   <body>
-    <nav class="navbar top-navbar">
-      <ul>
-        <li>
-          <button class="btn1" onclick="read_only_client_lesson_log()">
-            수업목록
-          </button>
-        </li>
-        <li>
-          <button class="btn1" onclick="client_workout_log()">운동일지</button>
-        </li>
-      </ul>
-    </nav>
     <div class="container">
       <div class="header">
         <h1 id="clientName">운동 일지</h1>
@@ -618,17 +629,40 @@
     <nav class="navbar bottom-navbar">
       <ul>
         <li>
-          <button class="btn1" onclick="navigateToFeedback()">
-            피드백게시판
+          <button class="btn1" onclick="read_only_client_lesson_log()">
+            <i class="fa fa-book"></i>
+            <span>수업목록</span>
           </button>
         </li>
+        <!-- <li>
+          <button class="btn1" onclick="client_workout_log()">
+            <i class="fa fa-dumbbell"></i>
+            <span>운동일지</span>
+          </button>
+        </li> -->
+        <!-- <li>
+          <button class="btn1" onclick="calendar()">
+            <i class="fa fa-calendar-alt"></i>
+            <span>캘린더</span>
+          </button>
+        </li> -->
         <li>
           <button class="btn1" onclick="read_only_progressrecord()">
-            변화기록
+            <i class="fa fa-chart-line"></i>
+            <span>변화기록</span>
           </button>
         </li>
         <li>
-          <button class="btn1" onclick="attendance_check()">출석체크</button>
+          <button class="btn1" onclick="exercise_information()">
+            <i class="fa fa-info-circle"></i>
+            <span>운동정보</span>
+          </button>
+        </li>
+        <li>
+          <button class="btn1" onclick="review()">
+            <i class="fa fa-star"></i>
+            <span>상품리뷰</span>
+          </button>
         </li>
       </ul>
     </nav>
@@ -693,6 +727,16 @@
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
           window.location.href = `attendance_check.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function calendar() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `calendar.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }

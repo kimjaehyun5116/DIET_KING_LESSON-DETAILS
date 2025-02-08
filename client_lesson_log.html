@@ -4,24 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="MacJae" />
-    <meta name="keywords" content="다킹" />
-    <meta name="description" content="다킹" />
+    <meta name="keywords" content="핏로그" />
+    <meta name="description" content="핏로그" />
 
     <!-- sns share -->
     <meta property="og:url" content="https://diet-king-app.netlify.app/" />
-    <meta property="og:title" content="다킹" />
+    <meta property="og:title" content="핏로그" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/img/main.png" />
-    <meta property="og:description" content="다킹" />
+    <meta
+      property="og:image"
+      content="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Ffitlog.jpeg?alt=media&token=98a84ebd-6ef1-4890-af3b-b8f2a42601da"
+    />
+    <meta property="og:description" content="핏로그" />
 
     <!--favicon-->
-    <link rel="shortcut icon" href="/img/favicon.ico" />
-    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
     <title>클라이언트 수업 로그</title>
+
     <style>
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f0f2f5;
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #e0e0e0;
         margin: 0;
         padding: 0;
         display: flex;
@@ -38,7 +58,7 @@
         border-radius: 25px;
         padding: 5px 10px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 16px;
         position: absolute;
         top: 35px;
         right: 25px;
@@ -58,6 +78,7 @@
       .bottom-navbar {
         bottom: 0;
       }
+
       .navbar {
         width: 100%;
         background-color: #343a40;
@@ -65,7 +86,7 @@
         bottom: 0;
         left: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
         z-index: 1000;
@@ -77,11 +98,12 @@
         margin: 0;
         padding: 0;
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
       }
 
       .navbar ul li {
+        text-align: center;
         margin: 0 20px;
       }
 
@@ -103,11 +125,11 @@
       }
 
       .container {
-        margin-top: 5%;
-        background-color: #ffffff;
+        margin-top: 10%;
+        background-color: #444242;
         padding: 30px;
         border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         width: 90%;
         max-width: 800px;
         display: flex;
@@ -119,7 +141,7 @@
       .lesson-list {
         height: 40%;
         overflow-y: scroll;
-        padding: 5px;
+        padding: 50px 10px;
         margin-bottom: 10px; /* 하단 여백 추가 */
       }
 
@@ -131,7 +153,7 @@
 
       h2 {
         margin-top: 0;
-        color: #333;
+        color: #ffffff;
         font-weight: 600;
       }
 
@@ -172,13 +194,35 @@
         cursor: pointer;
         text-align: center;
         font-size: 16px;
-        font-weight: 600;
+        font-weight: bold;
         margin-top: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
       }
 
       .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+      }
+      .btn2 {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        margin-bottom: 100px;
+      }
+
+      .btn2:hover {
         background-color: #0056b3;
         transform: translateY(-2px);
       }
@@ -222,7 +266,7 @@
         border-radius: 25px;
         border: none;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 16px;
         transition:
           background-color 0.3s ease,
           transform 0.3s ease;
@@ -253,7 +297,7 @@
         justify-content: center;
         align-items: center;
         margin-top: 20px;
-        font-size: 14px;
+        font-size: 16px;
       }
 
       .pagination button {
@@ -263,7 +307,7 @@
         margin: 0 5px;
         border-radius: 25px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 16px;
         transition:
           background-color 0.3s ease,
           transform 0.3s ease;
@@ -280,7 +324,7 @@
         align-items: center;
         justify-content: center;
         margin-top: 20px;
-        font-size: 14px;
+        font-size: 16px;
       }
 
       .pagination-info span {
@@ -353,25 +397,28 @@
       }
       /* 공통 스타일 */
       .btn1 {
-        width: 100%;
-        max-width: 500px;
-        padding: 15px;
-        background-color: #343a40; /* navbar와 동일한 색상 */
-        color: white;
+        background: none;
         border: none;
-        border-radius: 25px;
+        color: #e0e0e0; /* 버튼 텍스트 색 */
+        font-size: 10px; /* 텍스트 크기 */
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+        align-items: center;
         cursor: pointer;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
-        margin-top: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
+        transition: color 0.3s ease;
+      }
+
+      .btn1 i {
+        font-size: 30px; /* 아이콘 크기 */
+        margin-bottom: 3px; /* 아이콘과 텍스트 사이 여백 */
       }
 
       .btn1:hover {
-        background-color: #495057; /* navbar와 동일한 호버 색상 */
-        transform: translateY(-2px);
+        color: #007bff; /* 버튼 호버 시 색상 */
+      }
+
+      .btn1 span {
+        font-size: 10px; /* 텍스트 크기 */
       }
 
       /* 버튼 비활성화 시 스타일 */
@@ -396,6 +443,7 @@
       .btn1.edit:hover {
         background-color: #0056b3;
       }
+      /* 360px 이상의 너비를 가진 화면을 위한 스타일 */
       /* 모바일 스타일 */
       @media (max-width: 600px) {
         .container {
@@ -408,7 +456,7 @@
 
         .btn1 {
           padding: 0;
-          font-size: 10px;
+          font-size: 16px;
         }
 
         .bottom-navbar {
@@ -419,7 +467,7 @@
         }
 
         .navbar {
-          background-color: #333; /* 네비게이션 바 배경색 */
+          background-color: #313131; /* 네비게이션 바 배경색 */
           padding: 0; /* 패딩 제거 */
           overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
           white-space: nowrap; /* 줄바꿈 방지 */
@@ -443,7 +491,7 @@
           padding: 10px 15px; /* 여백 추가 */
           color: white; /* 텍스트 색상 */
           text-align: center; /* 텍스트 중앙 정렬 */
-          font-size: 14px; /* 폰트 크기 */
+          font-size: 16px; /* 폰트 크기 */
           text-decoration: none; /* 밑줄 제거 */
           white-space: nowrap; /* 줄바꿈 방지 */
         }
@@ -453,7 +501,7 @@
         }
 
         .navbar ul li a {
-          font-size: 10px;
+          font-size: 16px;
         }
 
         .lesson-box {
@@ -467,7 +515,7 @@
 
         .lesson-box h3,
         .lesson-box h4 {
-          font-size: 11px; /* 글자 크기 줄이기 */
+          font-size: 16px; /* 글자 크기 줄이기 */
           margin: 0; /* 여백 제거 */
         }
 
@@ -481,7 +529,7 @@
         .edit-btn,
         .delete-btn {
           padding: 5px 10px;
-          font-size: 10px; /* 버튼 글자 크기 줄이기 */
+          font-size: 16px; /* 버튼 글자 크기 줄이기 */
         }
 
         .form-group {
@@ -496,28 +544,16 @@
         .btn {
           width: 100%;
           max-width: none; /* 최대 너비 제한 제거 */
-          font-size: 10px; /* 글자 크기 줄이기 */
+          font-size: 16px; /* 글자 크기 줄이기 */
         }
       }
     </style>
   </head>
   <body>
-    <nav class="navbar top-navbar">
-      <ul>
-        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
-        <li>
-          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
-        </li>
-        <li>
-          <button class="btn1" onclick="read_client_workout_log()">
-            회원일지
-          </button>
-        </li>
-      </ul>
-    </nav>
     <div class="container">
       <div class="header">
         <h2 id="pageTitle">수업 목록</h2>
+
         <button class="logout-btn" onclick="logout()">로그아웃</button>
       </div>
 
@@ -529,8 +565,24 @@
           oninput="searchLessons()"
         />
       </div>
-
       <div class="lesson-list" id="lessonContainer"></div>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+        crossorigin="anonymous"
+      ></script>
+      <ins
+        class="kakao_ad_area"
+        style="display: none"
+        data-ad-unit="DAN-HT0oOoKgoiBBJV1U"
+        data-ad-width="320"
+        data-ad-height="50"
+      ></ins>
+      <script
+        type="text/javascript"
+        src="//t1.daumcdn.net/kas/static/ba.min.js"
+        async
+      ></script>
       <div class="pagination">
         <button
           class="pagination"
@@ -558,25 +610,48 @@
         </div>
 
         <button class="btn" id="addLessonBtn">수업 추가</button>
-        <button class="btn" onclick="goBack()">뒤로 가기</button>
+        <button class="btn2" onclick="goBack()">뒤로 가기</button>
       </div>
-
       <nav class="navbar bottom-navbar">
         <ul>
           <li>
-            <button class="btn1" onclick="navigateToFeedback()">
-              피드백게시판
+            <button class="btn1" onclick="client_list()">
+              <i class="fa fa-user"></i>
+              <span>회원목록</span>
             </button>
           </li>
           <li>
-            <button class="btn1" onclick="progressrecord()">변화기록</button>
+            <button class="btn1" onclick="client_lesson_log()">
+              <i class="fa fa-book"></i>
+              <span>수업목록</span>
+            </button>
           </li>
+          <!-- <li>
+            <button class="btn1" onclick="read_client_workout_log()">
+              회원일지
+            </button>
+          </li> -->
+          <!-- <li>
+              <button class="btn1" onclick="calendar()">캘린더</button>
+            </li> -->
           <li>
+            <button class="btn1" onclick="progressrecord()">
+              <i class="fa fa-chart-line"></i>
+              <span>변화기록</span>
+            </button>
+          </li>
+          <!-- <li>
             <button
               class="btn1"
               onclick="Check_attendance_records_only_trainer()"
             >
               출석기록
+            </button>
+          </li> -->
+          <li>
+            <button class="btn1" onclick="review()">
+              <i class="fa fa-star"></i>
+              <span>상품리뷰</span>
             </button>
           </li>
         </ul>
@@ -650,11 +725,11 @@
         return urlParams.get("clientId");
       }
       function client_list() {
-        const clientId = getClientId();
+        // const clientId = getClientId();
         const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
         if (trainerId) {
           // trainerId를 URL에 포함하여 페이지로 이동
-          window.location.href = `client_list.html?clientId=${clientId}&trainerId=${trainerId}`;
+          window.location.href = `client_list.html?trainerId=${trainerId}`;
         } else {
           console.error("trainerId가 정의되지 않았습니다.");
         }
@@ -700,6 +775,16 @@
           console.error("clientId가 정의되지 않았습니다.");
         }
       }
+      function calendar() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `calendar.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
       function navigateToFeedback() {
         const clientId = getClientId();
         const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
@@ -716,6 +801,16 @@
         if (clientId) {
           // clientId를 URL에 포함하여 페이지로 이동
           window.location.href = `read_client_workout_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function review() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `/weppage/reviewpage.html?clientId=${clientId}&trainerId=${trainerId}`;
         } else {
           console.error("clientId가 정의되지 않았습니다.");
         }

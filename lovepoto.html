@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa6.jpeg?alt=media&token=b2c61f5f-4811-40d0-ba17-f4fd4c3d917a"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa6.jpeg?alt=media&token=b2c61f5f-4811-40d0-ba17-f4fd4c3d917a"
+    />
+    <title>추억의 사진</title>
+    <style>
+      /* 기본 설정 */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        color: #333;
+      }
+
+      /* 컨테이너 설정 */
+      .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* 사진 그리드 설정 */
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3개 열로 배열 */
+        gap: 15px;
+        justify-items: center; /* 가운데 정렬 */
+      }
+
+      /* 사진 카드 스타일 */
+      .photo-card {
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s;
+        width: 100%; /* 카드 너비를 100%로 설정 */
+        max-width: 300px; /* 카드의 최대 너비 */
+      }
+
+      .photo-card:hover {
+        transform: scale(1.05);
+      }
+
+      .photo,
+      .video {
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      /* 제목 스타일 */
+      .caption {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 1rem;
+        color: #555;
+      }
+
+      /* 모달 스타일 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        overflow: auto; /* 스크롤 가능하도록 설정 */
+      }
+
+      .modal-content {
+        position: relative;
+        max-width: 90%; /* 모달 최대 너비 설정 */
+        max-height: 90%; /* 모달 최대 높이 설정 */
+        overflow: auto; /* 내용이 넘칠 경우 스크롤 */
+      }
+
+      .modal img,
+      .modal video {
+        max-width: 100%; /* 이미지/비디오의 최대 너비 설정 */
+        max-height: 100%; /* 이미지/비디오의 최대 높이 설정 */
+        display: block; /* 블록으로 표시하여 여백 제거 */
+        margin: 0 auto; /* 중앙 정렬 */
+      }
+
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      /* 페이지네이션 버튼 스타일 */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .page-btn {
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 5px;
+        transition: background 0.3s;
+      }
+
+      .page-btn:hover {
+        background: #ff3b3b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 style="text-align: center">추억의 사진</h1>
+
+      <div class="photo-grid" id="photoGrid">
+        <!-- 사진 카드를 추가할 공간 -->
+      </div>
+
+      <div class="pagination">
+        <button class="page-btn" onclick="changePage(-1)">이전 페이지</button>
+        <button class="page-btn" onclick="changePage(1)">다음 페이지</button>
+      </div>
+      <iframe
+        width="300"
+        height="150"
+        src="https://www.youtube.com/embed/YRcYiIBuWMQ?autoplay=1&loop=1&playlist=YRcYiIBuWMQ"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <!-- 모달 -->
+    <div class="modal" id="modal">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div class="modal-content" id="modalContent">
+        <!-- 모달에 표시될 콘텐츠 (이미지 또는 비디오) -->
+      </div>
+    </div>
+
+    <script>
+      const photos = [
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Video_2024-08-24-01-39-01.mp4?alt=media&token=909a4bf7-70d2-4e42-94d3-c7e916c7463f",
+          caption: "진영이 이쁜 영상",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-37-24%20001.jpeg?alt=media&token=ab75659d-a046-444d-908b-50cc002ec48c",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-37-24%20002.jpeg?alt=media&token=04c7dea4-ab55-436d-ad47-40b0fc2cd918",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-37-25%20003.jpeg?alt=media&token=728893d8-c14c-4fdc-a276-369de4b1089e",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-37-25%20004.jpeg?alt=media&token=f387d6f5-d250-4399-bca6-8ae8d9156de1",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-10%20001.jpeg?alt=media&token=1d148270-d21a-495d-aa0d-cc6041e12686",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-10%20002.jpeg?alt=media&token=fbf7e328-b032-4fee-9fb4-f166e9417562",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-10%20003.jpeg?alt=media&token=6fe3307f-45c6-41f4-b844-e7edb722f3a2",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-11%20004.jpeg?alt=media&token=3d0e3ec1-f164-4aeb-81ea-c966b209159a",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-11%20005.jpeg?alt=media&token=c12ce041-db23-4686-8e87-4774e55017a9",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-11%20006.jpeg?alt=media&token=0e512a4d-f4c8-46a8-bd2c-bd4ae0ba2099",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-11%20007.jpeg?alt=media&token=34a15834-0183-475d-b1e1-20ed80b320d9",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-11%20008.jpeg?alt=media&token=9efdcd22-032b-45d8-ae5f-809ed1c17ee1",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-12%20009.jpeg?alt=media&token=b52a7667-f5ac-4fc4-9a7c-6ea1c8f9c679",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-13%20010.jpeg?alt=media&token=6e37e913-9ffd-4774-b40f-b01784007f7e",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-13%20011.jpeg?alt=media&token=c1d42301-8455-4f5a-9175-990d6c68311a",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-13%20012.jpeg?alt=media&token=fa7fead6-480a-4af0-8a77-c9ffbaf4dbfd",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-13%20013.jpeg?alt=media&token=1c83b8b3-1ef4-4b60-a57e-d2b24a590f07",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-13%20014.jpeg?alt=media&token=e52f2da0-ea4e-48c8-8a43-d500583ec000",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-13%20015.jpeg?alt=media&token=96c8b651-7872-4abf-906e-660da94007d4",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-14%20016.jpeg?alt=media&token=c9ac902e-848c-4c7b-9e18-9a38bc5a4058",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2FKakaoTalk_Photo_2024-11-11-16-38-14%20017.jpeg?alt=media&token=73a65528-a910-4764-920d-f5ceb18e1a3b",
+          caption: "24.10.26~27 우리의 첫 여행 (양양에서)",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa1.jpeg?alt=media&token=d1cd4031-2701-40ed-a6f3-63298a500267",
+          caption: "24.11.1 재현이 생일에",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa11.jpeg?alt=media&token=f809d721-c327-4093-905d-03dd68538e79",
+          caption: "멋진 풍경",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa12.jpeg?alt=media&token=7c45759d-73a7-42a4-ad8d-b183595361f5",
+          caption: "웃고 있는 너",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa13.jpeg?alt=media&token=edd871b4-81cc-427f-b605-d95c2f6e5a90",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa14.jpeg?alt=media&token=d21a82df-ba4f-45d3-b3b1-e2700c71945a",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa15.jpeg?alt=media&token=b2793cd5-d0d8-4c94-913b-1d94bb15f1e9",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa16.jpeg?alt=media&token=97ec0186-ed2d-4102-9c8e-2070994869f8",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa17.jpeg?alt=media&token=5c28af6f-e4b6-49ad-ac10-e6e351e2c4ea",
+          caption: "닭도리탕",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa18.jpeg?alt=media&token=79f9669c-ec1d-4f2a-a4e6-98da83bf5aa8",
+          caption: "야채조공",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa19.jpeg?alt=media&token=5ad147e3-2ba3-405c-9e9f-6a96ca73c0d7",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa2.jpeg?alt=media&token=48951d54-b5e0-41ca-9a82-b8a0b908f4cc",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa20.jpeg?alt=media&token=5fb50a04-9a4f-4ca6-8f8a-9f5d94b8edac",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa21.jpeg?alt=media&token=bb592b47-3293-40f9-8171-cbdf9d80fd26",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa22.jpeg?alt=media&token=df6ee685-9563-48fb-a463-7679524ccafd",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa23.jpeg?alt=media&token=f587f89c-6cd7-4ae9-a407-5ad75eef589e",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa24.jpeg?alt=media&token=0848f070-d17d-4fbf-9832-18e9a9c8a8af",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa25.jpeg?alt=media&token=1fdb62c4-7106-47f8-bff2-fff81caab10e",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa26.jpeg?alt=media&token=cf7ad643-1ffd-44a4-b002-0197cc010333",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa27.jpeg?alt=media&token=48aad63f-6fa8-4452-accd-750fe6f06179",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa28.jpeg?alt=media&token=f5d04c3c-7645-4d73-8518-7e4eb4f0d027",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa29.jpeg?alt=media&token=e5150647-b4ed-45fc-aa3c-69a2f4acfb07",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa3.jpeg?alt=media&token=d14ca123-e9bb-4f61-958e-3068c6ad8393",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa30.jpeg?alt=media&token=b6dcb8bd-316c-4c0f-a81e-260a31e30f43",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa31.jpeg?alt=media&token=afc6ce4e-418c-46a9-82c8-31e3fc889721",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa32.jpeg?alt=media&token=ed48e212-4dc7-432e-be93-bff5e76cb837",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa33.jpeg?alt=media&token=dcfaaa12-b54e-4158-94ea-a820e36fc337",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa34.jpeg?alt=media&token=353b4d05-66e5-41de-b845-9ef2a678de68",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa35.jpeg?alt=media&token=4ca90307-8f1d-4ff7-9273-b61c232c18b0",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa36.jpeg?alt=media&token=75aa8076-004b-4d8d-b8a7-b43cd6376c77",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa37.jpeg?alt=media&token=765d95e5-78ae-4d94-bb60-3a2cb5cf5005",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa38.jpeg?alt=media&token=3a6453e4-3349-4b91-bdc9-c2a10d8a4e8c",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa39.jpeg?alt=media&token=6a09d31c-024f-4866-bfd8-8dd3ef1b9c6e",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa4.jpeg?alt=media&token=2d6a754e-dcbc-44e1-883c-ef62c553c943",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa40.jpeg?alt=media&token=c87a53bc-c6d5-4b02-9517-1676680a1f52",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa41.jpeg?alt=media&token=12a1af0b-6583-461b-beb1-ff04f3dc83bc",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa43.jpeg?alt=media&token=015b4a57-ded0-4f09-b8d2-68f66cf370b8",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa44.jpeg?alt=media&token=6c89eeb5-98c8-43ff-a80d-13c78ee2b658",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa5.jpeg?alt=media&token=2ceb5208-0dd3-4de2-9622-b618890d5f45",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa7.jpeg?alt=media&token=145efd54-5959-4ba7-9b0c-8145b533a69b",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa8.jpeg?alt=media&token=a3aacc8b-3700-467a-af0a-36faf141da3a",
+          caption: "함께한 여행",
+        },
+        {
+          src: "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fa9.jpeg?alt=media&token=b733f077-296a-4812-a83b-8f39c495d4a9",
+          caption: "함께한 여행",
+        },
+      ];
+
+      let currentPage = 1;
+      const imagesPerPage = 9; // 한 페이지에 표시할 이미지 수
+      const totalImages = photos.length; // 총 이미지 수
+
+      // 현재 페이지에 따라 사진을 표시하는 함수
+      function displayPhotos() {
+        const photoGrid = document.getElementById("photoGrid");
+        photoGrid.innerHTML = ""; // 현재 사진을 지우기
+
+        // 시작 및 종료 인덱스 계산
+        const start = (currentPage - 1) * imagesPerPage;
+        const end = start + imagesPerPage;
+
+        // 현재 페이지의 사진을 슬라이스하여 카드 생성
+        const currentPhotos = photos.slice(start, end);
+        currentPhotos.forEach((photo) => {
+          const card = document.createElement("div");
+          card.className = "photo-card";
+
+          // 파일 확장자 확인
+          const fileExtension = photo.src
+            .split(".")
+            .pop()
+            .split("?")[0]
+            .toLowerCase();
+          let mediaElement;
+          if (fileExtension === "mp4") {
+            // 비디오 요소 생성
+            mediaElement = document.createElement("video");
+            mediaElement.className = "video";
+            mediaElement.src = photo.src;
+            mediaElement.controls = true;
+            mediaElement.onclick = (e) => {
+              e.stopPropagation(); // 비디오 클릭 시 모달 열리지 않도록 함
+              openModal(photo.src, "video");
+            };
+          } else {
+            // 이미지 요소 생성
+            mediaElement = document.createElement("img");
+            mediaElement.className = "photo";
+            mediaElement.src = photo.src;
+            mediaElement.alt = photo.caption;
+            mediaElement.onclick = () => openModal(photo.src, "image");
+          }
+
+          const caption = document.createElement("div");
+          caption.className = "caption";
+          caption.textContent = photo.caption;
+
+          card.appendChild(mediaElement);
+          card.appendChild(caption);
+          photoGrid.appendChild(card);
+        });
+      }
+
+      // 현재 페이지를 변경하는 함수
+      function changePage(direction) {
+        currentPage += direction;
+        if (currentPage < 1) currentPage = 1; // 페이지 0으로 돌아가지 않도록 방지
+        if (currentPage > Math.ceil(totalImages / imagesPerPage))
+          currentPage = Math.ceil(totalImages / imagesPerPage); // 마지막 페이지 넘어가지 않도록 방지
+        displayPhotos(); // 표시된 사진 업데이트
+      }
+
+      // 클릭한 이미지 또는 비디오로 모달을 여는 함수
+      function openModal(src, type) {
+        const modal = document.getElementById("modal");
+        const modalContent = document.getElementById("modalContent");
+        modalContent.innerHTML = ""; // 기존 콘텐츠 지우기
+
+        if (type === "video") {
+          const video = document.createElement("video");
+          video.src = src;
+          video.controls = true;
+          video.autoplay = true;
+          video.style.maxWidth = "100%";
+          video.style.maxHeight = "100%";
+          modalContent.appendChild(video);
+        } else {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = "확대 이미지";
+          modalContent.appendChild(img);
+        }
+
+        modal.style.display = "flex"; // 모달 보여주기
+      }
+
+      // 모달을 닫는 함수
+      function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.style.display = "none"; // 모달 숨기기
+      }
+
+      // 초기 사진 표시
+      displayPhotos();
+    </script>
+  </body>
+</html>

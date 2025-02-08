@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+
+      // Storage 참조 생성
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child("img/159.gif");
+
+      // 이미지 다운로드 URL 가져오기
+      imageRef
+        .getDownloadURL()
+        .then((url) => {
+          // 이미지 src 속성 설정
+          document.getElementById("firebase-image").src = url;
+        })
+        .catch((error) => {
+          console.error("Error getting download URL:", error);
+        });
+    </script>
+    <title>다킹</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: black;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        table-layout: fixed; /* 테이블의 칸 크기를 고정 */
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        width: 33.33%; /* 각 칸의 너비를 균등하게 설정 */
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      h1 {
+        text-align: center;
+      }
+      .resize-img {
+        border-radius: 50px;
+        width: 30%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fex3.png?alt=media&token=51c083ff-d195-41ff-82b1-0786e74e90b7"
+              alt="어깨 이미지"
+              class="resize-img"
+            />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="/training/bb upright row.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(21).gif?alt=media&token=6cfec42c-82f3-4b45-9a48-a2dfbc403890"
+                alt="바벨 업라이트 로우"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />업라이트 로우<br /><br />
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/bb wide grip upright row.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(20).gif?alt=media&token=f98d91d2-d77b-4347-8b58-7b9163bf0590"
+                alt="와이드그립 업라이트 로우"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />와이드그립 업라이트 로우
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/bb standing close grip military press.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(22).gif?alt=media&token=01314a87-93e8-4578-b2f5-2c99a2903529"
+                alt="클로즈그립 밀리터리 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />클로즈그립 밀리터리 프레스
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/bb seated military press.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(23).gif?alt=media&token=9fb19caf-e5b6-44ab-a6e1-fcb0a66235a3"
+                alt="시티드 밀리터리 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 밀리터리 프레스
+            </a>
+          </td>
+          <td>
+            <a href="/training/bb frontal raise.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(57).gif?alt=media&token=1007d653-827e-4192-8b3c-bf4fe725ae01"
+                alt="프런트 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />프런트 레이즈
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/bb seated overhead press.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(63).gif?alt=media&token=ef410d3a-35ee-4663-9e28-d85f4d6c6dbc"
+                alt="시티드 오버헤드 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 오버헤드 프레스
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/ez bar and gravity raise.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(108).gif?alt=media&token=e57e93dd-6f69-4ff5-a30c-aeb609ea8dda"
+                alt="ez바 그래비티 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />ez바 그래비티 프레스
+            </a>
+          </td>
+          <td>
+            <a href="/training/standing behind neck press" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(137).gif?alt=media&token=d8a8253c-7414-470d-bc12-79f92fd8a5ef"
+                alt="스탠딩 비하인드넥프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />비하인드 넥프레스
+            </a>
+          </td>
+          <td>
+            <a href="/training/pushpress.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(154).gif?alt=media&token=9034d8b3-4575-4878-97cd-f7dc59e7aaac"
+                alt="푸쉬 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />푸쉬 프레스<br />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/bb shrug.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2F198.gif?alt=media&token=3bb01e63-d208-4127-9916-963f154a481a"
+                alt="바벨 슈러그"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />바벨 슈러그<br />
+            </a>
+          </td>
+          <!-- <td>
+            <a href="/training/standing behind neck press" style="color: white">
+              <img
+                src="/imgs/ezgif.com-optimize (137).gif"
+                alt="스탠딩 비하인드넥프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />스탠딩 비하인드넥프레스
+            </a>
+          </td> -->
+          <!-- <td>
+            <a href="/training/pushpress.html" style="color: white">
+              <img
+                src="/imgs/ezgif.com-optimize (154).gif"
+                alt="푸쉬 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />푸쉬 프레스<br />
+            </a>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

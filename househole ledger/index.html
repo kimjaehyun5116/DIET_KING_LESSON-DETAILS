@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>월별 가계부</title>
+    <style>
+      /* CSS 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #f2f4f6, #ffffff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #444;
+        font-size: 2em;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      #budget-form,
+      #budget-list,
+      #summary {
+        max-width: 600px;
+        width: 100%;
+        margin: 20px 0;
+        padding: 25px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      #budget-form input,
+      #budget-form select,
+      #budget-form button {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+      }
+
+      #budget-form button {
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.1em;
+      }
+
+      .budget-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 1em;
+      }
+
+      .income {
+        color: #4caf50;
+        font-weight: bold;
+      }
+
+      .expense {
+        color: #e53935;
+        font-weight: bold;
+      }
+
+      .actions button {
+        background-color: transparent;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 5px;
+      }
+
+      #summary {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        background: linear-gradient(to right, #ffefba, #ffffff);
+      }
+
+      #total,
+      #monthly-income,
+      #monthly-expense {
+        color: #007bff;
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      #carryover {
+        color: #555;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>월별 가계부</h1>
+    <div id="budget-form">
+      <div style="display: flex; align-items: center">
+        <button onclick="decreaseYear()">◀</button>
+        <select id="year"></select>
+        <button onclick="increaseYear()">▶</button>
+      </div>
+      <select id="month" onchange="loadMonthData()">
+        <option value="1">1월</option>
+        <option value="2">2월</option>
+        <option value="3">3월</option>
+        <option value="4">4월</option>
+        <option value="5">5월</option>
+        <option value="6">6월</option>
+        <option value="7">7월</option>
+        <option value="8">8월</option>
+        <option value="9">9월</option>
+        <option value="10">10월</option>
+        <option value="11">11월</option>
+        <option value="12">12월</option>
+      </select>
+      <input type="date" id="date" placeholder="날짜" />
+      <input type="text" id="description" placeholder="내용" />
+      <input type="number" id="amount" placeholder="금액" />
+      <button onclick="addTransaction()">추가</button>
+    </div>
+
+    <div id="budget-list"></div>
+    <div id="summary">
+      <p>당월 수입: <span id="monthly-income">₩0</span></p>
+      <p>당월 지출: <span id="monthly-expense">₩0</span></p>
+      <p>이월금액: <span id="carryover">₩0</span></p>
+      <p>총 수입: <span id="total-income">₩0</span></p>
+      <p>총 지출: <span id="total-expense">₩0</span></p>
+    </div>
+
+    <script>
+      let monthlyData = {};
+      let currentYear = new Date().getFullYear();
+      let currentMonth = new Date().getMonth() + 1;
+
+      function initializeYears() {
+        const yearSelect = document.getElementById("year");
+        for (let i = currentYear - 2; i <= currentYear + 2; i++) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = `${i}년`;
+          yearSelect.appendChild(option);
+        }
+        yearSelect.value = currentYear;
+      }
+
+      function loadMonthData() {
+        const monthSelect = document.getElementById("month");
+        currentMonth = monthSelect.value;
+        const monthData =
+          monthlyData[currentYear] && monthlyData[currentYear][currentMonth]
+            ? monthlyData[currentYear][currentMonth]
+            : [];
+        updateDisplay(monthData);
+        calculateMonthlyTotals(monthData);
+      }
+
+      function updateDisplay(monthData) {
+        const budgetList = document.getElementById("budget-list");
+        budgetList.innerHTML = "";
+        monthData.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "budget-item";
+          div.innerHTML = `
+        <span>${item.date} ${item.description}</span>
+        <span class="${item.type === "income" ? "income" : "expense"}">₩${item.amount}</span>
+        <div class="actions">
+          <button onclick="deleteTransaction(${index})">삭제</button>
+        </div>
+      `;
+          budgetList.appendChild(div);
+        });
+      }
+
+      function calculateMonthlyTotals(monthData) {
+        let incomeTotal = 0;
+        let expenseTotal = 0;
+        monthData.forEach((item) => {
+          if (item.type === "income") {
+            incomeTotal += item.amount;
+          } else {
+            expenseTotal += item.amount;
+          }
+        });
+
+        const carryover =
+          currentMonth > 1
+            ? monthlyData[currentYear][currentMonth - 1].carryover
+            : 0;
+        const netIncome = incomeTotal - expenseTotal;
+
+        document.getElementById("monthly-income").textContent =
+          `₩${incomeTotal}`;
+        document.getElementById("monthly-expense").textContent =
+          `₩${expenseTotal}`;
+        document.getElementById("carryover").textContent =
+          `₩${carryover + netIncome}`;
+        document.getElementById("total-income").textContent =
+          `₩${incomeTotal + carryover}`;
+        document.getElementById("total-expense").textContent =
+          `₩${expenseTotal + carryover}`;
+      }
+
+      function addTransaction() {
+        const date = document.getElementById("date").value;
+        const description = document.getElementById("description").value;
+        const amount = parseInt(document.getElementById("amount").value);
+        const type = amount >= 0 ? "income" : "expense";
+
+        if (!monthlyData[currentYear]) {
+          monthlyData[currentYear] = {};
+        }
+        if (!monthlyData[currentYear][currentMonth]) {
+          monthlyData[currentYear][currentMonth] = [];
+        }
+
+        monthlyData[currentYear][currentMonth].push({
+          date,
+          description,
+          amount: Math.abs(amount),
+          type,
+        });
+
+        saveData();
+        loadMonthData();
+      }
+
+      function deleteTransaction(index) {
+        monthlyData[currentYear][currentMonth].splice(index, 1);
+        saveData();
+        loadMonthData();
+      }
+
+      function saveData() {
+        localStorage.setItem("monthlyData", JSON.stringify(monthlyData));
+      }
+
+      function decreaseYear() {
+        currentYear--;
+        initializeYears();
+        loadMonthData();
+      }
+
+      function increaseYear() {
+        currentYear++;
+        initializeYears();
+        loadMonthData();
+      }
+
+      initializeYears();
+      loadMonthData();
+    </script>
+  </body>
+</html>

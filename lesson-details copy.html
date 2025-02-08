@@ -1,0 +1,4038 @@
+<!doctype html>
+<html lang="ko" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="MacJae" />
+    <meta name="keywords" content="다킹" />
+    <meta name="description" content="다킹" />
+
+    <!-- sns share -->
+    <meta property="og:url" content="https://diet-king-app.netlify.app/" />
+    <meta property="og:title" content="다킹" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/img/main.png" />
+    <meta property="og:description" content="다킹" />
+
+    <!--favicon-->
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <title>레슨 일지 작성</title>
+    <style>
+      .file-preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .file-preview {
+        display: block;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        margin: 5px;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .modal-content,
+      .modal-video {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+      }
+
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      /* 기존 스타일은 그대로 유지됩니다 */
+      .precautions {
+        font-size: 16px;
+        color: #d9534f; /* 빨간색 */
+        margin-top: 10px;
+        font-weight: bold;
+        display: none; /* 기본적으로 숨겨놓음 */
+        white-space: pre-line; /* 줄바꿈과 공백을 유지 */
+        margin-top: 10px; /* 주의사항 위에 간격 */
+        line-height: 1; /* 줄 간격 조절 */
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        overflow: hidden;
+        color: #e0e0e0;
+        overflow-y: scroll;
+      }
+
+      .top-navbar {
+        top: 0;
+      }
+
+      .bottom-navbar {
+        bottom: 0;
+      }
+
+      .navbar {
+        width: 100%;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+        background-color: #1e1e1e;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        height: 60px;
+      }
+
+      .navbar ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar ul li {
+        margin: 0 20px;
+      }
+
+      .navbar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .navbar ul li a:hover {
+        background-color: #495057;
+        transform: translateY(-2px);
+      }
+
+      .container {
+        margin-top: 10%;
+        background-color: #363535;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-height: 100%;
+        overflow-y: auto;
+      }
+      .logout-btn {
+        background-color: #ff5a5f;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 16px;
+        position: absolute;
+        top: 35px;
+        right: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        margin-top: 40px;
+      }
+
+      .logout-btn:hover {
+        background-color: #ff3b3f;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+      }
+      .header {
+        position: relative;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      #clientName {
+        font-size: 24px;
+        color: #ffffff;
+        margin: 0;
+        padding: 20px 0;
+      }
+      #viewReadOnlyBtn {
+        margin-bottom: 100px;
+      }
+      .exercise-group {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #fff;
+        position: relative;
+      }
+
+      .exercise-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-group {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        resize: vertical;
+        margin-bottom: 5px;
+        margin-top: 30px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .exerciseGroupsContainerontainer {
+        background-color: red;
+      }
+      .btn5 {
+        font-weight: bold;
+        margin-bottom: 100px;
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+      .btn5:hover {
+        background-color: #0056b3;
+      }
+      .btn1 {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        background-color: #343a40; /* navbar와 동일한 색상 */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .btn1:hover {
+        background-color: #495057; /* navbar와 동일한 호버 색상 */
+        transform: translateY(-2px);
+      }
+
+      .add-remove-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+
+      .add-remove-buttons button {
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 5px;
+      }
+
+      .remove-btn {
+        background-color: #dc3545;
+      }
+
+      .remove-btn:hover {
+        background-color: #c82333;
+      }
+
+      .add-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .exercise-group-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .exercise-group-table th,
+      .exercise-group-table td {
+        border: 1px solid #ddd;
+        padding: 2px;
+        text-align: center;
+      }
+
+      .exercise-group-table th {
+        background-color: #f4f4f4;
+      }
+
+      .add-group-btn {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .add-group-btn button {
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .add-group-btn button:hover {
+        background-color: #0056b3;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close-btn:hover {
+        background-color: #c82333;
+      }
+
+      .youtube-search-btn {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #ff0000;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        margin-top: 0px;
+      }
+
+      .youtube-search-btn:hover {
+        background-color: #cc0000;
+      }
+
+      .header h1 {
+        text-align: center;
+      }
+      .next_lesson {
+        color: #e0e0e0;
+        font-weight: bold;
+        border-radius: 10px;
+        background-color: #2c2c2c;
+        width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+        margin-top: 20px; /* 위쪽 여백 추가 */
+      }
+
+      .next_lesson textarea {
+        width: 100%; /* 부모 요소에 꽉 차도록 설정 */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+        resize: vertical; /* 수직으로만 크기 조절 가능 */
+      }
+      #exerciseName1 {
+        width: 60%;
+      }
+      #exerciseBodyPart11 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName2 {
+        width: 60%;
+      }
+      #exerciseBodyPart12 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName3 {
+        width: 60%;
+      }
+      #exerciseBodyPart13 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName4 {
+        width: 60%;
+      }
+      #exerciseBodyPart14 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName5 {
+        width: 60%;
+      }
+      #exerciseBodyPart15 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName6 {
+        width: 60%;
+      }
+      #exerciseBodyPart16 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName7 {
+        width: 60%;
+      }
+      #exerciseBodyPart17 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName8 {
+        width: 60%;
+      }
+      #exerciseBodyPart18 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName9 {
+        width: 60%;
+      }
+      #exerciseBodyPart19 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+      #exerciseName10 {
+        width: 60%;
+      }
+      #exerciseBodyPart20 {
+        width: 60%;
+        height: 20px;
+        margin-bottom: 5px;
+      }
+
+      @media (max-width: 600px) {
+        .exercise-group-table th,
+        .exercise-group-table td {
+          font-size: 16px; /* 원하는 글자 크기로 조정 */
+        }
+        #clienName {
+          font-size: 20px;
+        }
+        .form-group {
+          font-size: 16px;
+          margin-top: 30px;
+        }
+      }
+      #exerciseName1,
+      #exerciseName2,
+      #exerciseName3,
+      #exerciseName4,
+      #exerciseName5,
+      #exerciseName6,
+      #exerciseName7,
+      #exerciseName8,
+      #exerciseName9,
+      #exerciseName10 {
+        width: 50%;
+      }
+      #exerciseBodyPart11,
+      #exerciseBodyPart12,
+      #exerciseBodyPart13,
+      #exerciseBodyPart14,
+      #exerciseBodyPart15,
+      #exerciseBodyPart16,
+      #exerciseBodyPart17,
+      #exerciseBodyPart18,
+      #exerciseBodyPart19,
+      #exerciseBodyPart20 {
+        width: 50%;
+      }
+      .exercise-group-table th,
+      .exercise-group-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+
+      .exercise-group-table th {
+        background-color: #f4f4f4;
+      }
+
+      .exercise-group-table td:nth-child(1),
+      .exercise-group-table th:nth-child(1) {
+        width: 20%; /* 세트 열 너비 */
+      }
+
+      .exercise-group-table td:nth-child(2),
+      .exercise-group-table th:nth-child(2) {
+        width: 30%; /* 무게 열 너비 */
+      }
+
+      .exercise-group-table td:nth-child(3),
+      .exercise-group-table th:nth-child(3) {
+        width: 30%; /* 횟수 열 너비 */
+      }
+      .exercise-group-table input[type="number"] {
+        height: 10px; /* 원하는 높이로 조정 */
+        font-size: 16px;
+        text-align: center;
+      }
+      /* 버튼 스타일 */
+      .exercise-button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+      .exercise-button:hover {
+        background-color: #0056b3;
+      }
+      .exercise-group {
+        margin-top: 20px;
+      }
+      h4 {
+        margin-bottom: -10px;
+      }
+      @media (max-width: 600px) {
+        .btn1 {
+          padding: 0;
+        }
+        .navbar {
+          background-color: #333; /* 네비게이션 바 배경색 */
+          padding: 0; /* 패딩 제거 */
+          overflow-x: auto; /* 내용이 넘치면 스크롤바 표시 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list {
+          display: flex; /* 플렉스 박스로 변경하여 한 줄로 표시 */
+          justify-content: space-between; /* 각 항목이 여유롭게 배치되도록 설정 */
+          padding: 0;
+          margin: 0;
+          list-style: none; /* 리스트 스타일 제거 */
+        }
+
+        .navbar-list li {
+          flex: 1; /* 각 항목이 균등하게 공간을 차지 */
+        }
+
+        .navbar-list a {
+          display: block; /* 앵커 태그가 전체 공간을 차지하도록 설정 */
+          padding: 10px 15px; /* 여백 추가 */
+          color: white; /* 텍스트 색상 */
+          text-align: center; /* 텍스트 중앙 정렬 */
+          font-size: 16px; /* 폰트 크기 */
+          text-decoration: none; /* 밑줄 제거 */
+          white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .navbar-list a:hover {
+          background-color: #555; /* 마우스 오버 시 배경색 변경 */
+        }
+        .navbar ul li a {
+          font-size: 16px;
+        }
+        .navbar {
+          width: 100%; /* 네비게이션 바가 화면 전체 너비를 차지하도록 설정 */
+        }
+
+        .lesson-box {
+          display: flex; /* Flexbox 사용 */
+          flex-direction: row; /* 가로 방향으로 배치 */
+          align-items: center; /* 중앙 정렬 */
+          justify-content: space-between; /* 양 끝에 배치 */
+          padding: 10px; /* 패딩 줄이기 */
+          gap: 10px; /* 글자와 버튼 사이의 간격 */
+        }
+
+        .lesson-box h3,
+        .lesson-box h4 {
+          font-size: 16px; /* 글자 크기 줄이기 */
+          margin: 0; /* 여백 제거 */
+        }
+
+        .edit-delete-buttons {
+          display: flex; /* Flexbox 사용 */
+          flex-direction: row; /* 가로 방향으로 배치 */
+          justify-content: center; /* 중앙 정렬 */
+          margin-top: 5px; /* 간격 줄이기 */
+        }
+
+        .edit-btn,
+        .delete-btn {
+          padding: 5px 10px;
+          font-size: 16px; /* 버튼 글자 크기 줄이기 */
+        }
+
+        .form-group {
+          flex-direction: column; /* 세로로 배치 */
+          gap: 10px; /* 요소들 간의 간격 */
+        }
+
+        .form-group input {
+          width: 100%; /* 입력 필드가 전체 너비를 차지하도록 설정 */
+        }
+
+        .btn {
+          width: 100%;
+          max-width: none; /* 최대 너비 제한 제거 */
+          font-size: 16px; /* 글자 크기 줄이기 */
+        }
+
+        .container {
+          width: 100%; /* 모바일에서 컨테이너가 전체 너비를 차지하도록 설정 */
+
+          padding: 10px; /* 패딩 줄이기 */
+        }
+        .btn1 {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 id="clientName">레슨 일지</h1>
+        <div id="post-form">
+          <input type="file" id="media-upload" accept="image/*,video/*" />
+          <input
+            type="text"
+            id="post-caption"
+            placeholder="내용을 입력하세요"
+          />
+          <button id="add-post">업로드</button>
+        </div>
+        <div id="posts"></div>
+        <button class="logout-btn" onclick="logout()">로그아웃</button>
+      </div>
+      <div id="message"></div>
+      <div id="exerciseGroupsContainer">
+        <!-- 운동 그룹들이 동적으로 추가될 위치 -->
+      </div>
+      <h4>다음 회차 예정 수업</h4>
+      <div class="next_lesson">
+        <textarea
+          id="exerciseDescription${groupIndex}"
+          rows="4"
+          placeholder="다음 회차 예정 수업을 입력하세요"
+        ></textarea>
+      </div>
+
+      <div class="add-group-btn">
+        <button class="btn" id="addGroupBtn">종목 추가</button>
+      </div>
+
+      <input type="hidden" id="lessonId" />
+      <button class="btn" id="saveLessonBtn">저장</button>
+      <button class="btn" onclick="goBack()">뒤로 가기</button>
+      <button class="btn5" onclick="viewReadOnlyBtn()">공유하기</button>
+    </div>
+    <nav class="navbar bottom-navbar">
+      <ul>
+        <li><button class="btn1" onclick="client_list()">회원목록</button></li>
+        <li>
+          <button class="btn1" onclick="client_lesson_log()">수업목록</button>
+        </li>
+        <!-- <li>
+          <button class="btn1" onclick="read_client_workout_log()">
+            회원일지
+          </button>
+        </li> -->
+        <!-- <li>
+            <button class="btn1" onclick="calendar()">캘린더</button>
+          </li> -->
+        <li>
+          <button class="btn1" onclick="progressrecord()">변화기록</button>
+        </li>
+        <li>
+          <button class="btn1" onclick="review()">상품리뷰</button>
+        </li>
+      </ul>
+    </nav>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:f689c9f8b8c772c65cc3e4",
+        measurementId: "G-9NNCPJMT9M",
+      };
+
+      // Firebase 초기화
+      firebase.initializeApp(firebaseConfig);
+
+      // Firestore 초기화
+      const db = firebase.firestore();
+
+      // Storage 초기화
+      const storage = firebase.storage();
+
+      const exerciseGroupsContainer = document.getElementById(
+        "exerciseGroupsContainer"
+      );
+      // 클라이언트 ID 가져오기
+      function getClientId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("clientId");
+      }
+      function getTrainerId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("trainerId");
+      }
+      // 레슨 ID 가져오기
+      function getLessonId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("lessonId");
+      }
+      // 운동 이름에 맞는 주의사항을 저장
+      function savePrecautions(groupIndex) {
+        const exerciseName = document
+          .getElementById(`exerciseName${groupIndex}`)
+          .value.toLowerCase();
+        const clientId = getClientIdFromURL(); // URL에서 clientId 가져오기
+      }
+      function client_list() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
+        if (trainerId) {
+          // trainerId를 URL에 포함하여 페이지로 이동
+          window.location.href = `client_list.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function Check_attendance_records() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 trainerId를 가져옴
+        if (trainerId) {
+          // trainerId를 URL에 포함하여 페이지로 이동
+          window.location.href = `Check_attendance_records.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("trainerId가 정의되지 않았습니다.");
+        }
+      }
+      function navigateToFeedback() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `potoupload.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      // 수정된 progressrecord 함수
+      function progressrecord() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `progress-record.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function client_lesson_log() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `client_lesson_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function read_client_workout_log() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `read_client_workout_log.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function calendar() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `calendar.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      function review() {
+        const clientId = getClientId();
+        const trainerId = getTrainerId(); // 현재 URL에서 clientId를 가져옴
+        if (clientId) {
+          // clientId를 URL에 포함하여 페이지로 이동
+          window.location.href = `reviewpage.html?clientId=${clientId}&trainerId=${trainerId}`;
+        } else {
+          console.error("clientId가 정의되지 않았습니다.");
+        }
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        const addGroupBtn = document.getElementById("addGroupBtn");
+        const saveLessonBtn = document.getElementById("saveLessonBtn");
+        const viewReadOnlyBtn = document.getElementById("viewReadOnlyBtn");
+        const lessonIdInput = document.getElementById("lessonId");
+
+        // 레슨 데이터 로드 함수
+        async function loadLessonData() {
+          const lessonId = getLessonId();
+          const clientId = getClientId();
+
+          if (lessonId) {
+            try {
+              const lessonDoc = await db
+                .collection("lessons")
+                .doc(lessonId)
+                .get();
+              if (lessonDoc.exists) {
+                const lessonData = lessonDoc.data();
+                lessonIdInput.value = lessonId;
+
+                const exerciseGroups = lessonData.exerciseGroups || [];
+                exerciseGroups.forEach((group, index) => {
+                  createExerciseGroup(group, index + 1);
+                });
+
+                document.querySelector(".next_lesson textarea").value =
+                  lessonData.nextLesson || "";
+
+                if (clientId) {
+                  await loadClientCycleData(clientId, lessonData.cycle);
+                } else {
+                  console.log("클라이언트 ID가 입력되지 않았습니다.");
+                }
+              } else {
+                console.log("레슨 문서를 찾을 수 없습니다.");
+              }
+            } catch (error) {
+              console.error("레슨 데이터 로드 중 오류 발생:", error);
+              alert("레슨 데이터를 로드하는 중 오류가 발생했습니다.");
+            }
+          } else {
+            console.log("레슨 ID가 입력되지 않았습니다.");
+          }
+        }
+        // 클라이언트 사이클 데이터 로드 함수
+        async function loadClientCycleData(clientId, cycle) {
+          // cycle 정보를 사용하여 클라이언트 이름 업데이트
+          updateClientName(cycle);
+        }
+
+        // 클라이언트 이름 업데이트 함수
+        function updateClientName(cycle) {
+          const clientNameElement = document.getElementById("clientName");
+          clientNameElement.textContent = `${cycle}회차 레슨 일지`;
+        }
+
+        let availableIndexes = new Set(); // 인덱스를 저장하는 집합 초기화
+
+        function createExerciseGroup(groupData = {}, index) {
+          const groupIndex = index || Math.max(0, ...availableIndexes) + 1;
+          availableIndexes.add(groupIndex); // 인덱스 집합에 추가
+
+          const groupDiv = document.createElement("div");
+          groupDiv.classList.add("exercise-group");
+          groupDiv.id = `exerciseGroup${groupIndex}`;
+
+          groupDiv.innerHTML = `
+          <button class="close-btn" onclick="handleRemoveGroup('${groupDiv.id}')">&times;</button>
+          <div class="form-group">
+              <label for="exerciseName${groupIndex}">종목 ${groupIndex}</label>
+              <input type="text" id="exerciseName${groupIndex}" placeholder="운동 이름을 입력거나 선택하세요"
+              list="exerciseOptions${groupIndex}"
+              />
+              <datalist id="exerciseOptions${groupIndex}">
+                <option value="스쿼트"></option>
+                <option value="벤치 프레스"></option>
+                <option value="데드리프트"></option>
+                <option value="푸쉬업"></option>
+                <option value="풀업"></option>
+                <option value="런지"></option>
+                <option value="레그프레스"></option>
+                <option value="덤벨 컬"></option>
+                <option value="숄더 프레스"></option>
+                <option value="덤벨 프레스"></option>
+                <option value="덤벨 플라이"></option>
+                <option value="투암 덤벨 오버헤드 익스텐션"></option>
+                <option value="덤벨 숄더 프레스"></option>
+                <option value="사이드 레터럴 레이즈"></option>
+                <option value="벤트 오버 레터럴 레이즈"></option>
+                <option value="프론트 레이즈"></option>
+                <option value="투암 덤벨 로우"></option>
+                <option value="원암 덤벨 로우"></option>
+                <option value="투암 덤벨 킥백"></option>
+                <option value="킥백"></option>
+                <option value="원암 덤벨 킥백"></option>
+                <option value="원암 덤벨 오버헤드 익스텐션"></option>
+                <option value="인클라인 덤벨 프레스"></option>
+                <option value="인클라인 덤벨 플라이"></option>
+                <option value="덤벨 풀오버"></option>
+                <option value="풀오버"></option>
+                <option value="투암 덤벨 스컬크러셔"></option>
+                <option value="덤벨 스컬크러셔"></option>
+                <option value="스컬크러셔"></option>
+                <option value="덤벨 헤머컬"></option>
+                <option value="헤머컬"></option>
+                <option value="인클라인 덤벨 컬"></option>
+                <option value="인클라인 벤치프레스"></option>
+                <option value="디클라인 벤치프레스"></option>
+                <option value="인클라인 덤벨 헤머 컬"></option>
+                <option value="얼터네이트 덤벨 컬"></option>
+                <option value="인클라인 얼터네이트 덤벨 컬"></option>
+                <option value="이지바 컬"></option>
+                <option value="언더그립 이지바 컬"></option>
+                <option value="이지바 오버헤드 익스텐션"></option>
+                <option value="이지바 스컬크러셔"></option>
+                <option value="이지바 로우"></option>
+                <option value="이지바 드래그 컬"></option>
+                <option value="드래그 컬"></option>
+                <option value="암컬 머신"></option>
+                <option value="암컬"></option>
+                <option value="펙 플라이"></option>
+                <option value="덱 플라이"></option>
+                <option value="이지바 데드리프트"></option>
+                <option value="바벨 컬"></option>
+                <option value="바벨 로우"></option>
+                <option value="루마니안 데드리프트"></option>
+                <option value="컨벤셔널 데드리프트"></option>
+                <option value="스티프 레그 데드리프트"></option>
+                <option value="스미스머신 스쿼트"></option>
+                <option value="스미스머신 로우"></option>
+                <option value="스미스머신 데드리프트"></option>
+                <option value="스미스머신 스티프 데드리프트"></option>
+                <option value="스미스머신 벤치 프레스"></option>
+                <option value="스미스머신 인클라인 벤치 프레스"></option>
+                <option value="스미스머신 밀리터리 숄더 프레스"></option>
+                <option value="스미스머신 비하인드 넥 프레스"></option>
+                <option value="케이블 로프 푸쉬 다운"></option>
+                <option value="케이블 스트레이트바 푸쉬 다운"></option>
+                <option value="케이블 원암 언더그립 푸쉬 다운"></option>
+                <option value="케이블 오버헤드 익스텐션"></option>
+                <option value="케이블 바이셉스 컬"></option>
+                <option value="케이블 컬"></option>
+                <option value="케이블 더블 바이셉스 컬"></option>
+                <option value="케이블 로우"></option>
+                <option value="페이스 풀"></option>
+                <option value="케이블 사이드 레터럴 레이즈"></option>
+                <option value="케이블 벤트오버 레터럴 레이즈"></option>
+                <option value="케이블 크런치"></option>
+                <option value="케이블 롱풀"></option>
+                <option value="시티드 체스트 프레스"></option>
+                <option value="인클라인 시티드 체스트 프레스"></option>
+                <option value="디클라인 시티드 체스트 프레스"></option>
+                <option value="시티드 체스트 플라이"></option>
+                <option value="시티드 덱 플라이"></option>
+                <option value="머신 프리처 컬"></option>
+                <option value="프리처 컬"></option>
+                <option value="바벨 프리처 컬"></option>
+                <option value="덤벨 프리처 컬"></option>
+                <option value="딥스"></option>
+                <option value="풀업"></option>
+                <option value="행잉 레그 레이즈"></option>
+                <option value="싯업"></option>
+                <option value="크런치"></option>
+                <option value="랫 풀다운"></option>
+                <option value="하이 로우로우"></option>
+                <option value="와이드 랫 풀다운"></option>
+                <option value="시티드 숄더 프레스"></option>
+                <option value="바이킹 프레스"></option>
+                <option value="쉬러그"></option>
+                <option value="핵 스쿼트"></option>
+                <option value="핵 프레스"></option>
+                <option value="파워 레그 프레스"></option>
+                <option value="레그 익스텐션"></option>
+                <option value="레그 컬"></option>
+                <option value="이너타이"></option>
+                <option value="아웃타이"></option>
+                <option value="힙 브릿지"></option>
+                <option value="힙 쓰러스트"></option>
+                <option value="카프레이즈"></option>
+                <option value="몬스터 글루트"></option>
+                <option value="스텐드 힙 어덕터"></option>
+                <option value="머신 바이셉스 컬"></option>
+                <option value="롱 풀"></option>
+                <option value="시티드 로우"></option>
+                <option value="미들 로우"></option>
+                <option value="로우 로우"></option>
+                <option value="백 익스텐션"></option>
+                <option value="하이퍼 익스텐션"></option>
+                <option value="트레드밀"></option>
+                <option value="좌식사이클"></option>
+                <option value="입식사이클"></option>
+                <option value="천국의계단"></option>
+                <option value="마이마운틴"></option>
+                <option value="V 스쿼트"></option>
+                <option value="버티컬 레그 프레스"></option>
+                <option value="벤트 니 업"></option>
+                <option value="사이드 크런치"></option>
+                <option value="암 워킹"></option>
+                <option value="스텝 박스 발바꿔 뛰기"></option>
+                <option value="마운틴 클라이머"></option>
+                <option value="와이드 스쿼트"></option>
+                <option value="워킹 런지"></option>
+                <option value="스플릿 스쿼트"></option>
+                <option value="내로우 스쿼트"></option>
+                <option value="외발 스쿼트"></option>
+                <option value="점프 스쿼트"></option>
+                <option value="점프 런지"></option>
+                <option value="사이드 스쿼트"></option>
+                <option value="컨센트레이션 컬"></option>
+                <option value="케틀벨 스윙"></option>
+                <option value="케틀벨 스내치"></option>
+                <option value="케틀벨 클린"></option>
+                <option value="케틀벨 프레스"></option>
+                <option value="케틀벨 러스트"></option>
+                <option value="케틀벨 스쿼트"></option>
+                <option value="케틀벨 런지"></option>
+                <option value="케틀벨 데드리프트"></option>
+                <option value="케틀벨 터키 시겟 업"></option>
+                <option value="케틀벨 고블릿 스쿼트"></option>
+                <option value="케틀벨 우드 췰"></option>
+                <option value="케틀벨 체스트 프레스"></option>
+                <option value="케틀벨 하이 풀"></option>
+                <option value="케틀벨 러시안 트위스트"></option>
+                <option value="짐볼 스쿼트"></option>
+                <option value="짐볼 플랭크"></option>
+                <option value="짐볼 푸시업"></option>
+                <option value="짐볼 롤아웃"></option>
+                <option value="짐볼 벤치 프레스"></option>
+                <option value="짐볼 런지"></option>
+                <option value="짐볼 힙 써스트"></option>
+                <option value="짐볼 패스"></option>
+                <option value="짐볼 트위스트"></option>
+                <option value="짐볼 백 익스텐션"></option>
+                <option value="짐볼 크런치"></option>
+                <option value="짐볼 브리지"></option>
+                <option value="짐볼 마운틴 클라이머"></option>
+                <option value="짐볼 슈퍼맨"></option>
+                <option value="짐볼 사이드 플랭크"></option>
+                <option value="스텝업"></option>
+                <option value="스텝다운"></option>
+                <option value="스텝터치"></option>
+                <option value="스텝오버"></option>
+                <option value="스텝점프"></option>
+                <option value="점프스텝업"></option>
+                <option value="사이드 스텝업"></option>
+                <option value="크로스오버 스텝"></option>
+                <option value="런지 스텝업"></option>
+                <option value="스텝박스 푸시업"></option>
+                <option value="스텝박스 점프 푸시업"></option>
+                <option value="스텝박스 플랭크"></option>
+                <option value="스텝박스 바이시클 크런치"></option>
+                <option value="스텝박스 트라이셉스 딥스"></option>
+                <option value="스텝박스 힙 브릿지"></option>
+                <option value="TRX 플랭크"></option>
+                <option value="TRX 사이드 플랭크"></option>
+                <option value="TRX 푸시업"></option>
+                <option value="TRX 로우"></option>
+                <option value="TRX 롤아웃"></option>
+                <option value="TRX 스쿼트"></option>
+                <option value="TRX 런지"></option>
+                <option value="TRX 글루트 브릿지"></option>
+                <option value="TRX 버피"></option>
+                <option value="TRX 하이 니"></option>
+                <option value="TRX 체스트 프레스"></option>
+                <option value="TRX 레그 컬"></option>
+                <option value="TRX 스트레칭"></option>
+                <option value="짐스틱 스쿼트"></option>
+                <option value="짐스틱 롤아웃"></option>
+                <option value="짐스틱 푸시업"></option>
+                <option value="짐스틱 플랭크"></option>
+                <option value="짐스틱 바운스"></option>
+                <option value="짐스틱 러시안 트위스트"></option>
+                <option value="짐스틱 레그 리프트"></option>
+                <option value="짐스틱 스탠딩 트위스트"></option>
+                <option value="짐스틱 체스트 프레스"></option>
+                <option value="짐스틱 백 익스텐션"></option>
+                <option value="짐스틱 레그 컬"></option>
+                <option value="짐스틱 데드리프트"></option>
+                <option value="짐스틱 스쿼트 점프"></option>
+                <option value="짐스틱 하이 니"></option>
+                <option value="짐스틱 점핑 잭"></option>
+               </datalist>
+              <button class="youtube-search-btn" onclick="searchYouTube('${groupIndex}')">YouTube 검색</button>
+              <div id="post-form">
+        <input type="file" id="media-upload-${groupIndex}" accept="image/*,video/*" />
+        <input type="text" id="post-caption-${groupIndex}" placeholder="내용을 입력하세요" />
+        <button id="add-post-${groupIndex}">업로드</button>
+    </div>
+      <div id="precautions${groupIndex}" class="precautions" style="display: none;"></div>
+          </div>
+          <div class="form-group">
+              <label for="exerciseBodyPart${groupIndex}">부위</label>
+              <select id="exerciseBodyPart1${groupIndex}" onchange="recommendExercise(this)">
+                  <option value="">선택</option>
+                  <option value="가슴">가슴</option>
+                  <option value="등">등</option>
+                  <option value="하체">하체</option>
+                  <option value="어깨">어깨</option>
+                  <option value="이두">이두</option>
+                  <option value="삼두">삼두</option>
+                  <option value="복근">복근</option>
+                  <option value="유산소">유산소</option>
+              </select>
+              <div id="recommendation${groupIndex}" class="exercise-recommendation"></div>
+          </div>
+          <div class="form-group">
+              <label for="exerciseTable${groupIndex}">세트 정보</label>
+              <table id="exerciseTable${groupIndex}" class="exercise-group-table">
+                  <thead>
+                      <tr>
+                          <th>세트(set)</th>
+                          <th>무게(kg)</th>
+                          <th>횟수(회)</th>
+                      </tr>
+                  </thead>
+                  <tbody id="exerciseTableBody${groupIndex}">
+                  </tbody>
+              </table>
+          </div>
+          <div class="feedback-section">
+              <div class="form-group">
+                  <label for="exerciseDescription${groupIndex}">피드백</label>
+                  <textarea id="exerciseDescription${groupIndex}" rows="4"></textarea>
+              </div>
+              <div class="add-remove-buttons">
+                  <button class="btn add-btn" id="addSetBtn${groupIndex}">+</button>
+                  <button class="btn remove-btn" id="removeSetBtn${groupIndex}">-</button>
+              </div>
+          </div>
+        `;
+
+          exerciseGroupsContainer.appendChild(groupDiv);
+
+          // 운동 이름 입력창 이벤트 리스너 추가
+          const exerciseNameInput = document.getElementById(
+            `exerciseName${groupIndex}`
+          );
+          exerciseNameInput.addEventListener("input", function () {
+            showPrecautions(groupIndex);
+          });
+
+          // 부위가 이미 선택된 경우 추천 운동을 자동으로 업데이트
+          if (groupData.bodyPart) {
+            const selectElement = document.getElementById(
+              `exerciseBodyPart1${groupIndex}`
+            );
+            selectElement.value = groupData.bodyPart;
+            recommendExercise(selectElement);
+          }
+          // 종목 이름이 이미 설정된 경우 주의사항 자동으로 표시
+          if (groupData.name) {
+            const exerciseNameInput = document.getElementById(
+              `exerciseName${groupIndex}`
+            );
+            exerciseNameInput.value = groupData.name; // 종목 이름 설정
+            showPrecautions(groupIndex); // 주의사항 업데이트
+          }
+
+          document
+            .getElementById("exerciseGroupsContainer")
+            .appendChild(groupDiv);
+
+          const addSetBtn = document.getElementById(`addSetBtn${groupIndex}`);
+          const removeSetBtn = document.getElementById(
+            `removeSetBtn${groupIndex}`
+          );
+          const exerciseTableBody = document.getElementById(
+            `exerciseTableBody${groupIndex}`
+          );
+
+          let setCount = 0;
+
+          addSetBtn.addEventListener("click", function () {
+            setCount++;
+            const row = document.createElement("tr");
+            const setCell = document.createElement("td");
+            setCell.textContent = setCount;
+            row.appendChild(setCell);
+            const weightCell = document.createElement("td");
+            const weightInput = document.createElement("input");
+            weightInput.type = "number";
+            weightInput.placeholder = "무게(kg)";
+            weightCell.appendChild(weightInput);
+            row.appendChild(weightCell);
+            const repsCell = document.createElement("td");
+            const repsInput = document.createElement("input");
+            repsInput.type = "number";
+            repsInput.placeholder = "횟수(회)";
+            repsCell.appendChild(repsInput);
+            row.appendChild(repsCell);
+            exerciseTableBody.appendChild(row);
+          });
+
+          removeSetBtn.addEventListener("click", function () {
+            if (setCount > 0) {
+              exerciseTableBody.removeChild(exerciseTableBody.lastChild);
+              setCount--;
+            }
+          });
+
+          // 기존 데이터 로드
+          if (groupData) {
+            const exerciseBodyPartSelect = document.getElementById(
+              `exerciseBodyPart1${groupIndex}`
+            );
+            if (exerciseBodyPartSelect) {
+              exerciseBodyPartSelect.value = groupData.bodyPart || "";
+            }
+            document.getElementById(`exerciseName${groupIndex}`).value =
+              groupData.name || "";
+
+            const exercises = groupData.exercises || [];
+            exercises.forEach((exercise, setIndex) => {
+              const row = document.createElement("tr");
+              const setCell = document.createElement("td");
+              setCell.textContent = setIndex + 1;
+              row.appendChild(setCell);
+              const weightCell = document.createElement("td");
+              const weightInput = document.createElement("input");
+              weightInput.type = "number";
+              weightInput.value = exercise.weight || "";
+              weightInput.placeholder = "무게";
+              weightCell.appendChild(weightInput);
+              row.appendChild(weightCell);
+              const repsCell = document.createElement("td");
+              const repsInput = document.createElement("input");
+              repsInput.type = "number";
+              repsInput.value = exercise.reps || "";
+              repsInput.placeholder = "횟수";
+              repsCell.appendChild(repsInput);
+              row.appendChild(repsCell);
+              exerciseTableBody.appendChild(row);
+            });
+
+            // 피드백 로드
+            document.getElementById(`exerciseDescription${groupIndex}`).value =
+              groupData.feedback || "";
+          }
+        }
+
+        // 유튜브 검색
+        window.searchYouTube = function (index) {
+          const exerciseName = document.getElementById(
+            `exerciseName${index}`
+          ).value;
+          if (exerciseName) {
+            const searchQuery = encodeURIComponent(exerciseName);
+            const youtubeUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+            window.open(youtubeUrl, "_blank");
+          } else {
+            alert("운동 이름을 입력해주세요.");
+          }
+        };
+
+        // 운동 그룹 제거
+        window.handleRemoveGroup = function (groupId) {
+          const groupDiv = document.getElementById(groupId);
+          if (groupDiv) {
+            // 인덱스 추출 및 집합에서 제거
+            const index = parseInt(groupId.replace("exerciseGroup", ""), 10);
+            availableIndexes.delete(index);
+
+            exerciseGroupsContainer.removeChild(groupDiv);
+          }
+        };
+
+        // 레슨 데이터 저장
+        saveLessonBtn.addEventListener("click", async function () {
+          const clientId = getClientId();
+          if (!clientId) {
+            alert("클라이언트 ID를 찾을 수 없습니다.");
+            return;
+          }
+
+          const lessonId = lessonIdInput.value;
+          const nextLesson = document.querySelector(
+            ".next_lesson textarea"
+          ).value; // 다음 회차 예정 수업 내용
+
+          const exerciseGroups = Array.from(
+            exerciseGroupsContainer.children
+          ).map((groupDiv) => {
+            const index = groupDiv.id.replace("exerciseGroup", "");
+            const exerciseNameElement = document.getElementById(
+              `exerciseName${index}`
+            );
+            const exerciseBodyPartElement = document.getElementById(
+              `exerciseBodyPart1${index}`
+            );
+            const exerciseTableBody = document.getElementById(
+              `exerciseTableBody${index}`
+            );
+            const exerciseDescriptionElement = document.getElementById(
+              `exerciseDescription${index}`
+            );
+
+            return {
+              name: exerciseNameElement ? exerciseNameElement.value : "",
+              bodyPart: exerciseBodyPartElement
+                ? exerciseBodyPartElement.value
+                : "",
+              exercises: Array.from(
+                exerciseTableBody ? exerciseTableBody.children : []
+              ).map((row) => {
+                const weightInput = row.children[1].querySelector("input");
+                const repsInput = row.children[2].querySelector("input");
+                return {
+                  weight: weightInput ? weightInput.value : "",
+                  reps: repsInput ? repsInput.value : "",
+                };
+              }),
+              feedback: exerciseDescriptionElement
+                ? exerciseDescriptionElement.value
+                : "",
+            };
+          });
+
+          const lessonData = {
+            clientId: clientId,
+            exerciseGroups: exerciseGroups,
+            lessonIndex: document
+              .getElementById("clientName")
+              .textContent.replace("회차 레슨 일지", "")
+              .trim(),
+            nextLesson: nextLesson, // 추가된 필드
+          };
+
+          try {
+            if (lessonId) {
+              await db.collection("lessons").doc(lessonId).update(lessonData);
+              alert("레슨이 업데이트되었습니다.");
+            } else {
+              await db.collection("lessons").add(lessonData);
+              alert("새 레슨이 추가되었습니다.");
+            }
+            // window.location.href = "index.html"; // 데이터 저장 후 이동할 페이지
+          } catch (error) {
+            console.error("레슨 저장 중 오류 발생:", error);
+            alert("레슨을 저장하는 중 오류가 발생했습니다.");
+          }
+        });
+
+        // 새로운 운동 그룹 추가 버튼 클릭 이벤트
+        addGroupBtn.addEventListener("click", function () {
+          createExerciseGroup({}, null);
+        });
+
+        // 페이지 로드 시 레슨 데이터 로드
+        loadLessonData();
+
+        // URL에서 clientId를 추출하는 함수
+        function getQueryParam(param) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(param);
+        }
+        // clientId를 URL에서 추출
+        const clientId = getQueryParam("clientId");
+
+        viewReadOnlyBtn.addEventListener("click", function () {
+          const lessonId = lessonIdInput.value;
+          const trainerId = getTrainerId();
+          if (lessonId) {
+            window.location.href = `read_only.html?clientId=${clientId}&lessonId=${lessonId}`;
+          } else {
+            alert("레슨 ID를 찾을 수 없습니다.");
+          }
+        });
+      });
+      function logout() {
+        window.location.href = "/index.html"; // 로그아웃 처리 페이지로 리다이렉트
+      }
+      // 뒤로 가기 버튼 클릭 이벤트
+      function goBack() {
+        window.history.back();
+      }
+      // 사용 가능한 인덱스를 저장할 집합
+      const availableIndexes = new Set();
+    </script>
+    <script>
+      let exerciseGroupCount = 1; // 운동 그룹의 수
+
+      // 각 부위에 해당하는 운동 리스트
+      const exerciseLists = {
+        가슴: [
+          {
+            name: "벤치 프레스",
+            link: "https://www.youtube.com/results?search_query=벤치+프레스",
+          },
+          {
+            name: "푸쉬업",
+            link: "https://www.youtube.com/results?search_query=푸쉬업",
+          },
+          {
+            name: "덤벨 플라이",
+            link: "https://www.youtube.com/results?search_query=덤벨+플라이",
+          },
+          {
+            name: "인클라인 벤치프레스",
+            link: "https://www.youtube.com/results?search_query=인클라인+벤치프레스",
+          },
+          {
+            name: "케이블 크로스오버",
+            link: "https://www.youtube.com/results?search_query=케이블+크로스오버",
+          },
+          {
+            name: "딥스",
+            link: "https://www.youtube.com/results?search_query=딥스",
+          },
+          {
+            name: "덤벨 벤치프레스",
+            link: "https://www.youtube.com/results?search_query=덤벨+벤치프레스",
+          },
+          {
+            name: "케이블 풀오버",
+            link: "https://www.youtube.com/results?search_query=케이블+풀오버",
+          },
+          {
+            name: "체스트 프레스 머신",
+            link: "https://www.youtube.com/results?search_query=체스트+프레스+머신",
+          },
+          {
+            name: "덤벨 풀오버",
+            link: "https://www.youtube.com/results?search_query=덤벨+풀오버",
+          },
+        ],
+        등: [
+          {
+            name: "랫 풀다운",
+            link: "https://www.youtube.com/results?search_query=랫+풀다운",
+          },
+          {
+            name: "바벨 로우",
+            link: "https://www.youtube.com/results?search_query=바벨+로우",
+          },
+          {
+            name: "풀업",
+            link: "https://www.youtube.com/results?search_query=풀업",
+          },
+          {
+            name: "덤벨 로우",
+            link: "https://www.youtube.com/results?search_query=덤벨+로우",
+          },
+          {
+            name: "시티드 로우",
+            link: "https://www.youtube.com/results?search_query=시티드+로우",
+          },
+          {
+            name: "원암 덤벨 로우",
+            link: "https://www.youtube.com/results?search_query=원암+덤벨+로우",
+          },
+          {
+            name: "투암 덤벨 로우",
+            link: "https://www.youtube.com/results?search_query=투암+덤벨+로우",
+          },
+          {
+            name: "롱풀",
+            link: "https://www.youtube.com/results?search_query=롱풀",
+          },
+          {
+            name: "로잉 머신",
+            link: "https://www.youtube.com/results?search_query=로잉+머신",
+          },
+        ],
+        하체: [
+          {
+            name: "스쿼트",
+            link: "https://www.youtube.com/results?search_query=스쿼트",
+          },
+          {
+            name: "파워 레그 프레스",
+            link: "https://www.youtube.com/results?search_query=파워+레그+프레스",
+          },
+          {
+            name: "런지",
+            link: "https://www.youtube.com/results?search_query=런지",
+          },
+          {
+            name: "레그 컬",
+            link: "https://www.youtube.com/results?search_query=레그+컬",
+          },
+          {
+            name: "레그 익스텐션",
+            link: "https://www.youtube.com/results?search_query=레그+익스텐션",
+          },
+          {
+            name: "힙 쓰러스트",
+            link: "https://www.youtube.com/results?search_query=힙+쓰러스트",
+          },
+          {
+            name: "몬스터 글루트 머신",
+            link: "https://www.youtube.com/results?search_query=몬스터+글루트+머신",
+          },
+          {
+            name: "힙 브릿지",
+            link: "https://www.youtube.com/results?search_query=힙+브릿지",
+          },
+          {
+            name: "스모 스쿼트",
+            link: "https://www.youtube.com/results?search_query=스모+스쿼트",
+          },
+          {
+            name: "와이드 스쿼트",
+            link: "https://www.youtube.com/results?search_query=와이드+스쿼트",
+          },
+        ],
+        어깨: [
+          {
+            name: "밀리터리 프레스",
+            link: "https://www.youtube.com/results?search_query=밀리터리+프레스",
+          },
+          {
+            name: "사이드 레터럴 레이즈",
+            link: "https://www.youtube.com/results?search_query=사이드+레터럴+레이즈",
+          },
+          {
+            name: "리어 델트 플라이",
+            link: "https://www.youtube.com/results?search_query=리어+델트+플라이",
+          },
+          {
+            name: "프론트 레이즈",
+            link: "https://www.youtube.com/results?search_query=프론트+레이즈",
+          },
+          {
+            name: "덤벨 숄더 프레스",
+            link: "https://www.youtube.com/results?search_query=덤벨+숄더+프레스",
+          },
+          {
+            name: "업라이트 로우",
+            link: "https://www.youtube.com/results?search_query=업라이트+로우",
+          },
+          {
+            name: "바벨 쉬러그",
+            link: "https://www.youtube.com/results?search_query=바벨+쉬러그",
+          },
+          {
+            name: "덤벨 쉬러그",
+            link: "https://www.youtube.com/results?search_query=덤벨+쉬러그",
+          },
+          {
+            name: "비하인드 넥 프레스",
+            link: "https://www.youtube.com/results?search_query=비하인드+넥+프레스",
+          },
+          {
+            name: "벤트 오버 레터럴 레이즈",
+            link: "https://www.youtube.com/results?search_query=벤트+오버+레터럴+레이즈",
+          },
+        ],
+        복근: [
+          {
+            name: "크런치",
+            link: "https://www.youtube.com/results?search_query=크런치",
+          },
+          {
+            name: "레그 레이즈",
+            link: "https://www.youtube.com/results?search_query=레그+레이즈",
+          },
+          {
+            name: "플랭크",
+            link: "https://www.youtube.com/results?search_query=플랭크",
+          },
+          {
+            name: "바이시클 크런치",
+            link: "https://www.youtube.com/results?search_query=바이시클+크런치",
+          },
+          {
+            name: "행잉 레그 레이즈",
+            link: "https://www.youtube.com/results?search_query=행잉+레그+레이즈",
+          },
+          {
+            name: "케이블 크런치",
+            link: "https://www.youtube.com/results?search_query=케이블+크런치",
+          },
+          {
+            name: "V-싯업",
+            link: "https://www.youtube.com/results?search_query=V-싯업",
+          },
+          {
+            name: "벤치 싯업",
+            link: "https://www.youtube.com/results?search_query=벤치+싯업",
+          },
+        ],
+        이두: [
+          {
+            name: "바벨 컬",
+            link: "https://www.youtube.com/results?search_query=바벨+컬",
+          },
+          {
+            name: "덤벨 컬",
+            link: "https://www.youtube.com/results?search_query=덤벨+컬",
+          },
+          {
+            name: "해머 컬",
+            link: "https://www.youtube.com/results?search_query=해머+컬",
+          },
+          {
+            name: "프리쳐 컬",
+            link: "https://www.youtube.com/results?search_query=프리쳐+컬",
+          },
+          {
+            name: "케이블 컬",
+            link: "https://www.youtube.com/results?search_query=케이블+컬",
+          },
+          {
+            name: "바벨 드래그 컬",
+            link: "https://www.youtube.com/results?search_query=바벨+드래그+컬",
+          },
+          {
+            name: "바벨 리스트 컬",
+            link: "https://www.youtube.com/results?search_query=바벨+리스트+컬",
+          },
+          {
+            name: "콘센트레이션 컬",
+            link: "https://www.youtube.com/results?search_query=콘센트레이션+컬",
+          },
+        ],
+        삼두: [
+          {
+            name: "케이블 로프 푸쉬다운",
+            link: "https://www.youtube.com/results?search_query=케이블+로프+푸쉬다운",
+          },
+          {
+            name: "딥스",
+            link: "https://www.youtube.com/results?search_query=딥스",
+          },
+          {
+            name: "킥백",
+            link: "https://www.youtube.com/results?search_query=킥백",
+          },
+          {
+            name: "오버헤드 트라이셉스 익스텐션",
+            link: "https://www.youtube.com/results?search_query=오버헤드+트라이셉스+익스텐션",
+          },
+          {
+            name: "클로즈 그립 벤치프레스",
+            link: "https://www.youtube.com/results?search_query=클로즈+그립+벤치프레스",
+          },
+          {
+            name: "원암 덤벨 오버헤드 익스텐션",
+            link: "https://www.youtube.com/results?search_query=원암+덤벨+오버헤드+익스텐션",
+          },
+          {
+            name: "라잉 익스텐션",
+            link: "https://www.youtube.com/results?search_query=라잉+익스텐션",
+          },
+        ],
+        유산소: [
+          {
+            name: "트레드밀",
+            link: "https://www.youtube.com/results?search_query=트레드밀",
+          },
+          {
+            name: "천국의 계단",
+            link: "https://www.youtube.com/results?search_query=천국의+계단",
+          },
+          {
+            name: "좌식 사이클",
+            link: "https://www.youtube.com/results?search_query=좌식+사이클",
+          },
+          {
+            name: "입식 사이클",
+            link: "https://www.youtube.com/results?search_query=입식+사이클",
+          },
+          {
+            name: "일랩티컬",
+            link: "https://www.youtube.com/results?search_query=일랩티컬",
+          },
+          {
+            name: "조깅",
+            link: "https://www.youtube.com/results?search_query=조깅",
+          },
+          {
+            name: "수영",
+            link: "https://www.youtube.com/results?search_query=수영",
+          },
+          {
+            name: "마라톤",
+            link: "https://www.youtube.com/results?search_query=마라톤",
+          },
+        ],
+      };
+
+      function showExercises() {
+        const muscle = document.getElementById("muscle-select").value;
+        const container = document.getElementById("exercise-container");
+        container.innerHTML = ""; // 기존 내용 지우기
+
+        if (muscle) {
+          exercises[muscle].forEach((exercise) => {
+            const button = document.createElement("a");
+            button.textContent = exercise;
+            button.className = "exercise-button";
+            button.href = getYouTubeSearchURL(exercise);
+            button.target = "_blank"; // 새 탭에서 열기
+            container.appendChild(button);
+          });
+        }
+      }
+
+      // 운동 부위 선택에 따라 추천 운동을 표시하는 함수
+      function recommendExercise(selectElement) {
+        const selectedBodyPart = selectElement.value;
+        const recommendationDiv = selectElement
+          .closest(".exercise-group")
+          .querySelector(".exercise-recommendation");
+
+        if (selectedBodyPart && exerciseLists[selectedBodyPart]) {
+          const randomExercises = exerciseLists[selectedBodyPart]
+            .sort(() => 0.5 - Math.random()) // 무작위로 섞음
+            .slice(0, 3); // 상위 3개 선택
+
+          // 추천 운동을 HTML 링크로 만들어서 표시
+          recommendationDiv.innerHTML = "<strong>추천 운동:</strong><br>";
+          randomExercises.forEach((exercise) => {
+            const link = document.createElement("a");
+            link.href = exercise.link; // 링크를 올바르게 참조
+            link.textContent = exercise.name;
+            link.target = "_blank"; // 링크를 새 탭에서 열기
+            recommendationDiv.appendChild(link);
+            recommendationDiv.appendChild(document.createElement("br")); // 줄바꿈
+          });
+        } else {
+          recommendationDiv.innerHTML = ""; // 선택 안 했을 때 추천 초기화
+        }
+      }
+      // exerciseGroupsContainer.appendChild(groupDiv);
+
+      // exerciseNameInput 찾기
+      // const exerciseNameInput = groupDiv.querySelector(
+      //   `#exerciseName${groupIndex}`
+      // );
+
+      // exerciseNameInput에 이벤트 리스너 추가
+      // if (exerciseNameInput) {
+      //   exerciseNameInput.addEventListener("input", function () {
+      //     showPrecautions(groupIndex);
+      //   });
+      // } else {
+      //   console.error(`exerciseName${groupIndex} element not found`);
+      // }
+
+      // 주의사항 표시
+      function showPrecautions(groupIndex) {
+        const exerciseNameInput = document.getElementById(
+          `exerciseName${groupIndex}`
+        );
+        const precautionsDiv = document.getElementById(
+          `precautions${groupIndex}`
+        );
+        if (!exerciseNameInput || !precautionsDiv) return;
+
+        const exerciseName = exerciseNameInput.value.toLowerCase().trim();
+        let precautionsText = "";
+
+        if (exerciseName === "스쿼트") {
+          precautionsText = `
+          <img src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(33).gif?alt=media&token=f86772cd-bb8e-4bde-bb2e-29bc5da87961" alt="벤트 오버 레터럴 레이즈 동작" style="width:80%; max-width:300px; margin:10px 0;"><br>
+                                <strong>스쿼트 주의사항:</strong><br>
+                                1. 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+                                2. 등을 굽히지 않도록 허리를 바르게 유지하세요.<br>
+                                3. 발바닥 전체로 지면을 밀며 자세를 유지하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "벤치 프레스") {
+          precautionsText = `
+                                <strong>벤치프레스 주의사항:</strong><br>
+                                1. 바벨을 내릴 때 팔꿈치가 90도를 넘지 않도록 주의하세요.<br>
+                                2. 바벨을 내릴 때 가슴 중앙에 정확히 내려주세요.<br>
+                                3. 어깨를 눌러 바닥에 고정시키고, 엉덩이를 벤치에 붙이고 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "데드리프트") {
+          precautionsText = `
+                                <strong>데드리프트 주의사항:</strong><br>
+                                1. 허리를 곧게 펴고, 엉덩이를 뒤로 빼면서 무게를 들어올리세요.<br>
+                                2. 무게를 들 때 무릎이 너무 많이 굽지 않도록 주의하세요.<br>
+                                3. 무게가 올라가는 동안 체중이 발꿈치에 실리도록 유지하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "푸쉬업") {
+          precautionsText = `
+                                <strong>푸쉬업 주의사항:</strong><br>
+                                1. 손목에 과도한 부담을 주지 않도록 손목의 각도를 조정하세요.<br>
+                                2. 팔꿈치가 너무 벌어지지 않도록 주의하고, 몸이 일직선을 유지하세요.<br>
+                                3. 엉덩이를 너무 높이 올리지 않도록 평평한 자세를 유지하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "풀업") {
+          precautionsText = `
+                                <strong>풀업 주의사항:</strong><br>
+                                1. 팔꿈치를 당길 때 팔꿈치가 너무 벌어지지 않도록 주의하세요.<br>
+                                2. 몸을 흔들지 않도록 다리를 고정하고, 체중을 상체로 이동시키세요.<br>
+                                3. 어깨가 귀에 닿지 않도록 어깨를 내리고, 팔꿈치로 당기세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "런지") {
+          precautionsText = `
+                                <strong>런지 주의사항:</strong><br>
+                                1. 앞발의 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+                                2. 상체를 곧게 세우고, 무릎이 직각이 되도록 하세요.<br>
+                                3. 발꿈치를 사용하여 뒤로 밀지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "레그프레스") {
+          precautionsText = `
+                                <strong>레그프레스 주의사항:</strong><br>
+                                1. 무릎을 완전히 펴지 않도록 하여 관절에 무리가 가지 않도록 하세요.<br>
+                                2. 발을 발판에 정확히 배치하여 균형을 유지하세요.<br>
+                                3. 엉덩이가 벤치에서 떨어지지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 컬") {
+          precautionsText = `
+                                <strong>덤벨 컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 상체를 움직이지 않도록 하세요.<br>
+                                2. 덤벨을 내릴 때 너무 빨리 내리지 않도록 천천히 운동하세요.<br>
+                                3. 덤벨을 너무 높이 올리지 않도록 어깨에 부담을 주지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "숄더 프레스") {
+          precautionsText = `
+                                <strong>숄더 프레스 주의사항:</strong><br>
+                                1. 팔꿈치를 90도로 유지하며 덤벨을 들어올리세요.<br>
+                                2. 어깨가 귀에 닿지 않도록 어깨를 내리고 운동하세요.<br>
+                                3. 바벨이나 덤벨을 너무 빨리 내리지 않도록 천천히 내리세요.
+                              `;
+          precautionsDiv.style.display = "block";
+          // 운동 이름에 따라 주의사항 표시
+        } else if (exerciseName === "덤벨 프레스") {
+          precautionsText = `
+                                <strong>덤벨 프레스 주의사항:</strong><br>
+                                1. 팔꿈치가 90도를 넘지 않도록 주의하세요.<br>
+                                2. 덤벨을 너무 빨리 내리지 않도록 천천히 내리세요.<br>
+                                3. 덤벨을 밀 때 어깨에 과도한 압력이 가해지지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 플라이") {
+          precautionsText = `
+                                <strong>덤벨 플라이 주의사항:</strong><br>
+                                1. 팔꿈치를 약간 굽혀 덤벨을 내리세요.<br>
+                                2. 덤벨을 내릴 때 가슴 중앙을 향해 내리도록 하세요.<br>
+                                3. 운동 중 어깨를 과도하게 밀지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "투암 덤벨 오버헤드 익스텐션") {
+          precautionsText = `
+                                <strong>투암 덤벨 오버헤드 익스텐션 주의사항:</strong><br>
+                                1. 팔꿈치가 너무 벌어지지 않도록 주의하세요.<br>
+                                2. 덤벨을 머리 위로 올릴 때 몸을 흔들지 않도록 하세요.<br>
+                                3. 운동 시 허리에 무리가 가지 않도록 코어를 단단히 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 숄더 프레스") {
+          precautionsText = `
+                                <strong>덤벨 숄더 프레스 주의사항:</strong><br>
+                                1. 팔꿈치를 90도로 유지하며 덤벨을 올리세요.<br>
+                                2. 어깨가 귀에 닿지 않도록 어깨를 내리고 운동하세요.<br>
+                                3. 바벨이나 덤벨을 너무 빨리 내리지 않도록 천천히 내리세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "사이드 레터럴 레이즈") {
+          precautionsText = `
+                                <strong>사이드 레터럴 레이즈 주의사항:</strong><br>
+                                1. 팔꿈치를 약간 구부려서 덤벨을 들어올리세요.<br>
+                                2. 덤벨을 올릴 때 어깨가 지나치게 올라가지 않도록 하세요.<br>
+                                3. 운동 중 팔꿈치가 너무 벌어지지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "벤트 오버 레터럴 레이즈") {
+          precautionsText = `
+                                <strong>벤트 오버 레터럴 레이즈 주의사항:</strong><br>
+                                1. 상체를 평평하게 유지하며 운동하세요.<br>
+                                2. 팔꿈치가 몸을 지나치게 지나지 않도록 조정하세요.<br>
+                                3. 몸이 흔들리지 않도록 고정시키고 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "프론트 레이즈") {
+          precautionsText = `
+                                <strong>프론트 레이즈 주의사항:</strong><br>
+                                1. 팔꿈치를 살짝 굽힌 채 덤벨을 들어올리세요.<br>
+                                2. 어깨보다 너무 높게 덤벨을 올리지 않도록 하세요.<br>
+                                3. 팔꿈치와 손목에 무리를 주지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "투암 덤벨 로우") {
+          precautionsText = `
+                                <strong>투암 덤벨 로우 주의사항:</strong><br>
+                                1. 허리를 과도하게 굽히지 않도록 주의하세요.<br>
+                                2. 팔꿈치를 몸에 가깝게 유지하며 덤벨을 당기세요.<br>
+                                3. 운동 중 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "원암 덤벨 로우") {
+          precautionsText = `
+                                <strong>원암 덤벨 로우 주의사항:</strong><br>
+                                1. 상체를 평평하게 유지하고, 운동 중 다리가 흔들리지 않도록 하세요.<br>
+                                2. 팔꿈치가 몸에 가까이 유지되도록 하세요.<br>
+                                3. 덤벨을 너무 빨리 당기지 않도록 천천히 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "투암 덤벨 킥백") {
+          precautionsText = `
+                                <strong>투암 덤벨 킥백 주의사항:</strong><br>
+                                1. 상체를 과도하게 기울이지 않도록 주의하세요.<br>
+                                2. 팔꿈치가 너무 많이 벌어지지 않도록 주의하세요.<br>
+                                3. 운동 중 무게를 천천히 내리면서 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "킥백") {
+          precautionsText = `
+                                <strong>킥백 주의사항:</strong><br>
+                                1. 상체를 과도하게 기울이지 않도록 주의하세요.<br>
+                                2. 팔꿈치가 너무 많이 벌어지지 않도록 주의하세요.<br>
+                                3. 운동 중 무게를 천천히 내리면서 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "원암 덤벨 킥백") {
+          precautionsText = `
+                                <strong>원암 덤벨 킥백 주의사항:</strong><br>
+                                1. 상체가 흔들리지 않도록 고정시키세요.<br>
+                                2. 팔꿈치가 직각을 유지하며 덤벨을 들어 올리세요.<br>
+                                3. 덤벨을 너무 빠르게 올리지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "원암 덤벨 오버헤드 익스텐션") {
+          precautionsText = `
+                                <strong>원암 덤벨 오버헤드 익스텐션 주의사항:</strong><br>
+                                1. 팔꿈치를 90도로 굽히고 덤벨을 올리세요.<br>
+                                2. 몸을 흔들지 않도록 코어를 고정하세요.<br>
+                                3. 덤벨을 내릴 때 팔꿈치가 너무 벌어지지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 덤벨 프레스") {
+          precautionsText = `
+                                <strong>인클라인 덤벨 프레스 주의사항:</strong><br>
+                                1. 팔꿈치를 과도하게 내리지 않도록 주의하세요.<br>
+                                2. 덤벨을 정확히 가슴 앞에 내리세요.<br>
+                                3. 어깨를 과도하게 움직이지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 덤벨 플라이") {
+          precautionsText = `
+                                <strong>인클라인 덤벨 플라이 주의사항:</strong><br>
+                                1. 팔꿈치를 약간 굽힌 채 덤벨을 내리세요.<br>
+                                2. 덤벨을 내릴 때 가슴 중앙을 향해 내리도록 하세요.<br>
+                                3. 어깨에 무리가 가지 않도록 조심하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 풀오버") {
+          precautionsText = `
+                                <strong>덤벨풀오버 주의사항:</strong><br>
+                                1. 상체가 흔들리지 않도록 고정하세요.<br>
+                                2. 팔꿈치를 약간 굽힌 상태로 덤벨을 내리세요.<br>
+                                3. 덤벨을 너무 많이 내리지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "풀오버") {
+          precautionsText = `
+                                <strong>덤벨풀오버 주의사항:</strong><br>
+                                1. 상체가 흔들리지 않도록 고정하세요.<br>
+                                2. 팔꿈치를 약간 굽힌 상태로 덤벨을 내리세요.<br>
+                                3. 덤벨을 너무 많이 내리지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "투암 덤벨 스컬크러셔") {
+          precautionsText = `
+                                <strong>투암 덤벨 스컬크러셔 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 내리세요.<br>
+                                2. 너무 빠르게 덤벨을 올리지 않도록 천천히 운동하세요.<br>
+                                3. 운동 중 팔꿈치가 지나치게 벌어지지 않도록 주의하세요.
+                              `;
+
+          // 운동 이름에 따라 주의사항 표시
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 스컬크러셔") {
+          precautionsText = `
+                                <strong>덤벨 스컬크러셔 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 내리세요.<br>
+                                2. 너무 빠르게 덤벨을 올리지 않도록 천천히 운동하세요.<br>
+                                3. 운동 중 팔꿈치가 지나치게 벌어지지 않도록 주의하세요.
+                              `;
+
+          // 운동 이름에 따라 주의사항 표시
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스컬크러셔") {
+          precautionsText = `
+                                <strong>스컬크러셔 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 내리세요.<br>
+                                2. 너무 빠르게 덤벨을 올리지 않도록 천천히 운동하세요.<br>
+                                3. 운동 중 팔꿈치가 지나치게 벌어지지 않도록 주의하세요.
+                              `;
+
+          // 운동 이름에 따라 주의사항 표시
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 헤머컬") {
+          precautionsText = `
+                                <strong>덤벨 헤머컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 들어올리세요.<br>
+                                2. 덤벨을 올릴 때 팔꿈치가 지나치게 벌어지지 않도록 하세요.<br>
+                                3. 손목에 과도한 압력이 가해지지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "헤머컬") {
+          precautionsText = `
+                                <strong>헤머컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 들어올리세요.<br>
+                                2. 덤벨을 올릴 때 팔꿈치가 지나치게 벌어지지 않도록 하세요.<br>
+                                3. 손목에 과도한 압력이 가해지지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 덤벨 컬") {
+          precautionsText = `
+                                <strong>인클라인 덤벨 컬 주의사항:</strong><br>
+                                1. 팔꿈치를 너무 내리지 않도록 하고 팔꿈치를 고정하세요.<br>
+                                2. 덤벨을 천천히 들어올리세요.<br>
+                                3. 운동 중 팔꿈치가 흔들리지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 벤치프레스") {
+          precautionsText = `
+    <strong>인클라인 벤치프레스 주의사항:</strong><br>
+    1. 벤치의 각도를 30~45도로 맞추고 운동하세요.<br>
+    2. 바벨이 내려올 때 가슴 윗부분을 향하도록 조정하세요.<br>
+    3. 어깨에 과도한 부담이 가지 않도록 안정적인 자세를 유지하세요.<br>
+    4. 엉덩이를 벤치에 고정시키고, 몸을 흔들리지 않게 조정하세요.
+  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "디클라인 벤치프레스") {
+          precautionsText = `
+    <strong>디클라인 벤치프레스 주의사항:</strong><br>
+    1. 벤치의 각도를 15~30도로 조정하고 운동하세요.<br>
+    2. 바벨이 가슴 하단부에 닿도록 조정하세요.<br>
+    3. 허리를 과도하게 꺾지 않도록 주의하세요.<br>
+    4. 발을 단단히 고정하여 몸이 흔들리지 않도록 안정적인 자세를 유지하세요.
+  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 덤벨 헤머 컬") {
+          precautionsText = `
+                                <strong>인클라인 덤벨 헤머 컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 들어올리세요.<br>
+                                2. 팔꿈치를 너무 벌어지지 않게 하세요.<br>
+                                3. 덤벨을 내릴 때 천천히 내리세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "얼터네이트 덤벨 컬") {
+          precautionsText = `
+                                <strong>얼터네이트 덤벨 컬 주의사항:</strong><br>
+                                1. 양팔이 번갈아 가며 움직이도록 하세요.<br>
+                                2. 한 쪽 팔을 올릴 때 다른 팔꿈치가 흔들리지 않도록 고정하세요.<br>
+                                3. 덤벨을 빠르게 올리지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 얼터네이트 덤벨 컬") {
+          precautionsText = `
+                                <strong>인클라 인얼터네이트 덤벨 컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고, 한 팔씩 천천히 들어올리세요.<br>
+                                2. 상체가 흔들리지 않도록 주의하세요.<br>
+                                3. 덤벨을 내릴 때 과도하게 빠르게 내리지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이지바 컬") {
+          precautionsText = `
+                                <strong>이지바컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 손목에 부담이 가지 않도록 하세요.<br>
+                                2. 덤벨을 올릴 때 팔꿈치가 지나치게 벌어지지 않도록 하세요.<br>
+                                3. 바를 올릴 때 손목을 너무 구부리지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "언더그립 이지바 컬") {
+          precautionsText = `
+                                <strong>언더그립 이지바 컬 주의사항:</strong><br>
+                                1. 팔꿈치가 지나치게 벌어지지 않도록 하세요.<br>
+                                2. 손목에 무리가 가지 않도록 주의하세요.<br>
+                                3. 덤벨을 올릴 때 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이지바 오버헤드 익스텐션") {
+          precautionsText = `
+                                <strong>이지바 오버헤드 익스텐션 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 올리세요.<br>
+                                2. 팔꿈치가 너무 벌어지지 않도록 하세요.<br>
+                                3. 운동 중 허리를 과도하게 흔들지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이지바 스컬크러셔") {
+          precautionsText = `
+                                <strong>이지바 스컬크러셔 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 손목을 과도하게 구부리지 않도록 하세요.<br>
+                                2. 천천히 덤벨을 내리세요.<br>
+                                3. 운동 중 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이지바 로우") {
+          precautionsText = `
+                                <strong>이지바 로우 주의사항:</strong><br>
+                                1. 팔꿈치를 몸에 가까이 붙이고 덤벨을 당기세요.<br>
+                                2. 상체가 흔들리지 않도록 고정하세요.<br>
+                                3. 바를 너무 빠르게 당기지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이지바 드래그 컬") {
+          precautionsText = `
+    <strong>이지바 드래그 컬 주의사항:</strong><br>
+    1. 이지바를 몸 가까이 유지하며 천천히 들어 올리세요.<br>
+    2. 팔꿈치를 고정하고, 상체를 과도하게 움직이지 않도록 하세요.<br>
+    3. 손목을 자연스러운 각도로 유지하며 부상을 방지하세요.
+    `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "드래그 컬") {
+          precautionsText = `
+    <strong>드래그 컬 주의사항:</strong><br>
+    1. 바벨을 몸 가까이 끌어올리며 팔꿈치를 뒤로 살짝 이동시키세요.<br>
+    2. 어깨가 개입되지 않도록 팔꿈치와 상체를 고정하세요.<br>
+    3. 손목이 꺾이지 않도록 바벨을 자연스럽게 잡으세요.
+    `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "암컬 머신") {
+          precautionsText = `
+    <strong>암컬 머신 주의사항:</strong><br>
+    1. 팔꿈치를 패드에 정확히 고정하세요.<br>
+    2. 팔을 완전히 펴지 않고 약간 굽힌 상태를 유지하세요.<br>
+    3. 손목이 꺾이지 않도록 주의하세요.
+    `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "암컬") {
+          precautionsText = `
+    <strong>암컬 머신 주의사항:</strong><br>
+    1. 팔꿈치를 패드에 정확히 고정하세요.<br>
+    2. 팔을 완전히 펴지 않고 약간 굽힌 상태를 유지하세요.<br>
+    3. 손목이 꺾이지 않도록 주의하세요.
+    `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "펙 플라이") {
+          precautionsText = `
+    <strong>펙플라이 주의사항:</strong><br>
+    1. 팔꿈치를 살짝 굽힌 상태를 유지하세요.<br>
+    2. 양쪽 손이 정중앙에서 만나도록 조정하세요.<br>
+    3. 과도하게 팔을 뒤로 젖히지 않도록 하세요.
+    `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덱 플라이") {
+          precautionsText = `
+    <strong>덱플라이 머신 주의사항:</strong><br>
+    1. 손잡이를 잡을 때 어깨 높이에 맞게 조정하세요.<br>
+    2. 천천히 움직이며 운동 범위를 조절하세요.<br>
+    3. 어깨 관절에 무리가 가지 않도록 주의하세요.
+    `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이지바 데드리프트") {
+          precautionsText = `
+                                <strong>이지바데드리프트 주의사항:</strong><br>
+                                1. 허리를 과도하게 굽히지 않도록 하세요.<br>
+                                2. 운동 중 무릎이 너무 굽혀지지 않도록 주의하세요.<br>
+                                3. 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "바벨 컬") {
+          precautionsText = `
+                                <strong>바벨 컬 주의사항:</strong><br>
+                                1. 팔꿈치를 고정하고 덤벨을 들어 올리세요.<br>
+                                2. 팔꿈치가 지나치게 벌어지지 않도록 하세요.<br>
+                                3. 덤벨을 천천히 내리세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "바벨 로우") {
+          precautionsText = `
+                                <strong>바벨 로우 주의사항:</strong><br>
+                                1. 상체를 평평하게 유지하며 바를 당기세요.<br>
+                                2. 팔꿈치를 몸에 가깝게 유지하세요.<br>
+                                3. 바를 너무 빠르게 당기지 않도록 천천히 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "루마니안 데드리프트") {
+          precautionsText = `
+                                <strong>루마니안 데드리프트 주의사항:</strong><br>
+                                1. 허리를 굽히지 않도록 코어를 단단히 고정하세요.<br>
+                                2. 무릎을 너무 굽히지 않도록 주의하세요.<br>
+                                3. 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "컨벤셔널 데드리프트") {
+          precautionsText = `
+                                <strong>컨벤셔널 데드리프트 주의사항:</strong><br>
+                                1. 무릎을 너무 많이 굽히지 않도록 주의하세요.<br>
+                                2. 허리를 과도하게 굽히지 않도록 하세요.<br>
+                                3. 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스티프 레그 데드리프트") {
+          precautionsText = `
+                                <strong>스티프 레그 데드리프트 주의사항:</strong><br>
+                                1. 허리를 굽히지 않도록 고정하세요.<br>
+                                2. 상체를 너무 빠르게 내리지 않도록 천천히 하세요.<br>
+                                3. 무릎을 과도하게 굽히지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 스쿼트") {
+          precautionsText = `
+                                <strong>스미스머신 스쿼트 주의사항:</strong><br>
+                                1. 무릎이 발끝을 넘지 않도록 하세요.<br>
+                                2. 상체가 흔들리지 않도록 고정하세요.<br>
+                                3. 발바닥 전체로 지면을 밀며 운동하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 로우") {
+          precautionsText = `
+                                <strong>스미스머신 로우 주의사항:</strong><br>
+                                1. 상체가 평평하게 유지되도록 하세요.<br>
+                                2. 팔꿈치를 몸에 가깝게 유지하며 바를 당기세요.<br>
+                                3. 운동 중 팔꿈치가 지나치게 벌어지지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 데드리프트") {
+          precautionsText = `
+                                <strong>스미스 머신데드리프트 주의사항:</strong><br>
+                                1. 허리를 굽히지 않도록 코어를 단단히 고정하세요.<br>
+                                2. 무릎을 과도하게 굽히지 않도록 주의하세요.<br>
+                                3. 상체가 흔들리지 않도록 고정하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 스티프 데드리프트") {
+          precautionsText = `
+                                <strong>스미스머신 스티프 데드리프트 주의사항:</strong><br>
+                                1. 허리를 굽히지 않도록 고정하세요.<br>
+                                2. 상체를 너무 빠르게 내리지 않도록 하세요.<br>
+                                3. 무릎을 과도하게 굽히지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 벤치 프레스") {
+          precautionsText = `
+                                <strong>스미스머신 벤치 프레스 주의사항:</strong><br>
+                                1. 어깨를 과도하게 내리지 않도록 하세요.<br>
+                                2. 손목을 구부리지 않도록 주의하세요.<br>
+                                3. 바를 내려놓을 때 너무 빠르게 내려놓지 않도록 하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 인클라인 벤치 프레스") {
+          precautionsText = `
+                                <strong>스미스 머신 인클라인 벤치 프레스 주의사항:</strong><br>
+                                1. 어깨를 과도하게 내리지 않도록 하세요.<br>
+                                2. 팔꿈치를 너무 벌리지 않도록 하세요.<br>
+                                3. 손목에 과도한 압력이 가지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 밀리터리 숄더 프레스") {
+          precautionsText = `
+                                <strong>스미스머신 밀리터리 숄더 프레스 주의사항:</strong><br>
+                                1. 팔꿈치가 너무 벌어지지 않도록 하세요.<br>
+                                2. 어깨를 너무 내리지 않도록 하세요.<br>
+                                3. 팔꿈치를 굽힐 때 어깨에 부담이 가지 않도록 주의하세요.
+                              `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스미스머신 비하인드 넥 프레스") {
+          precautionsText = `
+                                <strong>스미스머신 비하인드 넥 프레스 주의사항:</strong><br>
+                                1. 팔꿈치를 과도하게 내리지 않도록 하세요.<br>
+                                2. 어깨에 무리가 가지 않도록 주의하세요.<br>
+                                3. 상체가 흔들리지 않도록 고정하세요.
+                              `;
+
+          // 운동 이름에 따라 주의사항 표시
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 로프 푸쉬 다운") {
+          precautionsText = `
+                          <strong>케이블 로프 푸쉬 다운 주의사항:</strong><br>
+                          1. 팔꿈치를 몸에 가까이 유지하세요.<br>
+                          2. 로프를 끝까지 내릴 때 손목에 무리가 가지 않도록 하세요.<br>
+                          3. 동작을 천천히, 통제된 방식으로 수행하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블스트레이트바푸쉬다운") {
+          precautionsText = `
+                          <strong>케이블스트레이트바푸쉬다운 주의사항:</strong><br>
+                          1. 팔꿈치를 고정하고 바를 내릴 때 팔꿈치가 옆으로 벌어지지 않도록 하세요.<br>
+                          2. 손목을 구부리지 않도록 주의하세요.<br>
+                          3. 팔꿈치가 너무 벌어지지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 스트레이트바 푸쉬 다운") {
+          precautionsText = `
+                          <strong>케이블 스트레이트바 푸쉬 다운 주의사항:</strong><br>
+                          1. 팔꿈치를 고정하고 바를 내릴 때 팔꿈치가 옆으로 벌어지지 않도록 하세요.<br>
+                          2. 손목을 구부리지 않도록 주의하세요.<br>
+                          3. 팔꿈치가 너무 벌어지지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 원암 언더그립 푸쉬 다운") {
+          precautionsText = `
+                          <strong>케이블 원암 언더그립 푸쉬 다운 주의사항:</strong><br>
+                          1. 팔꿈치를 고정하고 로프를 당길 때 손목에 부담이 가지 않도록 하세요.<br>
+                          2. 팔꿈치가 몸에 너무 가까워지지 않도록 하세요.<br>
+                          3. 천천히, 통제된 방식으로 운동을 수행하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 오버헤드 익스텐션") {
+          precautionsText = `
+                          <strong>케이블 오버헤드 익스텐션 주의사항:</strong><br>
+                          1. 팔꿈치가 과도하게 벌어지지 않도록 하세요.<br>
+                          2. 상체가 흔들리지 않도록 고정하세요.<br>
+                          3. 팔꿈치를 천천히 내리세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 바이셉스 컬") {
+          precautionsText = `
+                          <strong>케이블 바이셉스 컬 주의사항:</strong><br>
+                          1. 팔꿈치를 고정하고 케이블을 끌어당기세요.<br>
+                          2. 팔꿈치가 옆으로 벌어지지 않도록 하세요.<br>
+                          3. 손목을 과도하게 구부리지 않도록 주의하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 컬") {
+          precautionsText = `
+                          <strong>케이블 컬 주의사항:</strong><br>
+                          1. 팔꿈치를 고정하고, 팔꿈치가 옆으로 흔들리지 않도록 하세요.<br>
+                          2. 손목에 부담이 가지 않도록 주의하세요.<br>
+                          3. 천천히, 통제된 방식으로 운동을 수행하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블더블바이셉스컬") {
+          precautionsText = `
+                          <strong>케이블더블바이셉스컬 주의사항:</strong><br>
+                          1. 양팔을 동시에 사용하되 팔꿈치가 몸에 가까이 유지되도록 하세요.<br>
+                          2. 손목에 부담이 가지 않도록 주의하세요.<br>
+                          3. 팔꿈치가 흔들리지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 더블 바이셉스 컬") {
+          precautionsText = `
+                          <strong>케이블 더블 바이셉스 컬 주의사항:</strong><br>
+                          1. 양팔을 동시에 사용하되 팔꿈치가 몸에 가까이 유지되도록 하세요.<br>
+                          2. 손목에 부담이 가지 않도록 주의하세요.<br>
+                          3. 팔꿈치가 흔들리지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 로우") {
+          precautionsText = `
+                          <strong>케이블 로우 주의사항:</strong><br>
+                          1. 상체를 곧게 유지하고 팔꿈치를 몸에 가까이 당기세요.<br>
+                          2. 상체가 흔들리지 않도록 고정하세요.<br>
+                          3. 팔꿈치가 너무 벌어지지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "페이스 풀") {
+          precautionsText = `
+                          <strong>페이스 풀 주의사항:</strong><br>
+                          1. 팔꿈치를 고정하고 로프를 얼굴 쪽으로 당기세요.<br>
+                          2. 상체가 흔들리지 않도록 주의하세요.<br>
+                          3. 손목에 부담이 가지 않도록 조절하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 사이드 레터럴 레이즈") {
+          precautionsText = `
+                          <strong>케이블 사이드 레터럴 레이즈 주의사항:</strong><br>
+                          1. 팔꿈치를 살짝 굽히고 천천히 올리세요.<br>
+                          2. 어깨에 부담이 가지 않도록 주의하세요.<br>
+                          3. 상체를 과도하게 흔들지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 벤트오버 레터럴 레이즈") {
+          precautionsText = `
+                          <strong>케이블 벤트오버 레터럴 레이즈 주의사항:</strong><br>
+                          1. 허리를 굽히지 않도록 코어를 단단히 고정하세요.<br>
+                          2. 팔꿈치가 너무 벌어지지 않도록 하세요.<br>
+                          3. 상체를 과도하게 흔들지 않도록 주의하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 크런치") {
+          precautionsText = `
+                          <strong>케이블 크런치 주의사항:</strong><br>
+                          1. 복부를 사용하여 운동을 수행하세요.<br>
+                          2. 목에 부담을 주지 않도록 주의하세요.<br>
+                          3. 팔꿈치를 과도하게 내리지 않도록 하세요.
+                        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 롱풀") {
+          precautionsText = `
+                    <strong>케이블 롱풀 주의사항:</strong><br>
+                    1. 팔꿈치를 몸에 가깝게 유지하며 케이블을 당기세요.<br>
+                    2. 팔꿈치가 과도하게 벌어지지 않도록 주의하세요.<br>
+                    3. 상체를 과도하게 흔들지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "시티드 체스트 프레스") {
+          precautionsText = `
+                    <strong>시티드 체스트 프레스 주의사항:</strong><br>
+                    1. 어깨가 과도하게 올라가지 않도록 주의하세요.<br>
+                    2. 팔꿈치를 너무 넓게 벌리지 않도록 하세요.<br>
+                    3. 몸을 고정한 상태에서만 운동을 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케이블 롱 풀") {
+          precautionsText = `
+                    <strong>케이블 롱 풀 주의사항:</strong><br>
+                    1. 팔꿈치를 몸에 가깝게 유지하며 케이블을 당기세요.<br>
+                    2. 팔꿈치가 과도하게 벌어지지 않도록 주의하세요.<br>
+                    3. 상체를 과도하게 흔들지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "인클라인 시티드 체스트 프레스") {
+          precautionsText = `
+                    <strong>인클라인 시티드 체스트 프레스 주의사항:</strong><br>
+                    1. 상체가 너무 흔들리지 않도록 주의하세요.<br>
+                    2. 팔꿈치를 과도하게 벌리지 않도록 하세요.<br>
+                    3. 어깨를 내리며 운동을 수행하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "디클라인 시티드 체스트 프레스") {
+          precautionsText = `
+                    <strong>디클라인 시티드 체스트 프레스 주의사항:</strong><br>
+                    1. 가슴에 자극을 주는 동작을 반복하세요.<br>
+                    2. 팔꿈치를 너무 넓게 벌리지 않도록 하세요.<br>
+                    3. 상체를 고정하고 몸을 흔들지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "시티드 체스트 플라이") {
+          precautionsText = `
+                    <strong>시티드 체스트 플라이 주의사항:</strong><br>
+                    1. 어깨에 부담이 가지 않도록 팔꿈치를 살짝 굽힌 상태로 운동하세요.<br>
+                    2. 팔꿈치를 지나치게 벌리지 않도록 주의하세요.<br>
+                    3. 운동 중 상체가 흔들리지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "시티드 덱 플라이") {
+          precautionsText = `
+                    <strong>시티드 덱 플라이 주의사항:</strong><br>
+                    1. 팔꿈치를 조금만 굽혀서 운동을 진행하세요.<br>
+                    2. 팔꿈치가 몸에서 너무 멀어지지 않도록 하세요.<br>
+                    3. 상체를 고정하고 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "머신 프리처 컬") {
+          precautionsText = `
+                    <strong>머신 프리처 컬 주의사항:</strong><br>
+                    1. 팔꿈치가 고정된 상태에서만 운동을 하세요.<br>
+                    2. 상체를 흔들지 않도록 주의하세요.<br>
+                    3. 팔꿈치를 천천히 올리고 내리세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "프리처 컬") {
+          precautionsText = `
+                    <strong>프리처 컬 주의사항:</strong><br>
+                    1. 팔꿈치가 고정된 상태에서만 운동을 하세요.<br>
+                    2. 상체를 흔들지 않도록 주의하세요.<br>
+                    3. 팔꿈치를 천천히 올리고 내리세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "바벨 프리처 컬") {
+          precautionsText = `
+                    <strong>바벨 프리처 컬 주의사항:</strong><br>
+                    1. 팔꿈치와 팔꿈치가 흔들리지 않도록 고정하세요.<br>
+                    2. 바벨을 천천히 올리고 내리세요.<br>
+                    3. 상체를 고정한 상태에서만 운동을 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "덤벨 프리처 컬") {
+          precautionsText = `
+                    <strong>덤벨 프리처 컬 주의사항:</strong><br>
+                    1. 팔꿈치를 고정하고 덤벨을 올리세요.<br>
+                    2. 덤벨을 너무 빠르게 올리지 않도록 하세요.<br>
+                    3. 팔꿈치와 손목에 부담이 가지 않도록 조절하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "딥스") {
+          precautionsText = `
+                    <strong>딥스 주의사항:</strong><br>
+                    1. 어깨가 너무 낮게 내려가지 않도록 하세요.<br>
+                    2. 팔꿈치를 과도하게 벌리지 않도록 하세요.<br>
+                    3. 팔꿈치를 고정하고 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "풀업") {
+          precautionsText = `
+                    <strong>풀업 주의사항:</strong><br>
+                    1. 어깨에 과도한 부담을 주지 않도록 주의하세요.<br>
+                    2. 팔꿈치가 완전히 펴지지 않도록 하세요.<br>
+                    3. 상체를 흔들지 않도록 고정하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "행잉 레그 레이즈") {
+          precautionsText = `
+                    <strong>행잉 레그 레이즈 주의사항:</strong><br>
+                    1. 다리를 올릴 때 상체가 흔들리지 않도록 하세요.<br>
+                    2. 복부를 집중하여 동작을 수행하세요.<br>
+                    3. 하체를 너무 과도하게 흔들지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "싯업") {
+          precautionsText = `
+                    <strong>싯업 주의사항:</strong><br>
+                    1. 목에 부담이 가지 않도록 손을 가볍게 사용하세요.<br>
+                    2. 발을 고정시키고 복부를 사용하여 몸을 일으키세요.<br>
+                    3. 상체를 과도하게 숙이지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "크런치") {
+          precautionsText = `
+                    <strong>크런치 주의사항:</strong><br>
+                    1. 복부를 사용하여 상체를 일으키세요.<br>
+                    2. 목에 부담이 가지 않도록 손을 올리세요.<br>
+                    3. 상체를 과도하게 숙이지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "랫 풀다운") {
+          precautionsText = `
+                    <strong>랫풀다운 주의사항:</strong><br>
+                    1. 팔꿈치를 몸에 가깝게 두고 풀다운 하세요.<br>
+                    2. 상체를 고정하여 팔꿈치를 내리세요.<br>
+                    3. 상체를 흔들지 않도록 주의하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "하이 로우로우") {
+          precautionsText = `
+                    <strong>하이 로우로우 주의사항:</strong><br>
+                    1. 팔꿈치를 고정하고 몸통을 흔들지 않도록 하세요.<br>
+                    2. 팔꿈치가 너무 벌어지지 않도록 주의하세요.<br>
+                    3. 팔꿈치를 몸에 가까이 유지하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "와이드 랫 풀다운") {
+          precautionsText = `
+                    <strong>와이드 랫 풀다운 주의사항:</strong><br>
+                    1. 팔꿈치를 벌리고 케이블을 내리세요.<br>
+                    2. 상체를 흔들지 않도록 고정하세요.<br>
+                    3. 어깨에 부담을 주지 않도록 조심하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "시티드숄더프레스") {
+          precautionsText = `
+                    <strong>시티드숄더프레스 주의사항:</strong><br>
+                    1. 팔꿈치를 고정하고 상체를 흔들지 않도록 하세요.<br>
+                    2. 어깨에 부담이 가지 않도록 팔꿈치를 내리세요.<br>
+                    3. 천천히, 통제된 방식으로 운동을 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "시티드 숄더 프레스") {
+          precautionsText = `
+                    <strong>시티드 숄더 프레스 주의사항:</strong><br>
+                    1. 팔꿈치를 고정하고 상체를 흔들지 않도록 하세요.<br>
+                    2. 어깨에 부담이 가지 않도록 팔꿈치를 내리세요.<br>
+                    3. 천천히, 통제된 방식으로 운동을 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "바이킹 프레스") {
+          precautionsText = `
+                    <strong>바이킹 프레스 주의사항:</strong><br>
+                    1. 어깨를 과도하게 내리거나 올리지 않도록 주의하세요.<br>
+                    2. 팔꿈치를 고정하여 안정된 자세를 유지하세요.<br>
+                    3. 상체를 흔들지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "쉬러그") {
+          precautionsText = `
+                    <strong>쉬러그 주의사항:</strong><br>
+                    1. 어깨에 집중하여 바벨을 올리세요.<br>
+                    2. 상체가 과도하게 흔들리지 않도록 주의하세요.<br>
+                    3. 목에 부담을 주지 않도록 조심하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "핵 스쿼트") {
+          precautionsText = `
+                    <strong>핵 스쿼트 주의사항:</strong><br>
+                    1. 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+                    2. 하체에 집중하며 무게를 고르게 분배하세요.<br>
+                    3. 상체가 너무 많이 기울지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "핵 프레스") {
+          precautionsText = `
+                    <strong>핵 프레스 주의사항:</strong><br>
+                    1. 다리와 허벅지에 충분한 자극을 주도록 하세요.<br>
+                    2. 무릎이 안쪽으로 굽지 않도록 조심하세요.<br>
+                    3. 운동 중 무게가 과도하게 걸리지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "파워 레그 프레스") {
+          precautionsText = `
+                    <strong>파워 레그 프레스 주의사항:</strong><br>
+                    1. 발을 바르게 위치시켜 발끝이 벗어나지 않도록 하세요.<br>
+                    2. 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+                    3. 무릎에 과도한 부담을 주지 않도록 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "레그 익스텐션") {
+          precautionsText = `
+                    <strong>레그 익스텐션 주의사항:</strong><br>
+                    1. 발목을 완전히 펴지 않도록 주의하세요.<br>
+                    2. 무릎을 너무 많이 펴지 않도록 하세요.<br>
+                    3. 발끝을 고정한 상태로 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "레그 컬") {
+          precautionsText = `
+                    <strong>레그 컬 주의사항:</strong><br>
+                    1. 무릎에 과도한 압력이 가지 않도록 주의하세요.<br>
+                    2. 하체를 고정하고 다리를 올리세요.<br>
+                    3. 발끝을 고정하고 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "이너타이") {
+          precautionsText = `
+                    <strong>이너타이 주의사항:</strong><br>
+                    1. 다리를 고정하고 운동하세요.<br>
+                    2. 내전근에 자극을 느끼도록 집중하세요.<br>
+                    3. 엉덩이가 들리지 않도록 해주세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "아웃타이") {
+          precautionsText = `
+                    <strong>아웃타이 주의사항:</strong><br>
+                    1. 다리의 움직임에 집중하세요.<br>
+                    2. 허벅지와 엉덩이의 자극을 느끼도록 하세요.<br>
+                    3. 허리가 굽지않도록 해주세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "힙 브릿지") {
+          precautionsText = `
+                    <strong>힙 브릿지 주의사항:</strong><br>
+                    1. 허리를 과도하게 과신하지 않도록 하세요.<br>
+                    2. 엉덩이에 집중하며 운동하세요.<br>
+                    3. 하체가 고정된 상태에서만 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "힙 쓰러스트") {
+          precautionsText = `
+                    <strong>힙 쓰러스트 주의사항:</strong><br>
+                    1. 허리를 과도하게 과신하지 않도록 하세요.<br>
+                    2. 엉덩이에 집중하며 운동하세요.<br>
+                    3. 하체가 고정된 상태에서만 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "카프레이즈") {
+          precautionsText = `
+                    <strong>카프레이즈 주의사항:</strong><br>
+                    1. 발꿈치를 완전히 올리고 내리세요.<br>
+                    2. 상체를 흔들지 않도록 고정하세요.<br>
+                    3. 발끝에 자극을 주도록 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "몬스터 글루트") {
+          precautionsText = `
+                    <strong>몬스터 글루트 주의사항:</strong><br>
+                    1. 하체를 고정하고 엉덩이에 집중하세요.<br>
+                    2. 운동 범위가 너무 넓지 않도록 하세요.<br>
+                    3. 과도한 무게를 사용하지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텐드 힙 어덕터") {
+          precautionsText = `
+                    <strong>스텐드 힙 어덕터 주의사항:</strong><br>
+                    1. 다리를 과도하게 벌리지 않도록 하세요.<br>
+                    2. 엉덩이에 자극을 느끼도록 운동하세요.<br>
+                    3. 다리의 움직임에 집중하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "머신 바이셉스 컬") {
+          precautionsText = `
+                    <strong>머신 바이셉스 컬 주의사항:</strong><br>
+                    1. 팔꿈치를 고정하고 운동하세요.<br>
+                    2. 팔꿈치가 흔들리지 않도록 주의하세요.<br>
+                    3. 팔꿈치를 천천히 올리고 내리세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "롱 풀") {
+          precautionsText = `
+                    <strong>롱 풀 주의사항:</strong><br>
+                    1. 상체를 고정하고 다리를 올리세요.<br>
+                    2. 몸이 흔들리지 않도록 고정하세요.<br>
+                    3. 다리 운동에 집중하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "시티드 로우") {
+          precautionsText = `
+                    <strong>시티드 로우 주의사항:</strong><br>
+                    1. 팔꿈치를 몸에 가깝게 유지하고 몸을 흔들지 않도록 하세요.<br>
+                    2. 손목에 과도한 부담을 주지 않도록 하세요.<br>
+                    3. 팔꿈치를 고정하여 안정적인 자세를 유지하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "미들 로우") {
+          precautionsText = `
+                    <strong>미들 로우 주의사항:</strong><br>
+                    1. 팔꿈치를 몸에 가깝게 유지하고 몸을 흔들지 않도록 하세요.<br>
+                    2. 팔꿈치와 손목에 부담이 가지 않도록 조절하세요.<br>
+                    3. 상체를 과도하게 흔들지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "로우 로우") {
+          precautionsText = `
+                    <strong>로우 로우 주의사항:</strong><br>
+                    1. 팔꿈치를 고정하고 몸을 흔들지 않도록 하세요.<br>
+                    2. 팔꿈치를 천천히 올리고 내리세요.<br>
+                    3. 상체가 흔들리지 않도록 조심하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "백 익스텐션") {
+          precautionsText = `
+                    <strong>백 익스텐션 주의사항:</strong><br>
+                    1. 허리에 과도한 부담을 주지 않도록 하세요.<br>
+                    2. 상체를 과도하게 숙이지 않도록 하세요.<br>
+                    3. 몸을 천천히 돌려서 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "하이퍼 익스텐션") {
+          precautionsText = `
+                    <strong>하이퍼 익스텐션 주의사항:</strong><br>
+                    1. 허리에 과도한 부담을 주지 않도록 하세요.<br>
+                    2. 상체를 과도하게 숙이지 않도록 하세요.<br>
+                    3. 몸을 천천히 돌려서 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "트레드밀") {
+          precautionsText = `
+                    <strong>트레드밀 주의사항:</strong><br>
+                    1. 발목에 부담이 가지 않도록 속도를 조절하세요.<br>
+                    2. 몸을 곧게 유지하고 운동하세요.<br>
+                    3. 과도한 속도에서 운동하지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "좌식사이클") {
+          precautionsText = `
+                    <strong>좌식사이클 주의사항:</strong><br>
+                    1. 발을 고정하여 운동하세요.<br>
+                    2. 무릎에 부담을 주지 않도록 조절하세요.<br>
+                    3. 상체를 과도하게 기울이지 않도록 하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "입식사이클") {
+          precautionsText = `
+                    <strong>입식사이클 주의사항:</strong><br>
+                    1. 상체를 곧게 유지하고 운동하세요.<br>
+                    2. 무릎에 부담을 주지 않도록 속도를 조절하세요.<br>
+                    3. 발을 고정하여 운동하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "천국의계단") {
+          precautionsText = `
+                    <strong>천국의계단 주의사항:</strong><br>
+                    1. 상체를 곧게 유지하고 운동하세요.<br>
+                    2. 속도를 너무 높이지 않도록 조절하세요.<br>
+                    3. 발목에 부담을 주지 않도록 주의하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "마이마운틴") {
+          precautionsText = `
+                    <strong>마이마운틴 주의사항:</strong><br>
+                    1. 상체를 흔들지 않도록 하세요.<br>
+                    2. 발목에 부담을 주지 않도록 조절하세요.<br>
+                    3. 운동을 천천히 진행하세요.
+                  `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "V 스쿼트") {
+          precautionsText = `
+              <strong>V 스쿼트 주의사항:</strong><br>
+              1. 무릎을 발끝과 일직선으로 유지하세요.<br>
+              2. 허리를 곧게 펴고 상체를 바르게 유지하세요.<br>
+              3. 발뒤꿈치에 힘을 주어 일어설 때 무릎을 펴세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "버티컬 레그 프레스") {
+          precautionsText = `
+              <strong>버티컬 레그 프레스 주의사항:</strong><br>
+              1. 무릎을 너무 굽히지 않도록 주의하세요.<br>
+              2. 발끝이 과도하게 튕겨지지 않도록 발판에 잘 고정시키세요.<br>
+              3. 하중을 고르게 분배하고 빠르게 내리지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "크런치") {
+          precautionsText = `
+              <strong>크런치 주의사항:</strong><br>
+              1. 목에 무리를 주지 않도록 손을 머리 뒤에 올리지 않도록 하세요.<br>
+              2. 상체를 너무 급격히 들어올리지 않도록 하세요.<br>
+              3. 엉덩이를 바닥에 고정시키고 복부를 사용해 올라가세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "벤트 니 업") {
+          precautionsText = `
+              <strong>벤트 니 업 주의사항:</strong><br>
+              1. 무릎을 과도하게 굽히지 않도록 하세요.<br>
+              2. 상체를 지나치게 숙이지 않도록 유지하세요.<br>
+              3. 발끝과 무릎이 같은 방향을 유지하도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "사이드 크런치") {
+          precautionsText = `
+              <strong>사이드 크런치 주의사항:</strong><br>
+              1. 목에 부담을 주지 않도록 손을 잘 위치시켜 주세요.<br>
+              2. 상체를 빠르게 들어올리지 않도록 천천히 진행하세요.<br>
+              3. 무리하게 몸을 비틀지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "암 워킹") {
+          precautionsText = `
+              <strong>암 워킹 주의사항:</strong><br>
+              1. 팔꿈치를 굽히지 않고 팔을 쭉 뻗으세요.<br>
+              2. 상체를 흔들지 않도록 주의하세요.<br>
+              3. 무릎이 과도하게 굽혀지지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝 박스 발바꿔 뛰기") {
+          precautionsText = `
+              <strong>스텝 박스 발바꿔 뛰기 주의사항:</strong><br>
+              1. 점프 후 착지 시 무릎을 약간 굽혀 충격을 완화하세요.<br>
+              2. 발목을 과도하게 돌리지 않도록 주의하세요.<br>
+              3. 점프 후 균형을 유지하며 내려오세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "마운틴 클라이머") {
+          precautionsText = `
+              <strong>마운틴 클라이머 주의사항:</strong><br>
+              1. 상체를 흔들지 않도록 하세요.<br>
+              2. 발목에 부담을 주지 않도록 조절하세요.<br>
+              3. 운동을 천천히 진행하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "와이드 스쿼트") {
+          precautionsText = `
+              <strong>와이드 스쿼트 주의사항:</strong><br>
+              1. 발끝이 바깥쪽을 향하도록 하고 무릎과 일직선이 되도록 하세요.<br>
+              2. 엉덩이를 뒤로 빼며 스쿼트를 하세요.<br>
+              3. 무릎을 발끝을 넘지 않도록 주의하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "런지") {
+          precautionsText = `
+              <strong>런지 주의사항:</strong><br>
+              1. 앞 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+              2. 상체를 똑바로 유지하고 무게 중심을 잘 잡으세요.<br>
+              3. 뒷무릎을 바닥에 가깝게 내리세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "워킹 런지") {
+          precautionsText = `
+              <strong>워킹 런지 주의사항:</strong><br>
+              1. 앞 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+              2. 상체를 똑바로 유지하고 무게 중심을 잘 잡으세요.<br>
+              3. 뒷무릎을 바닥에 가깝게 내리세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스플릿 스쿼트") {
+          precautionsText = `
+              <strong>스플릿 스쿼트 주의사항:</strong><br>
+              1. 앞 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+              2. 상체를 바르게 유지하고 체중을 고르게 분배하세요.<br>
+              3. 뒤쪽 무릎을 바닥에 가깝게 내려주세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "내로우 스쿼트") {
+          precautionsText = `
+              <strong>내로우 스쿼트 주의사항:</strong><br>
+              1. 무릎을 발끝을 넘지 않도록 조심하세요.<br>
+              2. 상체를 곧게 유지하며, 엉덩이를 내리세요.<br>
+              3. 체중을 발꿈치에 집중하여 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "외발 스쿼트") {
+          precautionsText = `
+              <strong>외발 스쿼트 주의사항:</strong><br>
+              1. 균형을 잡고 운동을 진행하세요.<br>
+              2. 무릎을 과도하게 굽히지 않도록 하세요.<br>
+              3. 발목에 불편함이 생기지 않도록 주의하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "점프 스쿼트") {
+          precautionsText = `
+              <strong>점프 스쿼트 주의사항:</strong><br>
+              1. 착지 시 무릎에 부담이 가지 않도록 무릎을 약간 굽히세요.<br>
+              2. 몸을 일직선으로 유지하며 점프하세요.<br>
+              3. 팔꿈치를 지나치게 구부리지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "점프 런지") {
+          precautionsText = `
+              <strong>점프 런지 주의사항:</strong><br>
+              1. 착지 시 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+              2. 상체가 흔들리지 않도록 중심을 잡으세요.<br>
+              3. 점프 후 안정적인 자세로 착지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "사이드 스쿼트") {
+          precautionsText = `
+              <strong>사이드 스쿼트 주의사항:</strong><br>
+              1. 무릎을 발끝과 일직선으로 유지하세요.<br>
+              2. 발끝과 무릎이 과도하게 벌어지지 않도록 하세요.<br>
+              3. 엉덩이를 뒤로 빼며 스쿼트를 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "컨센트레이션 컬") {
+          precautionsText = `
+              <strong>컨센트레이션 컬 주의사항:</strong><br>
+              1. 팔꿈치를 고정시키고 팔꿈치가 움직이지 않도록 하세요.<br>
+              2. 천천히 진행하여 근육에 긴장을 유지하세요.<br>
+              3. 팔꿈치를 과도하게 올리지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 스윙") {
+          precautionsText = `
+              <strong>케틀벨 스윙 주의사항:</strong><br>
+              1. 허리를 과도하게 숙이지 않도록 하세요.<br>
+              2. 무릎을 살짝 구부리며 하체를 사용하세요.<br>
+              3. 상체를 고정시키고 엉덩이를 뒤로 밀며 스윙하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 스내치") {
+          precautionsText = `
+              <strong>케틀벨 스내치 주의사항:</strong><br>
+              1. 무릎을 과도하게 굽히지 않도록 하세요.<br>
+              2. 상체를 지나치게 숙이지 않도록 유지하세요.<br>
+              3. 발끝과 무릎이 같은 방향을 유지하도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 클린") {
+          precautionsText = `
+              <strong>케틀벨 클린 주의사항:</strong><br>
+              1. 팔꿈치를 직각으로 구부리지 않도록 하세요.<br>
+              2. 상체를 지나치게 구부리지 않도록 하세요.<br>
+              3. 다리와 엉덩이를 잘 사용하여 동작을 완료하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 프레스") {
+          precautionsText = `
+              <strong>케틀벨 프레스 주의사항:</strong><br>
+              1. 어깨를 과도하게 올리지 않도록 하세요.<br>
+              2. 팔꿈치를 안정적으로 고정시키세요.<br>
+              3. 무릎이 과도하게 굽히지 않도록 주의하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 러스트") {
+          precautionsText = `
+              <strong>케틀벨 러스트 주의사항:</strong><br>
+              1. 다리를 너무 펴지 않도록 하세요.<br>
+              2. 상체를 안정적으로 유지하세요.<br>
+              3. 하체의 힘을 이용해 무게를 조절하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 스쿼트") {
+          precautionsText = `
+              <strong>케틀벨 스쿼트 주의사항:</strong><br>
+              1. 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+              2. 엉덩이를 뒤로 빼며 스쿼트를 하세요.<br>
+              3. 상체를 똑바로 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 런지") {
+          precautionsText = `
+              <strong>케틀벨 런지 주의사항:</strong><br>
+              1. 앞 무릎이 발끝을 넘지 않도록 조심하세요.<br>
+              2. 상체를 곧게 유지하며 런지 동작을 하세요.<br>
+              3. 발끝과 무릎이 일직선이 되도록 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 데드리프트") {
+          precautionsText = `
+              <strong>케틀벨 데드리프트 주의사항:</strong><br>
+              1. 허리를 과도하게 구부리지 않도록 하세요.<br>
+              2. 무릎을 살짝 구부리며 하체를 사용하세요.<br>
+              3. 엉덩이를 뒤로 빼며 상체를 고정하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 터키 시겟 업") {
+          precautionsText = `
+              <strong>케틀벨 터키 시겟업 주의사항:</strong><br>
+              1. 몸의 균형을 유지하며 진행하세요.<br>
+              2. 팔꿈치를 과도하게 구부리지 않도록 주의하세요.<br>
+              3. 상체를 지나치게 뒤로 눕히지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 고블릿 스쿼트") {
+          precautionsText = `
+              <strong>케틀벨 고블릿 스쿼트 주의사항:</strong><br>
+              1. 무릎이 발끝을 넘지 않도록 하세요.<br>
+              2. 상체를 똑바로 유지하고 엉덩이를 뒤로 빼세요.<br>
+              3. 발꿈치에 체중을 두고 스쿼트를 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 우드 췰") {
+          precautionsText = `
+              <strong>케틀벨 우드 췰 주의사항:</strong><br>
+              1. 발끝과 무릎의 방향을 일치시키세요.<br>
+              2. 상체를 굽히지 않도록 조심하세요.<br>
+              3. 체중을 고르게 분배하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 체스트 프레스") {
+          precautionsText = `
+              <strong>케틀벨 체스트 프레스 주의사항:</strong><br>
+              1. 팔꿈치를 직각으로 유지하세요.<br>
+              2. 상체를 고정시키고 팔을 확실하게 펼치세요.<br>
+              3. 어깨에 무리가 가지 않도록 주의하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 하이 풀") {
+          precautionsText = `
+              <strong>케틀벨 하이 풀 주의사항:</strong><br>
+              1. 무릎을 과도하게 굽히지 않도록 하세요.<br>
+              2. 팔꿈치를 올리는 동작을 정확하게 진행하세요.<br>
+              3. 상체를 너무 숙이지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "케틀벨 러시안 트위스트") {
+          precautionsText = `
+              <strong>케틀벨 러시안 트위스트 주의사항:</strong><br>
+              1. 상체를 너무 많이 돌리지 않도록 하세요.<br>
+              2. 팔꿈치를 굽히지 않도록 조심하세요.<br>
+              3. 복부에 힘을 주어 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 스쿼트") {
+          precautionsText = `
+              <strong>짐볼 스쿼트 주의사항:</strong><br>
+              1. 무릎을 발끝을 넘지 않도록 하세요.<br>
+              2. 엉덩이를 뒤로 빼며 동작을 수행하세요.<br>
+              3. 짐볼을 벽에 고정시켜 운동하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 플랭크") {
+          precautionsText = `
+              <strong>짐볼 플랭크 주의사항:</strong><br>
+              1. 몸을 일직선으로 유지하며 운동하세요.<br>
+              2. 어깨와 손목이 일직선이 되도록 하세요.<br>
+              3. 엉덩이를 과도하게 올리지 않도록 주의하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 푸시업") {
+          precautionsText = `
+              <strong>짐볼 푸시업 주의사항:</strong><br>
+              1. 손목에 무리가 가지 않도록 조심하세요.<br>
+              2. 엉덩이가 과도하게 올라가지 않도록 하세요.<br>
+              3. 팔꿈치를 90도 각도로 굽혀서 푸시업을 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 롤아웃") {
+          precautionsText = `
+              <strong>짐볼 롤아웃 주의사항:</strong><br>
+              1. 상체를 너무 많이 밀지 않도록 주의하세요.<br>
+              2. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+              3. 복부에 힘을 주어 동작을 진행하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 벤치 프레스") {
+          precautionsText = `
+              <strong>짐볼 벤치 프레스 주의사항:</strong><br>
+              1. 팔꿈치가 너무 굽혀지지 않도록 조심하세요.<br>
+              2. 벤치와 짐볼 사이의 각도를 잘 맞추세요.<br>
+              3. 어깨를 지나치게 올리지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 런지") {
+          precautionsText = `
+              <strong>짐볼 런지 주의사항:</strong><br>
+              1. 앞 무릎이 발끝을 넘지 않도록 하세요.<br>
+              2. 상체를 똑바로 유지하며 런지하세요.<br>
+              3. 짐볼을 이용해 균형을 잡으며 운동하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 힙 써스트") {
+          precautionsText = `
+              <strong>짐볼 힙 써스트 주의사항:</strong><br>
+              1. 엉덩이를 과도하게 올리지 않도록 하세요.<br>
+              2. 무릎을 지나치게 굽히지 않도록 하세요.<br>
+              3. 복부에 힘을 주어 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 패스") {
+          precautionsText = `
+              <strong>짐볼 패스 주의사항:</strong><br>
+              1. 복부를 안정적으로 유지하세요.<br>
+              2. 팔꿈치와 무릎의 각도를 잘 맞추세요.<br>
+              3. 상체를 과도하게 굽히지 않도록 하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 트위스트") {
+          precautionsText = `
+              <strong>짐볼 트위스트 주의사항:</strong><br>
+              1. 상체를 과도하게 돌리지 않도록 하세요.<br>
+              2. 팔꿈치를 굽히지 않도록 주의하세요.<br>
+              3. 복부에 힘을 주어 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 백 익스텐션") {
+          precautionsText = `
+              <strong>짐볼 백 익스텐션 주의사항:</strong><br>
+              1. 상체를 지나치게 숙이지 않도록 하세요.<br>
+              2. 엉덩이를 과도하게 올리지 않도록 하세요.<br>
+              3. 복부에 힘을 주어 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 크런치") {
+          precautionsText = `
+              <strong>짐볼 크런치 주의사항:</strong><br>
+              1. 상체를 지나치게 올리지 않도록 하세요.<br>
+              2. 엉덩이가 과도하게 떨어지지 않도록 하세요.<br>
+              3. 복부에 힘을 주어 운동하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 브리지") {
+          precautionsText = `
+              <strong>짐볼 브리지 주의사항:</strong><br>
+              1. 엉덩이를 과도하게 올리지 않도록 하세요.<br>
+              2. 무릎을 과도하게 굽히지 않도록 하세요.<br>
+              3. 복부에 힘을 주어 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 마운틴 클라이머") {
+          precautionsText = `
+              <strong>짐볼 마운틴 클라이머 주의사항:</strong><br>
+              1. 엉덩이를 과도하게 올리지 않도록 하세요.<br>
+              2. 상체를 지나치게 숙이지 않도록 하세요.<br>
+              3. 팔꿈치와 무릎의 각도를 잘 맞추세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 슈퍼맨") {
+          precautionsText = `
+              <strong>짐볼 슈퍼맨 주의사항:</strong><br>
+              1. 엉덩이를 과도하게 올리지 않도록 하세요.<br>
+              2. 상체와 하체를 동시에 들어올리며 균형을 유지하세요.<br>
+              3. 복부에 힘을 주어 자세를 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐볼 사이드 플랭크") {
+          precautionsText = `
+              <strong>짐볼 사이드 플랭크 주의사항:</strong><br>
+              1. 상체와 하체가 일직선이 되도록 하세요.<br>
+              2. 엉덩이가 너무 내려가지 않도록 주의하세요.<br>
+              3. 복부에 힘을 주어 균형을 유지하세요.
+            `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝업") {
+          precautionsText = `
+          <strong>스텝업 주의사항:</strong><br>
+          1. 무릎이 발끝을 넘지 않도록 주의하세요.<br>
+          2. 발을 안정적으로 올리고 내려가세요.<br>
+          3. 상체가 흔들리지 않도록 주의하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝다운") {
+          precautionsText = `
+          <strong>스텝다운 주의사항:</strong><br>
+          1. 내려갈 때 무릎에 과도한 압박을 주지 않도록 하세요.<br>
+          2. 발을 안정적으로 내리세요.<br>
+          3. 속도를 조절하여 안전하게 수행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝터치") {
+          precautionsText = `
+          <strong>스텝터치 주의사항:</strong><br>
+          1. 발을 정확히 터치하여 균형을 유지하세요.<br>
+          2. 상체가 너무 앞으로 숙여지지 않도록 주의하세요.<br>
+          3. 발끝이 아닌 발바닥으로 터치하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝오버") {
+          precautionsText = `
+          <strong>스텝오버 주의사항:</strong><br>
+          1. 발목을 보호하고 안정적으로 동작을 진행하세요.<br>
+          2. 상체의 균형을 잘 유지하세요.<br>
+          3. 너무 급하게 하지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝점프") {
+          precautionsText = `
+          <strong>스텝점프 주의사항:</strong><br>
+          1. 무릎에 무리가 가지 않도록 점프하세요.<br>
+          2. 착지 시 발목을 보호하세요.<br>
+          3. 상체를 안정적으로 유지하며 점프하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "점프스텝업") {
+          precautionsText = `
+          <strong>점프스텝업 주의사항:</strong><br>
+          1. 점프할 때 무릎을 과도하게 굽히지 않도록 하세요.<br>
+          2. 착지 시 무릎을 살짝 구부려 충격을 완화하세요.<br>
+          3. 발을 정확히 스텝박스에 올려 놓으세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "사이드 스텝업") {
+          precautionsText = `
+          <strong>사이드 스텝업 주의사항:</strong><br>
+          1. 발을 정확히 올려서 균형을 유지하세요.<br>
+          2. 무릎을 너무 과도하게 구부리지 않도록 하세요.<br>
+          3. 상체가 기울지 않도록 주의하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "크로스오버 스텝") {
+          precautionsText = `
+          <strong>크로스오버 스텝 주의사항:</strong><br>
+          1. 상체의 균형을 유지하며 크로스오버 하세요.<br>
+          2. 무릎을 과도하게 굽히지 않도록 하세요.<br>
+          3. 발목을 보호하며 동작을 수행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "런지 스텝업") {
+          precautionsText = `
+          <strong>런지 스텝업 주의사항:</strong><br>
+          1. 무릎이 발끝을 넘지 않도록 하세요.<br>
+          2. 상체를 똑바로 유지하세요.<br>
+          3. 빠르게 하지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝박스 푸시업") {
+          precautionsText = `
+          <strong>스텝박스 푸시업 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체와 하체가 일직선을 이루도록 유지하세요.<br>
+          3. 푸시업 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝박스 점프 푸시업") {
+          precautionsText = `
+          <strong>스텝박스 점프 푸시업 주의사항:</strong><br>
+          1. 점프 후 착지 시 발목과 무릎을 보호하세요.<br>
+          2. 팔꿈치를 과도하게 굽히지 않도록 주의하세요.<br>
+          3. 빠르게 하지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝박스 플랭크") {
+          precautionsText = `
+          <strong>스텝박스 플랭크 주의사항:</strong><br>
+          1. 엉덩이가 너무 올라가지 않도록 일직선을 유지하세요.<br>
+          2. 팔꿈치와 어깨가 일직선을 이루도록 하세요.<br>
+          3. 복부에 힘을 주어 중심을 잡으세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝박스 바이시클 크런치") {
+          precautionsText = `
+          <strong>스텝박스 바이시클 크런치 주의사항:</strong><br>
+          1. 상체를 과도하게 굽히지 않도록 하세요.<br>
+          2. 다리와 팔꿈치를 정확히 맞춰서 동작을 수행하세요.<br>
+          3. 빠르게 하지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝박스 트라이셉스 딥스") {
+          precautionsText = `
+          <strong>스텝박스 트라이셉스 딥스 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체를 일직선으로 유지하세요.<br>
+          3. 어깨를 과도하게 올리지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "스텝박스 힙 브릿지") {
+          precautionsText = `
+          <strong>스텝박스 힙 브릿지 주의사항:</strong><br>
+          1. 무릎을 너무 많이 구부리지 않도록 하세요.<br>
+          2. 발을 정확히 올려놓고 다리를 곧게 유지하세요.<br>
+          3. 엉덩이를 너무 높이 들지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 플랭크") {
+          precautionsText = `
+          <strong>TRX 플랭크 주의사항:</strong><br>
+          1. 엉덩이를 너무 올리지 않도록 하세요.<br>
+          2. 복부에 힘을 주어 몸의 일직선을 유지하세요.<br>
+          3. 팔꿈치가 어깨 바로 아래에 오도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 사이드 플랭크") {
+          precautionsText = `
+          <strong>TRX 사이드 플랭크 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 엉덩이가 떨어지지 않도록 하세요.<br>
+          3. 상체가 일직선이 되도록 유지하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 푸시업") {
+          precautionsText = `
+          <strong>TRX 푸시업 주의사항:</strong><br>
+          1. 팔꿈치를 너무 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체와 하체가 일직선이 되도록 유지하세요.<br>
+          3. 푸시업 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 로우") {
+          precautionsText = `
+          <strong>TRX 로우 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체를 똑바로 유지하세요.<br>
+          3. 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 롤아웃") {
+          precautionsText = `
+          <strong>TRX 롤아웃 주의사항:</strong><br>
+          1. 무리하지 않도록 서서히 진행하세요.<br>
+          2. 복부를 사용해 몸의 중심을 잡으세요.<br>
+          3. 팔꿈치가 너무 많이 굽혀지지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 스쿼트") {
+          precautionsText = `
+          <strong>TRX 스쿼트 주의사항:</strong><br>
+          1. 무릎이 발끝을 넘지 않도록 하세요.<br>
+          2. 상체는 똑바로 유지하세요.<br>
+          3. 발바닥이 바닥에 잘 닿도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 런지") {
+          precautionsText = `
+          <strong>TRX 런지 주의사항:</strong><br>
+          1. 무릎이 발끝을 넘지 않도록 하세요.<br>
+          2. 런지 동작 시 무릎에 무리가 가지 않도록 조심하세요.<br>
+          3. 상체가 기울어지지 않도록 똑바로 유지하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 글루트 브릿지") {
+          precautionsText = `
+          <strong>TRX 글루트 브릿지 주의사항:</strong><br>
+          1. 엉덩이를 너무 높이 올리지 않도록 하세요.<br>
+          2. 무릎을 너무 많이 굽히지 않도록 하세요.<br>
+          3. 발꿈치로 힘을 주어 올리세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 버피") {
+          precautionsText = `
+          <strong>TRX 버피 주의사항:</strong><br>
+          1. 빠르게 하지 않도록 주의하세요.<br>
+          2. 착지 시 무릎에 무리가 가지 않도록 조심하세요.<br>
+          3. 팔꿈치를 과도하게 굽히지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 하이 니") {
+          precautionsText = `
+          <strong>TRX 하이 니 주의사항:</strong><br>
+          1. 무릎을 너무 과도하게 높이지 않도록 하세요.<br>
+          2. 상체를 똑바로 유지하세요.<br>
+          3. 발바닥이 바닥에 잘 닿도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 체스트 프레스") {
+          precautionsText = `
+          <strong>TRX 체스트 프레스 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체를 안정적으로 유지하세요.<br>
+          3. 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 레그 컬") {
+          precautionsText = `
+          <strong>TRX 레그 컬 주의사항:</strong><br>
+          1. 다리를 너무 높게 올리지 않도록 하세요.<br>
+          2. 상체가 흔들리지 않도록 주의하세요.<br>
+          3. 천천히 다리를 구부리며 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "TRX 스트레칭") {
+          precautionsText = `
+          <strong>TRX 스트레칭 주의사항:</strong><br>
+          1. 과도하게 무리하지 않도록 하세요.<br>
+          2. 천천히 스트레칭을 진행하세요.<br>
+          3. 깊은 스트레칭은 천천히 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 스쿼트") {
+          precautionsText = `
+          <strong>짐스틱 스쿼트 주의사항:</strong><br>
+          1. 무릎이 발끝을 넘지 않도록 하세요.<br>
+          2. 상체를 똑바로 유지하세요.<br>
+          3. 발끝을 바깥쪽으로 향하게 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 롤아웃") {
+          precautionsText = `
+          <strong>짐스틱 롤아웃 주의사항:</strong><br>
+          1. 복부에 힘을 주어 몸의 중심을 잡으세요.<br>
+          2. 무리하지 않도록 천천히 진행하세요.<br>
+          3. 팔꿈치가 너무 많이 굽혀지지 않도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 푸시업") {
+          precautionsText = `
+          <strong>짐스틱 푸시업 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체와 하체가 일직선이 되도록 유지하세요.<br>
+          3. 푸시업 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 플랭크") {
+          precautionsText = `
+          <strong>짐스틱 플랭크 주의사항:</strong><br>
+          1. 엉덩이를 너무 올리지 않도록 하세요.<br>
+          2. 팔꿈치와 어깨가 일직선이 되도록 하세요.<br>
+          3. 복부에 힘을 주어 중심을 잡으세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 바운스") {
+          precautionsText = `
+          <strong>짐스틱 바운스 주의사항:</strong><br>
+          1. 너무 급하게 하지 않도록 하세요.<br>
+          2. 몸을 부드럽게 움직이세요.<br>
+          3. 발목을 보호하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 러시안 트위스트") {
+          precautionsText = `
+          <strong>짐스틱 러시안 트위스트 주의사항:</strong><br>
+          1. 상체를 과도하게 비틀지 않도록 하세요.<br>
+          2. 하체는 고정하고 상체만 회전하세요.<br>
+          3. 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 레그 리프트") {
+          precautionsText = `
+          <strong>짐스틱 레그 리프트 주의사항:</strong><br>
+          1. 상체가 흔들리지 않도록 유지하세요.<br>
+          2. 다리를 올릴 때 무리가 가지 않도록 하세요.<br>
+          3. 천천히 다리를 내리세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 스탠딩 트위스트") {
+          precautionsText = `
+          <strong>짐스틱 스탠딩 트위스트 주의사항:</strong><br>
+          1. 상체를 너무 비틀지 않도록 하세요.<br>
+          2. 무릎을 고정하고 상체만 비틀어요.<br>
+          3. 천천히 동작을 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 체스트 프레스") {
+          precautionsText = `
+          <strong>짐스틱 체스트 프레스 주의사항:</strong><br>
+          1. 팔꿈치를 과도하게 굽히지 않도록 하세요.<br>
+          2. 상체를 똑바로 유지하세요.<br>
+          3. 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 백 익스텐션") {
+          precautionsText = `
+          <strong>짐스틱 백 익스텐션 주의사항:</strong><br>
+          1. 허리를 과도하게 뒤로 젖히지 않도록 하세요.<br>
+          2. 상체를 천천히 올리고 내리세요.<br>
+          3. 복부와 엉덩이에 힘을 주세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 레그 컬") {
+          precautionsText = `
+          <strong>짐스틱 레그 컬 주의사항:</strong><br>
+          1. 다리를 너무 높이 올리지 않도록 하세요.<br>
+          2. 천천히 다리를 내리세요.<br>
+          3. 상체가 흔들리지 않도록 유지하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 데드리프트") {
+          precautionsText = `
+          <strong>짐스틱 데드리프트 주의사항:</strong><br>
+          1. 허리를 곧게 유지하세요.<br>
+          2. 무릎을 과도하게 구부리지 않도록 하세요.<br>
+          3. 동작을 천천히 진행하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 스쿼트 점프") {
+          precautionsText = `
+          <strong>짐스틱 스쿼트 점프 주의사항:</strong><br>
+          1. 착지 시 무릎에 무리가 가지 않도록 하세요.<br>
+          2. 빠르게 하지 않도록 주의하세요.<br>
+          3. 상체를 똑바로 유지하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 하이 니") {
+          precautionsText = `
+          <strong>짐스틱 하이 니 주의사항:</strong><br>
+          1. 무릎을 너무 과도하게 높이지 않도록 하세요.<br>
+          2. 상체를 똑바로 유지하세요.<br>
+          3. 발바닥이 바닥에 잘 닿도록 하세요.
+        `;
+          precautionsDiv.style.display = "block";
+        } else if (exerciseName === "짐스틱 점핑 잭") {
+          precautionsText = `
+          <strong>짐스틱 점핑 잭 주의사항:</strong><br>
+          1. 빠르게 하지 않도록 주의하세요.<br>
+          2. 착지 시 무릎에 무리가 가지 않도록 하세요.<br>
+          3. 상체를 똑바로 유지하세요.
+        `;
+        } else {
+          precautionsText = "";
+        }
+
+        // 주의사항을 표시
+        precautionsDiv.innerHTML = precautionsText;
+        precautionsDiv.style.display = "block";
+      }
+      // 페이지 로드 시 레슨 데이터 로드
+      // document.addEventListener("DOMContentLoaded", function () {
+      //   loadLessonData();
+      // });
+      Kakao.init("574e770008e383cdbdb1389d4f4074c1"); // 카카오톡 JavaScript SDK 키로 대체
+
+      function viewReadOnlyBtn() {
+        const title = document.getElementById("clientName").textContent;
+
+        // URL 파라미터에서 clientId와 lessonId 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientId = urlParams.get("clientId");
+        const lessonId = urlParams.get("lessonId");
+
+        if (!clientId || !lessonId) {
+          console.error("URL에 clientId 또는 lessonId가 없습니다.");
+          return;
+        }
+
+        // 새로운 URL 생성
+        const readOnlyUrl = `${window.location.origin}/read_only.html?clientId=${clientId}&lessonId=${lessonId}`;
+
+        // 현재 날짜를 포맷하기 위한 함수
+        function formatDate(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+
+        const todayDate = formatDate(new Date()); // 현재 날짜 포맷
+
+        Kakao.Link.sendDefault({
+          objectType: "feed",
+          content: {
+            title: `${todayDate} 일지 업로드 완료`,
+            description: `일지의 내용을 참고해서 개인 운동에 적용하세요.`, // 날짜와 함께 레슨 일지 제목 설정
+            imageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d", // 썸네일 이미지 URL
+            link: {
+              mobileWebUrl: readOnlyUrl, // 새로 생성된 URL 사용
+              webUrl: readOnlyUrl, // 새로 생성된 URL 사용
+            },
+          },
+          buttons: [
+            {
+              title: "자세히 보기",
+              link: {
+                mobileWebUrl: readOnlyUrl, // 새로 생성된 URL 사용
+                webUrl: readOnlyUrl, // 새로 생성된 URL 사용
+              },
+            },
+          ],
+        });
+      }
+      document.body.appendChild(groupDiv); // 그룹을 DOM에 추가
+
+      // 이벤트 리스너 연결
+      const uploadButton = document.getElementById(`add-post-${groupIndex}`);
+      if (uploadButton) {
+        uploadButton.addEventListener("click", function () {
+          const mediaInput = document.getElementById(
+            `media-upload-${groupIndex}`
+          );
+          const captionInput = document.getElementById(
+            `post-caption-${groupIndex}`
+          );
+
+          if (mediaInput.files.length > 0 && captionInput.value.trim() !== "") {
+            const file = mediaInput.files[0];
+            const storageRef = storage.ref(`media/${Date.now()}-${file.name}`);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on(
+              "state_changed",
+              null,
+              function (error) {
+                console.error("미디어 업로드 오류: ", error);
+              },
+              function () {
+                uploadTask.snapshot.ref
+                  .getDownloadURL()
+                  .then(function (downloadURL) {
+                    addPost(downloadURL, captionInput.value, file.type);
+                  });
+              }
+            );
+          } else {
+            alert("미디어 파일과 내용을 모두 입력하세요.");
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const clientId = getUrlParameter("clientId");
+        const trainerId = getUrlParameter("trainerId");
+
+        document
+          .getElementById("add-post")
+          .addEventListener("click", function () {
+            const mediaInput = document.getElementById("media-upload");
+            const captionInput = document.getElementById("post-caption");
+
+            if (
+              mediaInput.files.length > 0 &&
+              captionInput.value.trim() !== ""
+            ) {
+              const file = mediaInput.files[0];
+              const storageRef = storage.ref(
+                `media/${Date.now()}-${file.name}`
+              );
+              const uploadTask = storageRef.put(file);
+
+              uploadTask.on(
+                "state_changed",
+                null,
+                function (error) {
+                  console.error("미디어 업로드 오류: ", error);
+                },
+                function () {
+                  uploadTask.snapshot.ref
+                    .getDownloadURL()
+                    .then(function (downloadURL) {
+                      addPost(downloadURL, captionInput.value, file.type);
+                    });
+                }
+              );
+            } else {
+              alert("미디어 파일과 내용을 모두 입력하세요.");
+            }
+          });
+
+        function addPost(mediaUrl, caption, mediaType) {
+          const newPost = {
+            mediaUrl,
+            caption,
+            mediaType,
+            clientId,
+            trainerId,
+            createdAt: new Date(),
+          };
+
+          db.collection("posts")
+            .add(newPost)
+            .then((docRef) => {
+              addPostToDOM(mediaUrl, caption, mediaType, docRef.id);
+              document.getElementById("post-caption").value = "";
+              document.getElementById("media-upload").value = "";
+            })
+            .catch((error) => {
+              console.error("게시물 추가 오류: ", error);
+            });
+        }
+        document.addEventListener("click", function (event) {
+          const menuIcons = document.querySelectorAll(".post-menu, .menu");
+
+          menuIcons.forEach((menuIcon) => {
+            const dropdown = menuIcon.querySelector(".menu-dropdown");
+
+            // 메뉴 아이콘 내부를 클릭한 경우
+            if (menuIcon.contains(event.target)) {
+              return; // 아무 작업도 하지 않음
+            }
+
+            // 메뉴 외부를 클릭한 경우 메뉴 닫기
+            if (dropdown && dropdown.style.display === "block") {
+              dropdown.style.display = "none";
+            }
+          });
+        });
+        function addPostToDOM(mediaUrl, caption, mediaType, postId) {
+          const postsContainer = document.getElementById("posts");
+          const postDiv = document.createElement("div");
+          postDiv.className = "post";
+          postDiv.dataset.postId = postId;
+
+          mediaType = mediaType || "image/jpeg";
+          const isVideo = mediaType.startsWith("video/");
+          const isImage = mediaType.startsWith("image/");
+
+          let mediaElement;
+          if (isVideo) {
+            mediaElement = document.createElement("video");
+            mediaElement.src = mediaUrl;
+            mediaElement.controls = true;
+          } else if (isImage) {
+            mediaElement = document.createElement("img");
+            mediaElement.src = mediaUrl;
+          } else {
+            console.error("Unsupported media type:", mediaType);
+            return;
+          }
+
+          const postCaption = document.createElement("p");
+          postCaption.textContent = caption;
+
+          const postMenuIcon = document.createElement("div");
+          postMenuIcon.className = "post-menu";
+          postMenuIcon.textContent = "⋮";
+
+          const postMenuDropdown = document.createElement("div");
+          postMenuDropdown.className = "menu-dropdown";
+
+          const editPostButton = document.createElement("button");
+          editPostButton.textContent = "수정";
+          editPostButton.addEventListener("click", function () {
+            const newCaption = prompt("게시물 수정", caption);
+            if (newCaption) {
+              updatePost(postId, newCaption, mediaUrl, mediaType);
+            }
+          });
+
+          const deletePostButton = document.createElement("button");
+          deletePostButton.textContent = "삭제";
+          deletePostButton.addEventListener("click", function () {
+            deletePost(postId);
+          });
+
+          postMenuDropdown.appendChild(editPostButton);
+          postMenuDropdown.appendChild(deletePostButton);
+          postMenuIcon.appendChild(postMenuDropdown);
+
+          postMenuIcon.addEventListener("click", function () {
+            postMenuDropdown.style.display =
+              postMenuDropdown.style.display === "block" ? "none" : "block";
+          });
+
+          postDiv.appendChild(postMenuIcon);
+          postDiv.appendChild(mediaElement);
+          postDiv.appendChild(postCaption);
+
+          const commentSection = document.createElement("div");
+          commentSection.className = "comment-section";
+          commentSection.dataset.postId = postId;
+
+          const commentInput = document.createElement("input");
+          commentInput.type = "text";
+          commentInput.placeholder = "댓글을 입력하세요";
+
+          const commentButton = document.createElement("button");
+          commentButton.textContent = "댓글";
+
+          commentButton.addEventListener("click", function () {
+            const commentText = commentInput.value;
+            if (commentText.trim() !== "") {
+              addCommentToDB(postId, commentText);
+              commentInput.value = "";
+            }
+          });
+
+          commentSection.appendChild(commentInput);
+          commentSection.appendChild(commentButton);
+
+          postDiv.appendChild(commentSection);
+
+          postsContainer.insertBefore(postDiv, postsContainer.firstChild);
+
+          loadComments(postId, commentSection);
+        }
+
+        function updatePost(postId, newCaption, mediaUrl, mediaType) {
+          db.collection("posts")
+            .doc(postId)
+            .update({
+              caption: newCaption,
+            })
+            .then(() => {
+              const postDiv = document.querySelector(
+                `.post[data-post-id="${postId}"]`
+              );
+              const mediaElement = postDiv.querySelector("img, video");
+
+              if (mediaElement) {
+                mediaElement.remove();
+              }
+
+              const newMediaElement = mediaType.startsWith("video/")
+                ? document.createElement("video")
+                : document.createElement("img");
+
+              newMediaElement.src = mediaUrl;
+              if (mediaType.startsWith("video/")) {
+                newMediaElement.controls = true;
+              }
+
+              postDiv.insertBefore(newMediaElement, postDiv.querySelector("p"));
+              postDiv.querySelector("p").textContent = newCaption;
+            })
+            .catch((error) => {
+              console.error("게시물 수정 오류: ", error);
+            });
+        }
+
+        function deletePost(postId) {
+          db.collection("posts")
+            .doc(postId)
+            .delete()
+            .then(() => {
+              const postDiv = document.querySelector(
+                `.post[data-post-id="${postId}"]`
+              );
+              postDiv.remove();
+            })
+            .catch((error) => {
+              console.error("게시물 삭제 오류: ", error);
+            });
+        }
+
+        function addCommentToDB(postId, text, parentId = null) {
+          getUserName(trainerId, clientId).then((userName) => {
+            const newComment = {
+              text,
+              postId,
+              parentId,
+              createdAt: new Date(),
+              userName, // 가져온 이름을 userName에 할당
+            };
+
+            db.collection("comments")
+              .add(newComment)
+              .then(() => {
+                loadComments(
+                  postId,
+                  document.querySelector(
+                    `.comment-section[data-post-id="${postId}"]`
+                  )
+                );
+              })
+              .catch((error) => {
+                console.error("댓글 추가 오류: ", error);
+              });
+          });
+        }
+
+        function loadComments(postId, section) {
+          section
+            .querySelectorAll(".comment")
+            .forEach((comment) => comment.remove());
+
+          db.collection("comments")
+            .where("postId", "==", postId)
+            .orderBy("createdAt", "asc")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const comment = doc.data();
+                const isReply = !!comment.parentId;
+                addComment(
+                  section,
+                  comment.text,
+                  isReply,
+                  doc.id,
+                  comment.parentId,
+                  comment.userName
+                );
+              });
+            })
+            .catch((error) => {
+              console.error("댓글 로드 오류: ", error);
+            });
+        }
+
+        function addComment(
+          section,
+          text,
+          isReply,
+          commentId,
+          parentId = null,
+          userName
+        ) {
+          const commentDiv = document.createElement("div");
+          commentDiv.className = "comment";
+          if (isReply) {
+            commentDiv.classList.add("reply");
+          }
+          commentDiv.dataset.commentId = commentId;
+
+          const commentText = document.createElement("p");
+          commentText.textContent = `${userName}: ${text}`;
+
+          const menuIcon = document.createElement("div");
+          menuIcon.className = "menu";
+          menuIcon.textContent = "⋮";
+
+          const menuDropdown = document.createElement("div");
+          menuDropdown.className = "menu-dropdown";
+
+          const editButton = document.createElement("button");
+          editButton.textContent = "수정";
+          editButton.addEventListener("click", function () {
+            const newText = prompt("댓글 수정", text);
+            if (newText) {
+              updateComment(commentId, newText, section, isReply);
+            }
+          });
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "삭제";
+          deleteButton.addEventListener("click", function () {
+            deleteComment(commentId, section);
+          });
+
+          const replyButton = document.createElement("button");
+          replyButton.textContent = "답글";
+          replyButton.addEventListener("click", function () {
+            const replyText = prompt("답글 입력");
+            if (replyText) {
+              addCommentToDB(section.dataset.postId, replyText, commentId);
+            }
+          });
+
+          menuDropdown.appendChild(editButton);
+          menuDropdown.appendChild(deleteButton);
+          menuDropdown.appendChild(replyButton);
+
+          menuIcon.appendChild(menuDropdown);
+          menuIcon.addEventListener("click", function () {
+            menuDropdown.style.display =
+              menuDropdown.style.display === "block" ? "none" : "block";
+          });
+
+          commentDiv.appendChild(commentText);
+          commentDiv.appendChild(menuIcon);
+          section.appendChild(commentDiv);
+
+          if (parentId) {
+            const parentCommentDiv = section.querySelector(
+              `.comment[data-comment-id="${parentId}"]`
+            );
+            parentCommentDiv && parentCommentDiv.appendChild(commentDiv);
+          }
+        }
+        function getUrlParameter(name) {
+          const params = new URLSearchParams(window.location.search);
+          return params.get(name) || "";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const clientId = getUrlParameter("clientId") || "defaultClientId";
+          const trainerId = getUrlParameter("trainerId") || "defaultTrainerId";
+
+          // 이하 코드
+        });
+        function loadPosts() {
+          const postsContainer = document.getElementById("posts");
+
+          postsContainer.innerHTML = "";
+
+          db.collection("posts")
+            .where("clientId", "==", clientId)
+            .where("trainerId", "==", trainerId)
+            .orderBy("createdAt", "asc")
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                const post = doc.data();
+                addPostToDOM(
+                  post.mediaUrl,
+                  post.caption,
+                  post.mediaType || "image/jpeg",
+                  doc.id
+                );
+              });
+            })
+            .catch((error) => {
+              console.error("게시물 로드 오류: ", error);
+            });
+        }
+
+        loadPosts();
+      });
+    </script>
+  </body>
+</html>

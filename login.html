@@ -4,42 +4,84 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="MacJae" />
-    <meta name="keywords" content="다킹" />
-    <meta name="description" content="다킹" />
+    <meta name="keywords" content="핏로그" />
+    <meta name="description" content="핏로그" />
 
     <!-- sns share -->
     <meta property="og:url" content="https://diet-king-app.netlify.app/" />
-    <meta property="og:title" content="다킹" />
+    <meta property="og:title" content="핏로그" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/img/main.png" />
-    <meta property="og:description" content="다킹" />
+    <meta
+      property="og:image"
+      content="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Ffitlog.jpeg?alt=media&token=98a84ebd-6ef1-4890-af3b-b8f2a42601da"
+    />
+    <meta property="og:description" content="핏로그" />
 
     <!--favicon-->
-    <link rel="shortcut icon" href="/img/favicon.ico" />
-    <link rel="apple-touch-icon-precomposed" href="/img/favicon.ico" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
     <title>Diet-King</title>
     <style>
       body {
+        background-color: #121212; /* 전체 배경 어두운 테마 */
+        color: #ffffff;
         font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
         margin: 0;
-        background-color: #f0f0f0;
       }
       .container {
+        display: none; /* 초기 로딩 화면에 숨김 */
+        background-color: #444242; /* 컨테이너 카드 스타일 */
         text-align: center;
-        background: #ffffff;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 부드러운 그림자 */
+      }
+      .splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #121212;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeOut 5s ease-out forwards;
+      }
+      .splash-screen img {
+        width: 80%;
+        height: auto;
+      }
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          visibility: hidden;
+        }
       }
       .login-buttons {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: px;
+        gap: 0px;
       }
       .login-buttons img {
         width: 200px;
@@ -53,12 +95,18 @@
       }
       .message {
         margin-top: 20px;
-        font-size: 12px;
-        color: #333;
+        font-size: 16px;
+        color: #e0e0e0; /* 글자 색상 - 밝은 회색 */
       }
     </style>
   </head>
   <body>
+    <div class="splash-screen">
+      <img
+        src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Ffitlog.jpeg?alt=media&token=98a84ebd-6ef1-4890-af3b-b8f2a42601da"
+        alt="로고"
+      />
+    </div>
     <div class="container">
       <div class="logo">
         <h1>로그인 페이지</h1>
@@ -161,6 +209,13 @@
             document.getElementById("message").innerText =
               "로그인 중 오류가 발생했습니다.";
           });
+      });
+      window.addEventListener("load", () => {
+        // 2초 후 컨테이너 표시
+        setTimeout(() => {
+          document.querySelector(".splash-screen").style.display = "none";
+          document.querySelector(".container").style.display = "block";
+        }, 2000);
       });
     </script>
   </body>

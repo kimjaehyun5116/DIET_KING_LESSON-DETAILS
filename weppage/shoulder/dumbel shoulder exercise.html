@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/images%2Fkakao400.jpg?alt=media&token=b8095014-0c64-40ef-b467-166f8f2ba90d"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5900014929670391"
+      crossorigin="anonymous"
+    ></script>
+    <ins
+      class="kakao_ad_area"
+      style="display: block; width: 320px; height: 100px; margin: 0 auto"
+      data-ad-unit="DAN-07cIPmTFzrJsRDO1"
+      data-ad-width="320"
+      data-ad-height="100"
+    ></ins>
+    <script
+      type="text/javascript"
+      src="//t1.daumcdn.net/kas/static/ba.min.js"
+      async
+    ></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
+    <script>
+      // Firebase 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx_AlSQLpW-KpYXpk0M2mDxVb7CZa_xUk",
+        authDomain: "diet-king-b567d.firebaseapp.com",
+        projectId: "diet-king-b567d",
+        storageBucket: "diet-king-b567d.appspot.com",
+        messagingSenderId: "11155339798",
+        appId: "1:11155339798:web:423854835f18e0b7c21337",
+        measurementId: "G-N9N8T32MVH",
+      };
+
+      // Firebase 초기화
+      const app = firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+
+      // Storage 참조 생성
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child("img/159.gif");
+
+      // 이미지 다운로드 URL 가져오기
+      imageRef
+        .getDownloadURL()
+        .then((url) => {
+          // 이미지 src 속성 설정
+          document.getElementById("firebase-image").src = url;
+        })
+        .catch((error) => {
+          console.error("Error getting download URL:", error);
+        });
+    </script>
+    <title>다킹</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: black;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        table-layout: fixed; /* 테이블의 칸 크기를 고정 */
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ccc;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        width: 33.33%; /* 각 칸의 너비를 균등하게 설정 */
+      }
+      th {
+        background-color: #f0f0f0;
+      }
+      a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      h1 {
+        text-align: center;
+      }
+      .resize-img {
+        border-radius: 50px;
+        width: 30%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fex3.png?alt=media&token=51c083ff-d195-41ff-82b1-0786e74e90b7"
+              alt="어깨 이미지"
+              class="resize-img"
+            />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="/training/db lateral raise.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(30).gif?alt=media&token=354b0571-2379-49a8-b583-437c39f6e5ab"
+                alt="사이드 레터럴 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />사이드 레터럴 레이즈
+            </a>
+          </td>
+          <td>
+            <a href="/training/db rear lateral raise.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(34).gif?alt=media&token=9897cf08-4b76-465f-81b9-5b13d0e299f0"
+                alt="덤벨 벤트오버 레터럴 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />벤트오버 레터럴 레이즈
+            </a>
+          </td>
+          <td>
+            <a href="/training/db rear deltoid fly.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(33).gif?alt=media&token=f86772cd-bb8e-4bde-bb2e-29bc5da87961"
+                alt="시티드 벤트오버 레터럴 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 벤트오버 레이즈
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/db standing frontal raise.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(36).gif?alt=media&token=d9868acc-f701-41b3-bed8-85068183f7f9"
+                alt="덤벨 프론탈 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />덤벨 프론탈 레이즈
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/db standing overhead press.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(37).gif?alt=media&token=9c890210-1433-43f0-a5b1-142360e2e1a4"
+                alt="스탠딩 덤벨 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />스탠딩 덤벨 프레스
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/db seated lateral raise.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-video-to-gif-converter.gif?alt=media&token=c0adfb35-1b91-45a6-858e-37b0e1f70931"
+                alt="시티드 레터럴 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />시티드 레터럴 레이즈
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/db arnold press.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(70).gif?alt=media&token=bdae1ba2-993c-4966-9154-7f120abc571e"
+                alt="아놀드 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />아놀드 프레스<br />
+            </a>
+          </td>
+          <td>
+            <a href="/training/db alternate press" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(71).gif?alt=media&token=04021a6c-466d-436c-84d9-9f1a02416c09"
+                alt="얼터네이트 사이드 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />얼터네이트 프레스
+            </a>
+          </td>
+
+          <td>
+            <a
+              href="/training/db lying one arm rear lateral raise .html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(92).gif?alt=media&token=e20fe1b6-07cc-4f60-897d-7a4a376c4057"
+                alt="라잉 사이드 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />라잉 사이드 레이즈
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/db incline reverse fly.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(93).gif?alt=media&token=33dd0649-7d02-4c3d-a5fe-fd93a1bf6b65"
+                alt="인클라인 리버스플라이"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />인클라인 리버스플라이
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/db lying one arm rear lateral raise .html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(94).gif?alt=media&token=4d346166-b4c0-411e-b800-327de16f0f8b"
+                alt="라잉 리어 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />라잉 리어 레이즈
+            </a>
+          </td>
+          <td>
+            <a href="/training/steering wheel.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(136).gif?alt=media&token=e0eea8e7-d243-48c1-84ed-c1ea56a81642"
+                alt="스트링 휠"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />스트링 휠<br /><br />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a
+              href="/training/db incline one arm lateral raise.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(96).gif?alt=media&token=d029f021-5e40-44cd-ba80-f6273c7da9b2"
+                alt="인클라인 웜암 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />인클라인 웜암 레이즈
+            </a>
+          </td>
+          <td>
+            <a href="/training/db frontal raise.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(98).gif?alt=media&token=20abd4f4-d3af-4df1-bad9-11aa13d59e7b"
+                alt="덤벨 프런트레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />덤벨 프런트레이즈
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/db two arm front raise.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(99).gif?alt=media&token=14f1d170-a719-4c0c-8ec3-227c17b908aa"
+                alt="투암 프론트 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />투암 프론트 레이즈
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="/training/frantal raise plate.html" style="color: white">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(100).gif?alt=media&token=11d0e417-ed64-4096-9b7b-18ee6a520805"
+                alt="원판 프런트 레이즈"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />원판 프런트 레이즈
+            </a>
+          </td>
+          <td>
+            <a
+              href="/training/db bench seated shoulder press.html"
+              style="color: white"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/diet-king-b567d.appspot.com/o/img%2Fezgif.com-optimize%20(104).gif?alt=media&token=35edcc10-6e04-4da0-a2df-3a872600219b"
+                alt="덤벨 숄더 프레스"
+                width="80"
+                height="80"
+                style="border: 2px solid black"
+              /><br />덤벨 숄더 프레스
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
